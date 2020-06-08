@@ -4,8 +4,7 @@ import {
   makeStyles,
   Typography,
   createMuiTheme,
-  ThemeProvider,
-  useMediaQuery
+  ThemeProvider
 } from '@material-ui/core';
 import LoadingSpinner from '../LoadingSpinner';
 import { green, orange } from '@material-ui/core/colors';
@@ -43,15 +42,18 @@ const theme = createMuiTheme({
 
 interface Props {}
 
+// FIXME: Only if ethereum property is defined
+window.ethereum.on('accountsChanged', function (accounts: any) {
+  // Time to reload your interface with accounts[0]!
+  console.log('Metamask account changed');
+});
+
 export const App: React.FC<Props> = (props) => {
   const { dispatch } = useContext(GlobalContext);
   const classes = useStyles();
   const [connectionError, setConnectionError] = useState(false);
   const [metamaskError, setMetamaskError] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  const smallDevice = useMediaQuery(theme.breakpoints.down('sm'));
-  console.log(smallDevice);
 
   useEffect(() => {
     if (window.ethereum === undefined) {
@@ -60,17 +62,19 @@ export const App: React.FC<Props> = (props) => {
     }
     const web3 = new Web3(Web3.givenProvider);
     dispatch({ type: 'SET_WEB3', web3: web3 });
-
-    // TODO: Check connection with Ganache
-    // setLoading(false);
-    setConnectionError(true);
-  }, []);
+    web3.eth.net
+      .isListening()
+      .then((result) => {
+        setLoading(false);
+        setConnectionError(!result);
+      })
+      .catch((error) => {
+        setLoading(false);
+        setConnectionError(true);
+      });
+  }, [dispatch]);
 
   let appBody: JSX.Element = <Typography>Success!!</Typography>;
-
-  if (loading) {
-    appBody = <LoadingSpinner />;
-  }
 
   if (metamaskError) {
     appBody = (
@@ -88,6 +92,10 @@ export const App: React.FC<Props> = (props) => {
         errorMessage="Start Ganache and configure Metamask network"
       ></ErrorView>
     );
+  }
+
+  if (loading) {
+    appBody = <LoadingSpinner />;
   }
 
   return (

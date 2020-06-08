@@ -1,6 +1,5 @@
 import React, { useReducer } from 'react';
 import Web3 from 'web3';
-import { useMediaQuery, useTheme } from '@material-ui/core';
 
 type SetWeb3Action = {
   type: 'SET_WEB3';
