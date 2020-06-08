@@ -1,5 +1,10 @@
 import React from 'react';
-import { makeStyles, Typography } from '@material-ui/core';
+import {
+  makeStyles,
+  Typography,
+  useMediaQuery,
+  useTheme
+} from '@material-ui/core';
 
 const useStyles = makeStyles({
   sadEmoticon: {
@@ -19,14 +24,12 @@ export const ErrorView: React.FC<Props> = (props) => {
       <Typography color="primary" className={classes.sadEmoticon}>
         :(
       </Typography>
-      <div>
-        <Typography variant="h5" color="primary" display="inline">
-          {props.errorName + ' error: '}
-        </Typography>
-        <Typography variant="h5" display="inline">
-          {props.errorMessage}
-        </Typography>
-      </div>
+      <Typography align="center" variant="h5" color="primary">
+        {props.errorName + ' error'}
+      </Typography>
+      <Typography align="center" variant="h5">
+        {props.errorMessage}
+      </Typography>
     </>
   );
 };
