@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useCallback } from 'react';
 import Web3 from 'web3';
 import {
   makeStyles,
@@ -42,27 +42,29 @@ const theme = createMuiTheme({
 
 interface Props {}
 
-// FIXME: Only if ethereum property is defined
-window.ethereum.on('accountsChanged', function (accounts: any) {
-  // Time to reload your interface with accounts[0]!
-  console.log('Metamask account changed');
-});
-
 export const App: React.FC<Props> = (props) => {
-  const { dispatch } = useContext(GlobalContext);
+  const { globalState, dispatch } = useContext(GlobalContext);
   const classes = useStyles();
   const [connectionError, setConnectionError] = useState(false);
   const [metamaskError, setMetamaskError] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [balance, setBalance] = useState('');
 
   useEffect(() => {
     if (window.ethereum === undefined) {
       setMetamaskError(true);
+      setLoading(false);
       return;
+    } else {
+      dispatch({
+        type: 'SET_ACCOUNT',
+        account: window.ethereum.selectedAddress
+      });
+      window.ethereum.on('accountsChanged', function (accounts: string[]) {
+        dispatch({ type: 'SET_ACCOUNT', account: accounts[0] });
+      });
     }
-    const web3 = new Web3(Web3.givenProvider);
-    dispatch({ type: 'SET_WEB3', web3: web3 });
-    web3.eth.net
+    globalState.web3.eth.net
       .isListening()
       .then((result) => {
         setLoading(false);
@@ -74,7 +76,18 @@ export const App: React.FC<Props> = (props) => {
       });
   }, [dispatch]);
 
-  let appBody: JSX.Element = <Typography>Success!!</Typography>;
+  let appBody: JSX.Element = (
+    <Typography align="center">
+      Welcome {globalState.account} your balance is{' '}
+      {globalState.web3.utils.fromWei(balance, 'ether')}
+    </Typography>
+  );
+
+  if (globalState.account !== '') {
+    globalState.web3.eth
+      .getBalance(globalState.account)
+      .then((accountBalance) => setBalance(accountBalance));
+  }
 
   if (metamaskError) {
     appBody = (
