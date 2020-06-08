@@ -1,14 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import Web3 from 'web3';
 import {
   makeStyles,
   Typography,
   createMuiTheme,
-  ThemeProvider
+  ThemeProvider,
+  useMediaQuery
 } from '@material-ui/core';
 import LoadingSpinner from '../LoadingSpinner';
 import { green, orange } from '@material-ui/core/colors';
 import ErrorView from '../ErrorView';
+import {
+  GlobalContextProvider,
+  GlobalContext
+} from '../../contexts/GlobalContext';
 
 declare global {
   interface Window {
@@ -39,10 +44,14 @@ const theme = createMuiTheme({
 interface Props {}
 
 export const App: React.FC<Props> = (props) => {
+  const { dispatch } = useContext(GlobalContext);
   const classes = useStyles();
   const [connectionError, setConnectionError] = useState(false);
   const [metamaskError, setMetamaskError] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  const smallDevice = useMediaQuery(theme.breakpoints.down('sm'));
+  console.log(smallDevice);
 
   useEffect(() => {
     if (window.ethereum === undefined) {
@@ -50,10 +59,11 @@ export const App: React.FC<Props> = (props) => {
       return;
     }
     const web3 = new Web3(Web3.givenProvider);
-    web3.eth.net
-      .isListening()
-      .then(console.log)
-      .catch((err) => setConnectionError(true));
+    dispatch({ type: 'SET_WEB3', web3: web3 });
+
+    // TODO: Check connection with Ganache
+    // setLoading(false);
+    setConnectionError(true);
   }, []);
 
   let appBody: JSX.Element = <Typography>Success!!</Typography>;
@@ -87,4 +97,10 @@ export const App: React.FC<Props> = (props) => {
   );
 };
 
-export default App;
+const WrappedApp: React.FC = () => (
+  <GlobalContextProvider>
+    <App />
+  </GlobalContextProvider>
+);
+
+export default WrappedApp;
