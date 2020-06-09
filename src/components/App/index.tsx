@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useCallback } from 'react';
 import {
   makeStyles,
   Typography,
@@ -6,13 +6,14 @@ import {
   ThemeProvider
 } from '@material-ui/core';
 import LoadingSpinner from '../LoadingSpinner';
-import { green, orange } from '@material-ui/core/colors';
+import { orange } from '@material-ui/core/colors';
 import ErrorView from '../ErrorView';
 import {
   GlobalContextProvider,
   GlobalContext
 } from '../../contexts/GlobalContext';
 import EnableMetamask from '../EnableMetamask';
+import { useInterval } from '../../hooks/useInterval';
 
 declare global {
   interface Window {
@@ -34,8 +35,7 @@ const useStyles = makeStyles({
 
 const theme = createMuiTheme({
   palette: {
-    primary: orange,
-    secondary: green
+    primary: orange
   }
 });
 
@@ -49,6 +49,21 @@ export const App: React.FC<Props> = (props) => {
   const [loading, setLoading] = useState(true);
   const [isMetamaskEnabled, setIsMetamaskEnabled] = useState(false);
   const { web3 } = globalState;
+
+  const CheckConnection = useCallback(() => {
+    web3.eth.net
+      .isListening()
+      .then((result) => {
+        setLoading(false);
+        setConnectionError(!result);
+      })
+      .catch((error) => {
+        setLoading(false);
+        setConnectionError(true);
+      });
+  }, []);
+
+  useInterval(CheckConnection, 5000);
 
   useEffect(() => {
     if (window.ethereum === undefined) {
@@ -68,18 +83,8 @@ export const App: React.FC<Props> = (props) => {
         }
       });
     }
-    // TODO: Check connection periodically
-    web3.eth.net
-      .isListening()
-      .then((result) => {
-        setLoading(false);
-        setConnectionError(!result);
-      })
-      .catch((error) => {
-        setLoading(false);
-        setConnectionError(true);
-      });
-  }, [dispatch, web3]);
+    CheckConnection();
+  }, []);
 
   let appBody: JSX.Element = (
     <Typography align="center">Welcome {globalState.account}</Typography>
