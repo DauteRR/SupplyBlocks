@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useContext, useCallback } from 'react';
-import Web3 from 'web3';
+import React, { useEffect, useState, useContext } from 'react';
 import {
   makeStyles,
   Typography,
@@ -13,6 +12,7 @@ import {
   GlobalContextProvider,
   GlobalContext
 } from '../../contexts/GlobalContext';
+import EnableMetamask from '../EnableMetamask';
 
 declare global {
   interface Window {
@@ -27,7 +27,6 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
     width: '100vw',
     height: '100vh'
   }
@@ -48,7 +47,8 @@ export const App: React.FC<Props> = (props) => {
   const [connectionError, setConnectionError] = useState(false);
   const [metamaskError, setMetamaskError] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [balance, setBalance] = useState('');
+  const [isMetamaskEnabled, setIsMetamaskEnabled] = useState(false);
+  const { web3 } = globalState;
 
   useEffect(() => {
     if (window.ethereum === undefined) {
@@ -56,15 +56,20 @@ export const App: React.FC<Props> = (props) => {
       setLoading(false);
       return;
     } else {
+      setIsMetamaskEnabled(window.ethereum._metamask.isEnabled());
       dispatch({
         type: 'SET_ACCOUNT',
         account: window.ethereum.selectedAddress
       });
       window.ethereum.on('accountsChanged', function (accounts: string[]) {
         dispatch({ type: 'SET_ACCOUNT', account: accounts[0] });
+        if (accounts.length === 0) {
+          setIsMetamaskEnabled(false);
+        }
       });
     }
-    globalState.web3.eth.net
+    // TODO: Check connection periodically
+    web3.eth.net
       .isListening()
       .then((result) => {
         setLoading(false);
@@ -74,19 +79,14 @@ export const App: React.FC<Props> = (props) => {
         setLoading(false);
         setConnectionError(true);
       });
-  }, [dispatch]);
+  }, [dispatch, web3]);
 
   let appBody: JSX.Element = (
-    <Typography align="center">
-      Welcome {globalState.account} your balance is{' '}
-      {globalState.web3.utils.fromWei(balance, 'ether')}
-    </Typography>
+    <Typography align="center">Welcome {globalState.account}</Typography>
   );
 
-  if (globalState.account !== '') {
-    globalState.web3.eth
-      .getBalance(globalState.account)
-      .then((accountBalance) => setBalance(accountBalance));
+  if (!isMetamaskEnabled) {
+    appBody = <EnableMetamask flagSetter={setIsMetamaskEnabled} />;
   }
 
   if (metamaskError) {
