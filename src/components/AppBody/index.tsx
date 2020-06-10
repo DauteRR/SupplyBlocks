@@ -1,7 +1,12 @@
 import React, { useContext } from 'react';
 import { makeStyles, Theme } from '@material-ui/core';
-import { GlobalContext } from '../../contexts/GlobalContext';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { GlobalContext } from '../../contexts/Global';
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect
+} from 'react-router-dom';
 import { ApplicationRoutes } from '../../routes';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({}));

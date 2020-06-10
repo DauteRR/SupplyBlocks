@@ -3,10 +3,7 @@ import { makeStyles, createMuiTheme, ThemeProvider } from '@material-ui/core';
 import LoadingSpinner from '../LoadingSpinner';
 import { orange } from '@material-ui/core/colors';
 import ErrorView from '../ErrorView';
-import {
-  GlobalContextProvider,
-  GlobalContext
-} from '../../contexts/GlobalContext';
+import { GlobalContextProvider, GlobalContext } from '../../contexts/Global';
 import EnableMetamask from '../EnableMetamask';
 import { useInterval } from '../../hooks/useInterval';
 import AppBody from '../AppBody';
