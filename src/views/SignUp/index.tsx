@@ -2,16 +2,16 @@ import React from 'react';
 import { makeStyles, Typography, Button, Theme } from '@material-ui/core';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({
-  root: () => ({
+  root: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center'
-  })
+  }
 }));
 
 interface Props {}
 
-export const SignUp: React.FC<Props> = (props) => {
+export const SignUpView: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   return (
@@ -30,4 +30,4 @@ export const SignUp: React.FC<Props> = (props) => {
   );
 };
 
-export default SignUp;
+export default SignUpView;

@@ -10,50 +10,50 @@ import {
   GridSize,
   Container
 } from '@material-ui/core';
-import Logo from '../Logo';
+import Logo from '../../components/Logo';
 import TruckIconPNG from '../../assets/TruckIcon.png';
 import FactoryIconPNG from '../../assets/FactoryIcon.png';
 import RetailerIconPNG from '../../assets/RetailerIcon.png';
 import WarehouseIconPNG from '../../assets/WarehouseIcon.png';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({
-  root: () => ({
+  root: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center'
-  }),
-  title: () => ({
+  },
+  title: {
     marginBottom: theme.spacing(1)
-  }),
-  subtitle: () => ({
+  },
+  subtitle: {
     marginBottom: theme.spacing(8)
-  }),
-  name: () => ({
+  },
+  name: {
     fontSize: 34,
     color: theme.palette.primary.dark,
     [theme.breakpoints.up('sm')]: {
       fontSize: 48
     }
-  }),
-  iconCard: () => ({
+  },
+  iconCard: {
     borderRadius: '50%',
     height: 0,
     width: '100%',
     paddingBottom: '100%'
-  }),
-  icon: () => ({
+  },
+  icon: {
     width: '100%',
     height: 'auto'
-  }),
-  gridRoot: () => ({
+  },
+  gridRoot: {
     flexGrow: 1,
     marginBottom: theme.spacing(4)
-  }),
-  gridItem: () => ({
+  },
+  gridItem: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center'
-  })
+  }
 }));
 
 interface GridItemType {
@@ -129,7 +129,7 @@ interface Props {}
 
 //FIXME: Horizontal scroll CSS issue
 
-export const Welcome: React.FC<Props> = (props) => {
+export const WelcomeView: React.FC<Props> = (props) => {
   const classes = useStyles();
   const theme = useTheme();
   const smallDevice = useMediaQuery(theme.breakpoints.down('xs'));
@@ -160,4 +160,4 @@ export const Welcome: React.FC<Props> = (props) => {
   );
 };
 
-export default Welcome;
+export default WelcomeView;

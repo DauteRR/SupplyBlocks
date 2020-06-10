@@ -1,12 +1,7 @@
 import React, { useContext } from 'react';
 import { makeStyles, Theme } from '@material-ui/core';
 import { GlobalContext } from '../../contexts/Global';
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  Redirect
-} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ApplicationRoutes } from '../../routes';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({}));
@@ -23,7 +18,7 @@ export const AppBody: React.FC<Props> = (props) => {
       <Switch>
         {ApplicationRoutes.map((route, index) => (
           <Route path={route.path} key={index} exact={route.exact}>
-            {route.component}
+            {route.view}
           </Route>
         ))}
       </Switch>

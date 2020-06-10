@@ -1,22 +1,22 @@
 import React from 'react';
-import { SignUp } from '../components/SignUp';
-import Welcome from '../components/Welcome';
+import { SignUpView } from '../views/SignUp';
+import { WelcomeView } from '../views/Welcome';
 
 export interface Route {
   path: string;
-  component: JSX.Element;
+  view: JSX.Element;
   exact: boolean;
 }
 
 export const ApplicationRoutes: Route[] = [
   {
     path: '/sign-up',
-    component: <SignUp />,
+    view: <SignUpView />,
     exact: true
   },
   {
     path: '/',
-    component: <Welcome />,
+    view: <WelcomeView />,
     exact: true
   }
 ];

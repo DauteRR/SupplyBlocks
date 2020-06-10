@@ -3,14 +3,14 @@ import { makeStyles, Theme } from '@material-ui/core';
 import LogoPNG from '../../assets/logo.png';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({
-  logo: () => ({
+  logo: {
     marginTop: theme.spacing(4),
     width: 200,
     [theme.breakpoints.up('sm')]: {
       width: 240
     },
     marginBottom: theme.spacing(4)
-  })
+  }
 }));
 
 interface Props {}

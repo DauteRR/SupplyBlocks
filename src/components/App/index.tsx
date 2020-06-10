@@ -1,10 +1,14 @@
 import React, { useEffect, useState, useContext, useCallback } from 'react';
-import { makeStyles, createMuiTheme, ThemeProvider } from '@material-ui/core';
+import {
+  makeStyles,
+  createMuiTheme,
+  ThemeProvider,
+  Button
+} from '@material-ui/core';
 import LoadingSpinner from '../LoadingSpinner';
 import { orange } from '@material-ui/core/colors';
-import ErrorView from '../ErrorView';
+import ErrorView from '../../views/Error';
 import { GlobalContextProvider, GlobalContext } from '../../contexts/Global';
-import EnableMetamask from '../EnableMetamask';
 import { useInterval } from '../../hooks/useInterval';
 import AppBody from '../AppBody';
 
@@ -22,6 +26,9 @@ const useStyles = makeStyles({
     flexDirection: 'column',
     alignItems: 'center',
     width: '100vw'
+  },
+  button: {
+    maxWidth: 200
   }
 });
 
@@ -41,7 +48,7 @@ export const App: React.FC<Props> = (props) => {
   const { globalState, dispatch } = useContext(GlobalContext);
   const classes = useStyles();
   const [connectionError, setConnectionError] = useState(false);
-  const [metamaskError, setMetamaskError] = useState(false);
+  const [web3ProviderError, setWeb3ProviderError] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isMetamaskEnabled, setIsMetamaskEnabled] = useState(false);
   const { web3 } = globalState;
@@ -57,6 +64,13 @@ export const App: React.FC<Props> = (props) => {
 
   // TODO: Ensure that Metamask is enabled
   const CheckMetamask = useCallback(() => window.ethereum.selectedAddress, []);
+
+  const enableMetamaskCallback = useCallback(() => {
+    window.ethereum
+      .enable()
+      .then(() => setIsMetamaskEnabled(true))
+      .catch(() => {});
+  }, [props]);
 
   useEffect(() => {
     if (isMetamaskEnabled) {
@@ -82,7 +96,7 @@ export const App: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if (window.ethereum === undefined) {
-      setMetamaskError(true);
+      setWeb3ProviderError(true);
       setLoading(false);
       return;
     }
@@ -99,10 +113,25 @@ export const App: React.FC<Props> = (props) => {
   let appBody: JSX.Element = <AppBody />;
 
   if (!isMetamaskEnabled) {
-    appBody = <EnableMetamask flagSetter={setIsMetamaskEnabled} />;
+    // appBody = <EnableMetamask flagSetter={setIsMetamaskEnabled} />;
+    appBody = (
+      <ErrorView
+        errorName="Metamask"
+        errorMessage="In order to use the dapp Metamask should have account authorization"
+      >
+        <Button
+          color="primary"
+          className={classes.button}
+          variant="contained"
+          onClick={enableMetamaskCallback}
+        >
+          Enable Metamask
+        </Button>
+      </ErrorView>
+    );
   }
 
-  if (metamaskError) {
+  if (web3ProviderError) {
     appBody = (
       <ErrorView
         errorName="Web3 provider"
