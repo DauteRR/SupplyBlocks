@@ -59,11 +59,8 @@ export const App: React.FC<Props> = (props) => {
     []
   );
 
-  const CheckMetamask = useCallback(
-    () =>
-      window.ethereum._metamask.isEnabled() && window.ethereum.selectedAddress,
-    []
-  );
+  // TODO: Ensure that Metamask is enabled
+  const CheckMetamask = useCallback(() => window.ethereum.selectedAddress, []);
 
   useEffect(() => {
     if (isMetamaskEnabled) {
