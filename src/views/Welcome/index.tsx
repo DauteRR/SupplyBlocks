@@ -25,6 +25,9 @@ const useStyles = makeStyles<Theme>((theme: Theme) => ({
   title: {
     marginBottom: theme.spacing(1)
   },
+  logo: {
+    margin: theme.spacing(4)
+  },
   subtitle: {
     marginBottom: theme.spacing(8)
   },
@@ -135,7 +138,9 @@ export const WelcomeView: React.FC<Props> = (props) => {
   const smallDevice = useMediaQuery(theme.breakpoints.down('xs'));
   return (
     <div className={classes.root}>
-      <Logo />
+      <div className={classes.logo}>
+        <Logo />
+      </div>
       <Typography
         className={classes.title}
         variant={smallDevice ? 'h4' : 'h3'}
