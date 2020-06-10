@@ -1,10 +1,5 @@
 import React, { useEffect, useState, useContext, useCallback } from 'react';
-import {
-  makeStyles,
-  Typography,
-  createMuiTheme,
-  ThemeProvider
-} from '@material-ui/core';
+import { makeStyles, createMuiTheme, ThemeProvider } from '@material-ui/core';
 import LoadingSpinner from '../LoadingSpinner';
 import { orange } from '@material-ui/core/colors';
 import ErrorView from '../ErrorView';
@@ -14,6 +9,7 @@ import {
 } from '../../contexts/GlobalContext';
 import EnableMetamask from '../EnableMetamask';
 import { useInterval } from '../../hooks/useInterval';
+import AppBody from '../AppBody';
 
 declare global {
   interface Window {
@@ -39,6 +35,10 @@ const theme = createMuiTheme({
   }
 });
 
+const SetOnAccountChange = (callback: (accounts: string[]) => void) => {
+  window.ethereum.on('accountsChanged', callback);
+};
+
 interface Props {}
 
 export const App: React.FC<Props> = (props) => {
@@ -49,6 +49,27 @@ export const App: React.FC<Props> = (props) => {
   const [loading, setLoading] = useState(true);
   const [isMetamaskEnabled, setIsMetamaskEnabled] = useState(false);
   const { web3 } = globalState;
+
+  const UpdateAccount = useCallback(
+    (address: string) =>
+      dispatch({
+        type: 'SET_ACCOUNT',
+        account: address
+      }),
+    []
+  );
+
+  const CheckMetamask = useCallback(
+    () =>
+      window.ethereum._metamask.isEnabled() && window.ethereum.selectedAddress,
+    []
+  );
+
+  useEffect(() => {
+    if (isMetamaskEnabled) {
+      UpdateAccount(window.ethereum.selectedAddress);
+    }
+  }, [isMetamaskEnabled]);
 
   const CheckConnection = useCallback(() => {
     web3.eth.net
@@ -63,32 +84,26 @@ export const App: React.FC<Props> = (props) => {
       });
   }, []);
 
-  useInterval(CheckConnection, 5000);
+  // TODO: Tune frequency
+  useInterval(CheckConnection, 30000);
 
   useEffect(() => {
     if (window.ethereum === undefined) {
       setMetamaskError(true);
       setLoading(false);
       return;
-    } else {
-      setIsMetamaskEnabled(window.ethereum._metamask.isEnabled());
-      dispatch({
-        type: 'SET_ACCOUNT',
-        account: window.ethereum.selectedAddress
-      });
-      window.ethereum.on('accountsChanged', function (accounts: string[]) {
-        dispatch({ type: 'SET_ACCOUNT', account: accounts[0] });
-        if (accounts.length === 0) {
-          setIsMetamaskEnabled(false);
-        }
-      });
     }
     CheckConnection();
+    setIsMetamaskEnabled(CheckMetamask());
+    SetOnAccountChange((accounts: string[]) => {
+      UpdateAccount(accounts[0]);
+      if (accounts.length === 0) {
+        setIsMetamaskEnabled(false);
+      }
+    });
   }, []);
 
-  let appBody: JSX.Element = (
-    <Typography align="center">Welcome {globalState.account}</Typography>
-  );
+  let appBody: JSX.Element = <AppBody />;
 
   if (!isMetamaskEnabled) {
     appBody = <EnableMetamask flagSetter={setIsMetamaskEnabled} />;
