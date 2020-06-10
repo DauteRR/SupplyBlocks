@@ -36,7 +36,6 @@ export const EnableMetamask: React.FC<Props> = (props) => {
 
   return (
     <div className={classes.root}>
-      <Welcome />
       <WarningRoundedIcon className={classes.icon} color="primary" />
       <Typography className={classes.message} align="center">
         In order to use the dapp Metamask should have account authorization
