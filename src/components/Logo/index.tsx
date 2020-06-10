@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core';
-import LogoSVG from '../../assets/logo.svg';
+import LogoPNG from '../../assets/logo.png';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({
   logo: () => ({
@@ -17,7 +17,7 @@ interface Props {}
 
 export const Logo: React.FC<Props> = (props) => {
   const classes = useStyles();
-  return <img className={classes.logo} src={LogoSVG} alt="Supplyblocks Logo" />;
+  return <img className={classes.logo} src={LogoPNG} alt="Supplyblocks Logo" />;
 };
 
 export default Logo;

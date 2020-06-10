@@ -1,6 +1,8 @@
 import React, { useContext } from 'react';
-import { makeStyles, Theme, Typography } from '@material-ui/core';
+import { makeStyles, Theme } from '@material-ui/core';
 import { GlobalContext } from '../../contexts/GlobalContext';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { ApplicationRoutes } from '../../routes';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({}));
 
@@ -12,9 +14,15 @@ export const AppBody: React.FC<Props> = (props) => {
   const { account } = globalState;
 
   return (
-    <>
-      <Typography align="center">Welcome {account}</Typography>
-    </>
+    <Router>
+      <Switch>
+        {ApplicationRoutes.map((route, index) => (
+          <Route path={route.path} key={index} exact={route.exact}>
+            {route.component}
+          </Route>
+        ))}
+      </Switch>
+    </Router>
   );
 };
 
