@@ -1,5 +1,5 @@
 import React from 'react';
-import { RegisterEntity } from '../components/RegisterEntity';
+import { SignUp } from '../components/SignUp';
 import Welcome from '../components/Welcome';
 
 export interface Route {
@@ -10,8 +10,8 @@ export interface Route {
 
 export const ApplicationRoutes: Route[] = [
   {
-    path: '/register',
-    component: <RegisterEntity />,
+    path: '/sign-up',
+    component: <SignUp />,
     exact: true
   },
   {

@@ -1,6 +1,5 @@
 import React from 'react';
 import { makeStyles, Typography, Button, Theme } from '@material-ui/core';
-import Welcome from '../Welcome';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({
   root: () => ({
@@ -12,12 +11,11 @@ const useStyles = makeStyles<Theme>((theme: Theme) => ({
 
 interface Props {}
 
-export const RegisterEntity: React.FC<Props> = (props) => {
+export const SignUp: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
-      <Welcome />
       <Typography align="center">
         New Supplyblocks user? Let's create an account!
       </Typography>
@@ -32,4 +30,4 @@ export const RegisterEntity: React.FC<Props> = (props) => {
   );
 };
 
-export default RegisterEntity;
+export default SignUp;
