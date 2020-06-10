@@ -6,7 +6,7 @@ import {
   useTheme,
   useMediaQuery
 } from '@material-ui/core';
-import Logo from '../../assets/logo.svg';
+import Logo from '../Logo';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({
   root: () => ({
@@ -15,6 +15,9 @@ const useStyles = makeStyles<Theme>((theme: Theme) => ({
     alignItems: 'center'
   }),
   title: () => ({
+    marginBottom: theme.spacing(1)
+  }),
+  subtitle: () => ({
     marginBottom: theme.spacing(4)
   }),
   name: () => ({
@@ -42,7 +45,7 @@ export const Welcome: React.FC<Props> = (props) => {
   const smallDevice = useMediaQuery(theme.breakpoints.down('xs'));
   return (
     <div className={classes.root}>
-      <img className={classes.logo} src={Logo} alt="Supplyblocks Logo" />
+      <Logo />
       <Typography
         className={classes.title}
         variant={smallDevice ? 'h4' : 'h3'}
@@ -52,6 +55,9 @@ export const Welcome: React.FC<Props> = (props) => {
         <Typography className={classes.name} display="inline">
           Supplyblocks
         </Typography>
+      </Typography>
+      <Typography align="center" variant="h6" className={classes.subtitle}>
+        Blockchain applied to supply chain orchestration.
       </Typography>
     </div>
   );
