@@ -73,6 +73,7 @@ export const SignUpView: React.FC<Props> = (props) => {
     [createEntity, globalState]
   );
 
+  // TODO: LoadingSpinner and redirect to dashboard after successfull sign-up
   // TODO: Add descriptive text under the title explaining that the petition should be approved by admin
   // TODO: Change component return value if the address is pending of admin approval
   return (

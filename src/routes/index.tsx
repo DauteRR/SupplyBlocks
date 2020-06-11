@@ -2,6 +2,11 @@ import React from 'react';
 import { SignUpView } from '../views/SignUp';
 import { WelcomeView } from '../views/Welcome';
 import Dashboard from '../views/Dashboard';
+import { Typography } from '@material-ui/core';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
+import GpsFixedIcon from '@material-ui/icons/GpsFixed';
+import BusinessIcon from '@material-ui/icons/Business';
 
 export interface Route {
   path: string;
@@ -16,6 +21,50 @@ export interface Routes {
   dashboard: Route;
 }
 
+export interface ExtendedRoute extends Route {
+  icon: JSX.Element;
+  label: string;
+}
+
+export interface DashboardRoutes {
+  [key: string]: ExtendedRoute;
+  account: ExtendedRoute;
+  products: ExtendedRoute;
+  deliveries: ExtendedRoute;
+  companies: ExtendedRoute;
+}
+
+export const DashboardRoutes: DashboardRoutes = {
+  companies: {
+    label: 'Companies',
+    exact: true,
+    path: '/dashboard/companies',
+    view: <Typography>Companies</Typography>,
+    icon: <BusinessIcon />
+  },
+  products: {
+    label: 'Products',
+    exact: true,
+    path: '/dashboard/products',
+    view: <Typography>Products</Typography>,
+    icon: <ShoppingBasketIcon />
+  },
+  deliveries: {
+    label: 'Deliveries',
+    exact: true,
+    path: '/dashboard/deliveries',
+    view: <Typography>Deliveries</Typography>,
+    icon: <GpsFixedIcon />
+  },
+  account: {
+    label: 'Account',
+    exact: true,
+    path: '/dashboard/account',
+    view: <Typography>Account</Typography>,
+    icon: <AccountBoxIcon />
+  }
+};
+
 export const ApplicationRoutes: Routes = {
   signUp: {
     path: '/sign-up',
@@ -25,7 +74,7 @@ export const ApplicationRoutes: Routes = {
   dashboard: {
     path: '/dashboard',
     view: <Dashboard />,
-    exact: true
+    exact: false
   },
   welcome: {
     path: '/',

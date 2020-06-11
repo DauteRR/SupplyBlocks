@@ -7,7 +7,8 @@ const useStyles = makeStyles({
     width: '100vw',
     height: '100vh',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)'
   }
 });
 

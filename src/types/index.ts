@@ -1,11 +1,13 @@
-export const EntityTypes = [
+export const entityTypes = [
+  'None',
+  'Admin',
   'Factory',
   'Retailer',
   'Warehouse',
   'Transport'
 ] as const;
 
-export type EntityType = typeof EntityTypes[number];
+export type EntityType = typeof entityTypes[number];
 
 export interface Entity {
   name: string;
@@ -17,8 +19,10 @@ export interface Entity {
 }
 
 export const entityTypeConversion: { [key in EntityType]: number } = {
-  Factory: 1,
-  Transport: 2,
-  Warehouse: 3,
-  Retailer: 4
+  None: 0,
+  Admin: 1,
+  Factory: 2,
+  Transport: 3,
+  Warehouse: 4,
+  Retailer: 5
 };

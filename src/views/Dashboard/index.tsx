@@ -1,9 +1,11 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useContext } from 'react';
 import clsx from 'clsx';
 import { useMediaQuery, makeStyles, Theme, useTheme } from '@material-ui/core';
 import Topbar from '../../components/Topbar';
-
-// import { Sidebar, Topbar, Footer } from './components';
+import Sidebar from '../../components/Sidebar';
+import { GlobalContext } from '../../contexts/Global';
+import { useHistory } from 'react-router-dom';
+import { ApplicationRoutes } from '../../routes';
 
 const useStyles = makeStyles<Theme>((theme) => ({
   root: {
@@ -29,6 +31,12 @@ const Dashboard: React.FC = (props) => {
     defaultMatches: true
   });
   const [openSidebar, setOpenSidebar] = useState(false);
+  const { globalState } = useContext(GlobalContext);
+  let history = useHistory();
+
+  if (!globalState.entity.set) {
+    //TODO: Redirect "smoothly" to /sign-up
+  }
 
   const handleSidebarOpen = useCallback(() => {
     setOpenSidebar(true);
@@ -48,6 +56,15 @@ const Dashboard: React.FC = (props) => {
       })}
     >
       <Topbar onSidebarOpen={handleSidebarOpen} />
+      <Sidebar
+        onClose={handleSidebarClose}
+        open={shouldOpenSidebar}
+        variant={isDesktop ? 'persistent' : 'temporary'}
+      />
+      {/* <main className={classes.content}>
+        {children}
+        <Footer />
+      </main> */}
     </div>
   );
 };

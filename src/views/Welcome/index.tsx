@@ -131,7 +131,7 @@ const GridItem: React.FC<GridItemType> = (props) => {
 
 interface Props {}
 
-//FIXME: Horizontal scroll CSS issue
+//TODO: Fix horizontal scroll CSS issue
 export const WelcomeView: React.FC<Props> = (props) => {
   const classes = useStyles();
   const theme = useTheme();
