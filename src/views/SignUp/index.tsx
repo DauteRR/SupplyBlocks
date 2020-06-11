@@ -50,7 +50,6 @@ export const SignUpView: React.FC<Props> = (props) => {
 
   const submitCallback = useCallback(
     (values: SignUpFormFields, helpers: FormikHelpers<SignUpFormFields>) => {
-      state.contract.methods.entitiesCount().call().then(console.log);
       state.contract.methods
         .create(
           globalState.account,
@@ -61,21 +60,19 @@ export const SignUpView: React.FC<Props> = (props) => {
         )
         .send({ from: globalState.account })
         .then((result: any) => {
-          console.log(result);
           helpers.setSubmitting(false);
           enqueueSnackbar('Petition send', {
             variant: 'success'
           });
         })
         .catch((error: any) => {
-          console.log(error);
           helpers.setSubmitting(false);
           enqueueSnackbar('Error sending petition', {
             variant: 'error'
           });
         });
     },
-    [state.contract]
+    [state.contract, globalState]
   );
 
   return (
