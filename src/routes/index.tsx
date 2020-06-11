@@ -10,6 +10,9 @@ export interface Route {
 
 export interface Routes {
   [key: string]: Route;
+  signUp: Route;
+  welcome: Route;
+  dashboard: Route;
 }
 
 export const ApplicationRoutes: Routes = {
@@ -22,5 +25,10 @@ export const ApplicationRoutes: Routes = {
     path: '/',
     view: <WelcomeView />,
     exact: false
+  },
+  dashboard: {
+    path: '/dashboard',
+    view: <p>TODO:</p>,
+    exact: true
   }
 };

@@ -25,17 +25,25 @@ type State = {
   entity: Entity;
 };
 
+export const EmptyEntity: Entity = {
+  email: '',
+  name: '',
+  phoneNumber: '',
+  type: 0,
+  set: false,
+  approved: false
+};
+
+export const isEmptyEntity = (entity: Entity) => {
+  return Object.keys(entity)
+    .map((key) => key as keyof Entity)
+    .every((value) => entity[value] === EmptyEntity[value]);
+};
+
 const initialState: State = {
   web3: new Web3(Web3.givenProvider),
   account: '',
-  entity: {
-    email: '',
-    name: '',
-    phoneNumber: '',
-    type: '',
-    set: false,
-    approved: false
-  }
+  entity: EmptyEntity
 };
 
 type Context = {

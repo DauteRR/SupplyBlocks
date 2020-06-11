@@ -15,6 +15,7 @@ import TruckIconPNG from '../../assets/TruckIcon.png';
 import FactoryIconPNG from '../../assets/FactoryIcon.png';
 import RetailerIconPNG from '../../assets/RetailerIcon.png';
 import WarehouseIconPNG from '../../assets/WarehouseIcon.png';
+import JoinButton from './Button';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({
   root: {
@@ -29,7 +30,7 @@ const useStyles = makeStyles<Theme>((theme: Theme) => ({
     margin: theme.spacing(4)
   },
   subtitle: {
-    marginBottom: theme.spacing(8)
+    marginBottom: theme.spacing(4)
   },
   name: {
     fontSize: 34,
@@ -131,7 +132,7 @@ const GridItem: React.FC<GridItemType> = (props) => {
 interface Props {}
 
 //FIXME: Horizontal scroll CSS issue
-
+//TODO: Add a button with the text JOIN or ENTER according to the approved field of the global state entity
 export const WelcomeView: React.FC<Props> = (props) => {
   const classes = useStyles();
   const theme = useTheme();
@@ -154,6 +155,7 @@ export const WelcomeView: React.FC<Props> = (props) => {
       <Typography align="center" variant="h6" className={classes.subtitle}>
         Blockchain applied to supply chain orchestration.
       </Typography>
+      <JoinButton />
       <Container maxWidth="md" className={classes.gridRoot}>
         <Grid container spacing={3}>
           {GridItems.map((item, index) => (

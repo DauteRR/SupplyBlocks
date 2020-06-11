@@ -66,7 +66,6 @@ export const App: React.FC<Props> = (props) => {
     []
   );
 
-  // TODO: Ensure that Metamask is enabled
   const CheckMetamask = useCallback(() => {
     if (!window.ethereum) {
       setWeb3ProviderError(true);
@@ -88,7 +87,7 @@ export const App: React.FC<Props> = (props) => {
   }, [isMetamaskEnabled]);
 
   const CheckConnection = useCallback(() => {
-    web3.eth.net.isListening().catch((error) => {
+    web3.eth.net.isListening().catch(() => {
       setConnectionError(true);
     });
   }, []);
@@ -113,10 +112,6 @@ export const App: React.FC<Props> = (props) => {
       }
     });
   }, [entityContractContext.state, globalState.account]);
-
-  useEffect(() => {
-    console.log(globalState.entity);
-  }, [globalState.entity]);
 
   let appBody: JSX.Element = <AppBody />;
 

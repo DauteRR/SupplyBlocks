@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useTheme } from '@material-ui/core';
 import LogoPNG from '../../assets/logo.png';
+import { ApplicationRoutes } from '../../routes';
+import { useHistory } from 'react-router-dom';
 
 interface Props {
   smallDevicesWidth?: number;
@@ -12,7 +14,21 @@ export const Logo: React.FC<Props> = (props) => {
     ? props.width
     : props.smallDevicesWidth;
 
-  return <img width={width} src={LogoPNG} alt="Supplyblocks Logo" />;
+  let history = useHistory();
+
+  const clickCallback = useCallback(() => {
+    history.push(ApplicationRoutes.welcome.path);
+  }, [history]);
+
+  return (
+    <img
+      style={{ cursor: 'pointer' }}
+      width={width}
+      src={LogoPNG}
+      onClick={clickCallback}
+      alt="Supplyblocks Logo"
+    />
+  );
 };
 
 Logo.defaultProps = {

@@ -11,7 +11,7 @@ export interface Entity {
   name: string;
   email: string;
   phoneNumber: string;
-  type: number | '';
+  type: number;
   set: boolean;
   approved: boolean;
 }

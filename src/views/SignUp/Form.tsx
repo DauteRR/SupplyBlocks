@@ -10,8 +10,7 @@ import {
   CircularProgress,
   FormControl,
   InputLabel,
-  MenuItem,
-  Menu
+  MenuItem
 } from '@material-ui/core';
 import { EntityType, EntityTypes } from '../../types';
 
