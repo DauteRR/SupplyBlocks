@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { entityTypes } from '../../types';
+import { visibleEntityTypes } from '../../types';
 
 const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
@@ -15,5 +15,5 @@ export const SignUpFormValidationSchema = Yup.object({
     .required('Contact phone is required')
     .matches(phoneRegExp, 'Phone number is not valid'),
   awareness: Yup.bool().oneOf([true], 'Field must be checked'),
-  type: Yup.string().required().oneOf(entityTypes)
+  type: Yup.string().required().oneOf(visibleEntityTypes)
 });

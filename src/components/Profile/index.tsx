@@ -1,10 +1,9 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import { Avatar, Typography, Theme, makeStyles } from '@material-ui/core';
-import { DashboardRoutes } from '../../routes';
+import { Typography, Theme, makeStyles } from '@material-ui/core';
 import { GlobalContext } from '../../contexts/Global';
 import EntityTypeAvatar from '../EntityTypeAvatar';
-import { entityTypes } from '../../types';
+import { getEntityType } from '../../types';
+import EntityTypeChip from '../EntityTypeChip';
 
 const useStyles = makeStyles<Theme>((theme) => ({
   root: {
@@ -29,7 +28,7 @@ const Profile: React.FC = (props) => {
 
   return (
     <div className={classes.root}>
-      <EntityTypeAvatar type={entityTypes[entity.type]} />
+      <EntityTypeAvatar type={getEntityType(entity.type)} />
       <Typography align="center" className={classes.name} variant="h5">
         {entity.name}
       </Typography>
@@ -39,6 +38,7 @@ const Profile: React.FC = (props) => {
       <Typography align="center" variant="body2">
         {entity.phoneNumber}
       </Typography>
+      <EntityTypeChip showIcon={false} type={getEntityType(entity.type)} />
     </div>
   );
 };
