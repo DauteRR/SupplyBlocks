@@ -5,7 +5,6 @@ import {
   ThemeProvider,
   Button
 } from '@material-ui/core';
-import LoadingSpinner from '../LoadingSpinner';
 import { orange } from '@material-ui/core/colors';
 import ErrorView from '../../views/Error';
 import { GlobalContextProvider, GlobalContext } from '../../contexts/Global';
@@ -54,8 +53,7 @@ export const App: React.FC<Props> = (props) => {
   const classes = useStyles();
   const [connectionError, setConnectionError] = useState(false);
   const [web3ProviderError, setWeb3ProviderError] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [isMetamaskEnabled, setIsMetamaskEnabled] = useState(false);
+  const [isMetamaskEnabled, setIsMetamaskEnabled] = useState(true);
   const { web3 } = globalState;
   const entityContractContext = useContext(EntityContractContext);
 
@@ -69,14 +67,19 @@ export const App: React.FC<Props> = (props) => {
   );
 
   // TODO: Ensure that Metamask is enabled
-  const CheckMetamask = useCallback(() => window.ethereum.selectedAddress, []);
+  const CheckMetamask = useCallback(() => {
+    if (!window.ethereum) {
+      setWeb3ProviderError(true);
+    }
+    setIsMetamaskEnabled(window.ethereum.selectedAddress);
+  }, [window]);
 
   const enableMetamaskCallback = useCallback(() => {
     window.ethereum
       .enable()
       .then(() => setIsMetamaskEnabled(true))
       .catch(() => {});
-  }, [props]);
+  }, [props, window]);
 
   useEffect(() => {
     if (isMetamaskEnabled) {
@@ -85,29 +88,15 @@ export const App: React.FC<Props> = (props) => {
   }, [isMetamaskEnabled]);
 
   const CheckConnection = useCallback(() => {
-    web3.eth.net
-      .isListening()
-      .then((result) => {
-        setLoading(false);
-        setConnectionError(!result);
-      })
-      .catch((error) => {
-        setLoading(false);
-        setConnectionError(true);
-      });
+    web3.eth.net.isListening().catch((error) => {
+      setConnectionError(true);
+    });
   }, []);
 
-  // TODO: Tune frequency
-  useInterval(CheckConnection, 30000);
+  useInterval(CheckConnection, 5000);
+  useInterval(CheckMetamask, 5000);
 
   useEffect(() => {
-    if (window.ethereum === undefined) {
-      setWeb3ProviderError(true);
-      setLoading(false);
-      return;
-    }
-    CheckConnection();
-    setIsMetamaskEnabled(CheckMetamask());
     SetOnAccountChange((accounts: string[]) => {
       UpdateAccount(accounts[0]);
       if (accounts.length === 0) {
@@ -117,10 +106,21 @@ export const App: React.FC<Props> = (props) => {
     entityContractContext.dispatch({ type: 'INITIALIZE', web3: web3 });
   }, []);
 
+  useEffect(() => {
+    entityContractContext.getEntity(globalState.account).then((entity) => {
+      if (entity) {
+        dispatch({ type: 'SET_ENTITY', entity: entity });
+      }
+    });
+  }, [entityContractContext.state, globalState.account]);
+
+  useEffect(() => {
+    console.log(globalState.entity);
+  }, [globalState.entity]);
+
   let appBody: JSX.Element = <AppBody />;
 
   if (!isMetamaskEnabled) {
-    // appBody = <EnableMetamask flagSetter={setIsMetamaskEnabled} />;
     appBody = (
       <ErrorView
         errorName="Metamask"
@@ -154,10 +154,6 @@ export const App: React.FC<Props> = (props) => {
         errorMessage="Start Ganache and configure Metamask network"
       ></ErrorView>
     );
-  }
-
-  if (loading) {
-    appBody = <LoadingSpinner />;
   }
 
   return <div className={classes.appContainer}>{appBody}</div>;

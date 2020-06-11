@@ -2,7 +2,7 @@ import EntityContractJSON from '../contracts/Entity.json';
 import { AbiItem } from 'web3-utils';
 import Web3 from 'web3';
 import React, { useReducer, useCallback } from 'react';
-import { EntityType } from '../types';
+import { EntityType, Entity } from '../types';
 
 type InitializeAction = {
   type: 'INITIALIZE';
@@ -31,12 +31,14 @@ type Context = {
   state: State;
   dispatch: React.Dispatch<any>;
   createEntity: (params: EntityCreationArgs) => any;
+  getEntity: (address: string) => Promise<Entity | undefined>;
 };
 
 const DefaultContext: Context = {
   state: initialState,
   dispatch: () => null,
-  createEntity: (params: EntityCreationArgs) => null
+  createEntity: (params: EntityCreationArgs) => null,
+  getEntity: (address: string) => new Promise<undefined>(() => {})
 };
 
 const EntityContractContext = React.createContext<Context>(DefaultContext);
@@ -75,18 +77,30 @@ const EntityContractContextProvider: React.FC = ({ children }) => {
     [state]
   );
 
+  const getEntity = useCallback(
+    async (address: string) => {
+      if (state.contract && address) {
+        const result = await state.contract.methods.entities(address).call();
+
+        const entity: Entity = {
+          approved: result.approved,
+          email: result.email,
+          name: result.name,
+          phoneNumber: result.phoneNumber,
+          set: result.set,
+          type: result.type
+        };
+        return entity;
+      }
+    },
+    [state]
+  );
+
   return (
-    <Provider value={{ state: state, dispatch, createEntity }}>
+    <Provider value={{ state: state, dispatch, createEntity, getEntity }}>
       {children}
     </Provider>
   );
 };
 
 export { EntityContractContext, EntityContractContextProvider };
-
-// const callback = useCallback(() => {
-//   EntityContract.methods
-//     .entities(account)
-//     .call()
-//     .then((result: any) => console.log(result.name));
-// }, [account]);
