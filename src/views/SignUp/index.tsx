@@ -10,6 +10,7 @@ import { SignUpForm, SignUpFormFields } from './Form';
 import { Formik } from 'formik';
 import Logo from '../../components/Logo';
 import { SignUpFormValidationSchema } from './ValidationSchema';
+import { useSnackbar } from 'notistack';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({
   root: {
@@ -40,6 +41,7 @@ interface Props {}
 
 export const SignUpView: React.FC<Props> = (props) => {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
   return (
     <Container className={classes.root} component="main" maxWidth="sm">
@@ -72,6 +74,9 @@ export const SignUpView: React.FC<Props> = (props) => {
             setTimeout(() => {
               console.log(values);
               setSubmitting(false);
+              enqueueSnackbar('Petition send', {
+                variant: 'success'
+              });
             }, 3000);
           }}
         >

@@ -11,6 +11,7 @@ import ErrorView from '../../views/Error';
 import { GlobalContextProvider, GlobalContext } from '../../contexts/Global';
 import { useInterval } from '../../hooks/useInterval';
 import AppBody from '../AppBody';
+import { SnackbarProvider } from 'notistack';
 
 declare global {
   interface Window {
@@ -162,7 +163,14 @@ export const App: React.FC<Props> = (props) => {
 
 const WrappedApp: React.FC = () => (
   <GlobalContextProvider>
-    <App />
+    <SnackbarProvider
+      maxSnack={3}
+      preventDuplicate
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+      autoHideDuration={3000}
+    >
+      <App />
+    </SnackbarProvider>
   </GlobalContextProvider>
 );
 
