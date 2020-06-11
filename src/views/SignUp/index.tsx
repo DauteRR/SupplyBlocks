@@ -46,19 +46,17 @@ export const SignUpView: React.FC<Props> = (props) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const { globalState } = useContext(GlobalContext);
-  const { state } = useContext(EntityContractContext);
+  const { createEntity } = useContext(EntityContractContext);
 
   const submitCallback = useCallback(
     (values: SignUpFormFields, helpers: FormikHelpers<SignUpFormFields>) => {
-      state.contract.methods
-        .create(
-          globalState.account,
-          values.name,
-          values.email,
-          values.phoneNumber,
-          entityTypeConversion[values.type as EntityType]
-        )
-        .send({ from: globalState.account })
+      createEntity({
+        name: values.name,
+        email: values.email,
+        phoneNumber: values.phoneNumber,
+        account: globalState.account,
+        type: entityTypeConversion[values.type as EntityType]
+      })
         .then((result: any) => {
           helpers.setSubmitting(false);
           enqueueSnackbar('Petition send', {
@@ -72,9 +70,11 @@ export const SignUpView: React.FC<Props> = (props) => {
           });
         });
     },
-    [state.contract, globalState]
+    [createEntity, globalState]
   );
 
+  // TODO: Add descriptive text under the title explaining that the petition should be approved by admin
+  // TODO: Change component return value if the address is pending of admin approval
   return (
     <Container className={classes.root} component="main" maxWidth="sm">
       <CssBaseline />

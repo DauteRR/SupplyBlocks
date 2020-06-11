@@ -1,7 +1,7 @@
 import EntityContractJSON from '../contracts/Entity.json';
 import { AbiItem } from 'web3-utils';
 import Web3 from 'web3';
-import React, { useReducer } from 'react';
+import React, { useReducer, useCallback } from 'react';
 import { EntityType } from '../types';
 
 type InitializeAction = {
@@ -19,14 +19,31 @@ const initialState: State = {
   contract: undefined
 };
 
-const EntityContractContext = React.createContext<{
+export interface EntityCreationArgs {
+  account: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  type: number;
+}
+
+type Context = {
   state: State;
   dispatch: React.Dispatch<any>;
-}>({ state: initialState, dispatch: () => null });
+  createEntity: (params: EntityCreationArgs) => any;
+};
+
+const DefaultContext: Context = {
+  state: initialState,
+  dispatch: () => null,
+  createEntity: (params: EntityCreationArgs) => null
+};
+
+const EntityContractContext = React.createContext<Context>(DefaultContext);
 
 const { Provider } = EntityContractContext;
 
-const Reducer = (state: State, action: Action) => {
+const Reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'INITIALIZE':
       return {
@@ -43,7 +60,26 @@ const Reducer = (state: State, action: Action) => {
 const EntityContractContextProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(Reducer, initialState);
 
-  return <Provider value={{ state: state, dispatch }}>{children}</Provider>;
+  const createEntity = useCallback(
+    (params: EntityCreationArgs) => {
+      return state.contract.methods
+        .create(
+          params.account,
+          params.name,
+          params.email,
+          params.phoneNumber,
+          params.type
+        )
+        .send({ from: params.account });
+    },
+    [state]
+  );
+
+  return (
+    <Provider value={{ state: state, dispatch, createEntity }}>
+      {children}
+    </Provider>
+  );
 };
 
 export { EntityContractContext, EntityContractContextProvider };
