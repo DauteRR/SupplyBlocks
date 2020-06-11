@@ -17,6 +17,6 @@ export const ApplicationRoutes: Route[] = [
   {
     path: '/',
     view: <WelcomeView />,
-    exact: true
+    exact: false
   }
 ];
