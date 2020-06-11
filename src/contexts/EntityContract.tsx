@@ -88,7 +88,7 @@ const EntityContractContextProvider: React.FC = ({ children }) => {
           name: result.name,
           phoneNumber: result.phoneNumber,
           set: result.set,
-          type: result.entityType
+          type: parseInt(result.entityType)
         };
         return entity;
       }
