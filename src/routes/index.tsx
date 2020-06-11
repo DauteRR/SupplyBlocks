@@ -8,15 +8,19 @@ export interface Route {
   exact: boolean;
 }
 
-export const ApplicationRoutes: Route[] = [
-  {
+export interface Routes {
+  [key: string]: Route;
+}
+
+export const ApplicationRoutes: Routes = {
+  signUp: {
     path: '/sign-up',
     view: <SignUpView />,
     exact: true
   },
-  {
+  welcome: {
     path: '/',
     view: <WelcomeView />,
     exact: false
   }
-];
+};

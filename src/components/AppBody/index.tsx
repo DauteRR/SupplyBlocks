@@ -16,9 +16,13 @@ export const AppBody: React.FC<Props> = (props) => {
   return (
     <Router>
       <Switch>
-        {ApplicationRoutes.map((route, index) => (
-          <Route path={route.path} key={index} exact={route.exact}>
-            {route.view}
+        {Object.keys(ApplicationRoutes).map((key, index) => (
+          <Route
+            path={ApplicationRoutes[key].path}
+            key={index}
+            exact={ApplicationRoutes[key].exact}
+          >
+            {ApplicationRoutes[key].view}
           </Route>
         ))}
       </Switch>
