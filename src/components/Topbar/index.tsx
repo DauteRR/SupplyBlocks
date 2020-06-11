@@ -1,21 +1,16 @@
-import React, { useState, useCallback } from 'react';
-import { Link as RouterLink, useHistory } from 'react-router-dom';
-import clsx from 'clsx';
-import PropTypes from 'prop-types';
+import React, { useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   AppBar,
   Toolbar,
-  Badge,
   Hidden,
   IconButton,
   makeStyles,
   Theme,
-  Button,
   Tooltip
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
-import InputIcon from '@material-ui/icons/Input';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Logo from '../Logo';
 import { ApplicationRoutes } from '../../routes';
 
@@ -55,7 +50,7 @@ const Topbar: React.FC<Props> = (props) => {
               onClick={clickCallback}
               color="inherit"
             >
-              <InputIcon />
+              <ExitToAppIcon />
             </IconButton>
           </Tooltip>
         </Hidden>
