@@ -132,7 +132,6 @@ const GridItem: React.FC<GridItemType> = (props) => {
 interface Props {}
 
 //FIXME: Horizontal scroll CSS issue
-//TODO: Add a button with the text JOIN or ENTER according to the approved field of the global state entity
 export const WelcomeView: React.FC<Props> = (props) => {
   const classes = useStyles();
   const theme = useTheme();
