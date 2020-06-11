@@ -7,6 +7,13 @@ export const entityTypes = [
   'Transport'
 ] as const;
 
+export const visibleEntityTypes = [
+  'Factory',
+  'Retailer',
+  'Warehouse',
+  'Transport'
+] as const;
+
 export type EntityType = typeof entityTypes[number];
 
 export interface Entity {

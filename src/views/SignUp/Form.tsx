@@ -12,7 +12,7 @@ import {
   InputLabel,
   MenuItem
 } from '@material-ui/core';
-import { EntityType, entityTypes } from '../../types';
+import { EntityType, visibleEntityTypes } from '../../types';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({
   wrapper: {
@@ -99,7 +99,7 @@ export const SignUpForm: React.FC<FormikProps<SignUpFormFields>> = (props) => {
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              {entityTypes.map((type, index) => (
+              {visibleEntityTypes.map((type, index) => (
                 <MenuItem key={index} value={type}>
                   {type}
                 </MenuItem>

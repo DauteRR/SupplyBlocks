@@ -45,8 +45,8 @@ interface Props {}
 export const SignUpView: React.FC<Props> = (props) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-  const { globalState } = useContext(GlobalContext);
-  const { createEntity } = useContext(EntityContractContext);
+  const { globalState, dispatch } = useContext(GlobalContext);
+  const { createEntity, getEntity } = useContext(EntityContractContext);
 
   const submitCallback = useCallback(
     (values: SignUpFormFields, helpers: FormikHelpers<SignUpFormFields>) => {
@@ -62,6 +62,11 @@ export const SignUpView: React.FC<Props> = (props) => {
           enqueueSnackbar('Petition send', {
             variant: 'success'
           });
+          getEntity(globalState.account).then((entity) => {
+            if (entity) {
+              dispatch({ type: 'SET_ENTITY', entity: entity });
+            }
+          });
         })
         .catch((error: any) => {
           helpers.setSubmitting(false);
@@ -75,7 +80,7 @@ export const SignUpView: React.FC<Props> = (props) => {
 
   // TODO: LoadingSpinner and redirect to dashboard after successfull sign-up
   // TODO: Add descriptive text under the title explaining that the petition should be approved by admin
-  // TODO: Change component return value if the address is pending of admin approval
+  // TODO: Change component return value if the address is pending of admin approval or the address already is assigned to an existing entity
   return (
     <Container className={classes.root} component="main" maxWidth="sm">
       <CssBaseline />
