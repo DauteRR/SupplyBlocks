@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useContext } from 'react';
 import {
   makeStyles,
   Typography,
@@ -7,10 +7,13 @@ import {
   Theme
 } from '@material-ui/core';
 import { SignUpForm, SignUpFormFields } from './Form';
-import { Formik } from 'formik';
+import { Formik, FormikHelpers } from 'formik';
 import Logo from '../../components/Logo';
 import { SignUpFormValidationSchema } from './ValidationSchema';
 import { useSnackbar } from 'notistack';
+import { EntityContractContext } from '../../contexts/EntityContract';
+import { GlobalContext } from '../../contexts/Global';
+import { EntityType, entityTypeConversion } from '../../types';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({
   root: {
@@ -42,6 +45,38 @@ interface Props {}
 export const SignUpView: React.FC<Props> = (props) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+  const { globalState } = useContext(GlobalContext);
+  const { state } = useContext(EntityContractContext);
+
+  const submitCallback = useCallback(
+    (values: SignUpFormFields, helpers: FormikHelpers<SignUpFormFields>) => {
+      state.contract.methods.entitiesCount().call().then(console.log);
+      state.contract.methods
+        .create(
+          globalState.account,
+          values.name,
+          values.email,
+          values.phoneNumber,
+          entityTypeConversion[values.type as EntityType]
+        )
+        .send({ from: globalState.account })
+        .then((result: any) => {
+          console.log(result);
+          helpers.setSubmitting(false);
+          enqueueSnackbar('Petition send', {
+            variant: 'success'
+          });
+        })
+        .catch((error: any) => {
+          console.log(error);
+          helpers.setSubmitting(false);
+          enqueueSnackbar('Error sending petition', {
+            variant: 'error'
+          });
+        });
+    },
+    [state.contract]
+  );
 
   return (
     <Container className={classes.root} component="main" maxWidth="sm">
@@ -69,16 +104,7 @@ export const SignUpView: React.FC<Props> = (props) => {
             awareness: false
           }}
           validateOnMount
-          onSubmit={(values, { setSubmitting }) => {
-            // TODO: store values, setSubmitting(false)
-            setTimeout(() => {
-              console.log(values);
-              setSubmitting(false);
-              enqueueSnackbar('Petition send', {
-                variant: 'success'
-              });
-            }, 3000);
-          }}
+          onSubmit={submitCallback}
         >
           {(props) => {
             return <SignUpForm {...props} />;

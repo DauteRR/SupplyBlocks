@@ -12,6 +12,10 @@ import { GlobalContextProvider, GlobalContext } from '../../contexts/Global';
 import { useInterval } from '../../hooks/useInterval';
 import AppBody from '../AppBody';
 import { SnackbarProvider } from 'notistack';
+import {
+  EntityContractContext,
+  EntityContractContextProvider
+} from '../../contexts/EntityContract';
 
 declare global {
   interface Window {
@@ -53,6 +57,7 @@ export const App: React.FC<Props> = (props) => {
   const [loading, setLoading] = useState(true);
   const [isMetamaskEnabled, setIsMetamaskEnabled] = useState(false);
   const { web3 } = globalState;
+  const entityContractContext = useContext(EntityContractContext);
 
   const UpdateAccount = useCallback(
     (address: string) =>
@@ -109,6 +114,7 @@ export const App: React.FC<Props> = (props) => {
         setIsMetamaskEnabled(false);
       }
     });
+    entityContractContext.dispatch({ type: 'INITIALIZE', web3: web3 });
   }, []);
 
   let appBody: JSX.Element = <AppBody />;
@@ -154,23 +160,23 @@ export const App: React.FC<Props> = (props) => {
     appBody = <LoadingSpinner />;
   }
 
-  return (
-    <ThemeProvider theme={theme}>
-      <div className={classes.appContainer}>{appBody}</div>
-    </ThemeProvider>
-  );
+  return <div className={classes.appContainer}>{appBody}</div>;
 };
 
 const WrappedApp: React.FC = () => (
   <GlobalContextProvider>
-    <SnackbarProvider
-      maxSnack={3}
-      preventDuplicate
-      anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-      autoHideDuration={3000}
-    >
-      <App />
-    </SnackbarProvider>
+    <ThemeProvider theme={theme}>
+      <SnackbarProvider
+        maxSnack={3}
+        preventDuplicate
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        autoHideDuration={3000}
+      >
+        <EntityContractContextProvider>
+          <App />
+        </EntityContractContextProvider>
+      </SnackbarProvider>
+    </ThemeProvider>
   </GlobalContextProvider>
 );
 
