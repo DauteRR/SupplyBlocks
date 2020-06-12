@@ -147,7 +147,7 @@ export const WelcomeView: React.FC<Props> = (props) => {
       >
         Welcome to{' '}
         <Typography className={classes.name} display="inline">
-          Supplyblocks
+          SupplyBlocks
         </Typography>
       </Typography>
       <Typography align="center" variant="h6" className={classes.subtitle}>

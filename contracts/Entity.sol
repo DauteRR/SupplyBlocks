@@ -18,7 +18,7 @@ contract Entity {
   constructor() public {
     addressLUT.push(msg.sender);
     entities[msg.sender] = EntityData({
-      name: 'Supplyblocks',
+      name: 'SupplyBlocks',
       email: 'supplyblocks@.ull.edu.es',
       phoneNumber: '',
       entityType: EntityType.Admin,

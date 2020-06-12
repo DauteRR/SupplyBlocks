@@ -27,7 +27,7 @@ export const Logo: React.FC<Props> = (props) => {
       width={width}
       src={props.withTitle ? LogoWithTitlePNG : LogoPNG}
       onClick={clickCallback}
-      alt="Supplyblocks Logo"
+      alt="SupplyBlocks Logo"
     />
   );
 };

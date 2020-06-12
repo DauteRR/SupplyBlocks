@@ -23,7 +23,7 @@ export const WelcomeTopbar: React.FC<Props> = (props) => {
     <AppBar position="static">
       <Toolbar className={classes.toolbar}>
         <Typography align="center" variant="h4">
-          Supplyblocks
+          SupplyBlocks
         </Typography>
       </Toolbar>
     </AppBar>

@@ -35,7 +35,7 @@ const Footer: React.FC<Props> = (props) => {
         className={classes.root}
       >
         <Typography style={{ color: fontColor }} variant="body1">
-          &copy; Supplyblocks. 2020
+          &copy; SupplyBlocks. 2020
         </Typography>
         <Typography style={{ color: fontColor }} variant="caption">
           Created as Cybersecurity and Data Intelligence Master's Degree final

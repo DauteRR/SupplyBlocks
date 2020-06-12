@@ -24,7 +24,7 @@ interface Props {}
 
 export const JoinButton: React.FC<Props> = (props) => {
   const classes = useStyles();
-  const [text, setText] = useState('Join Supplyblocks');
+  const [text, setText] = useState('Join SupplyBlocks');
   const [redirectTarget, setRedirectTarget] = useState(
     ApplicationRoutes.signUp.path
   );
@@ -33,7 +33,7 @@ export const JoinButton: React.FC<Props> = (props) => {
 
   useEffect(() => {
     const emptyEntity = isEmptyEntity(globalState.entity);
-    setText(emptyEntity ? 'Join Supplyblocks' : 'Enter dashboard');
+    setText(emptyEntity ? 'Join SupplyBlocks' : 'Enter dashboard');
     setRedirectTarget(
       emptyEntity
         ? ApplicationRoutes.signUp.path

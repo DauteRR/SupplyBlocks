@@ -94,7 +94,7 @@ export const SignUpView: React.FC<Props> = (props) => {
         >
           Join{' '}
           <Typography className={classes.name} display="inline">
-            Supplyblocks
+            SupplyBlocks
           </Typography>
         </Typography>
         <Formik<SignUpFormFields>
