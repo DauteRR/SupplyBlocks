@@ -5,7 +5,6 @@ import {
   ThemeProvider,
   Button
 } from '@material-ui/core';
-import { orange } from '@material-ui/core/colors';
 import ErrorView from '../../views/Error';
 import { GlobalContextProvider, GlobalContext } from '../../contexts/Global';
 import { useInterval } from '../../hooks/useInterval';
@@ -76,14 +75,14 @@ export const App: React.FC<Props> = (props) => {
       setWeb3ProviderError(true);
     }
     setIsMetamaskEnabled(window.ethereum.selectedAddress);
-  }, [window]);
+  }, []);
 
   const enableMetamaskCallback = useCallback(() => {
     window.ethereum
       .enable()
       .then(() => setIsMetamaskEnabled(true))
       .catch(() => {});
-  }, [props, window]);
+  }, []);
 
   useEffect(() => {
     if (isMetamaskEnabled) {

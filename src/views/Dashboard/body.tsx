@@ -1,11 +1,6 @@
 import React from 'react';
-import { makeStyles, Theme, Container } from '@material-ui/core';
 import { DashboardRoutes, ApplicationRoutes } from '../../routes';
 import { Route, Redirect } from 'react-router-dom';
-
-const useStyles = makeStyles<Theme>((theme) => ({
-  root: {}
-}));
 
 interface Props {
   pages: DashboardRoutes;
@@ -13,7 +8,6 @@ interface Props {
 
 const DashboardBody: React.FC<Props> = (props) => {
   const { pages } = props;
-  const classes = useStyles();
 
   return (
     <>

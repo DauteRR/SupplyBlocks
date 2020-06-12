@@ -1,4 +1,4 @@
-import React, { forwardRef, useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   List,
   ListItem,
@@ -7,7 +7,6 @@ import {
   Theme,
   ListItemIcon,
   ListItemText,
-  ListItemProps,
   Tooltip
 } from '@material-ui/core';
 import { DashboardRoutes, ExtendedRoute } from '../../routes';
@@ -81,7 +80,7 @@ const SidebarNav: React.FC<Props> = (props) => {
     <List className={classes.root}>
       {Object.keys(pages).map((key, index) => {
         const page = pages[key];
-        const activePage = page.path == active;
+        const activePage = page.path === active;
         return (
           <Tooltip key={index} title={page.label} aria-label={page.label}>
             <ListItem

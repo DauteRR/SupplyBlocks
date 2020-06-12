@@ -1,5 +1,5 @@
 import React from 'react';
-import { Theme, makeStyles, Chip, useTheme } from '@material-ui/core';
+import { Theme, makeStyles, Chip } from '@material-ui/core';
 import { EntityType, getEntityTypesData } from '../../types';
 
 const useStyles = makeStyles<Theme>((theme) => ({
@@ -18,7 +18,6 @@ const entityTypesData = getEntityTypesData('white', 25);
 
 const EntityTypeChip: React.FC<Props> = (props) => {
   const classes = useStyles();
-  const theme = useTheme();
   const data = entityTypesData[props.type];
   return (
     <Chip

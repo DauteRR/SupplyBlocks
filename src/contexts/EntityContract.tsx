@@ -2,7 +2,7 @@ import EntityContractJSON from '../contracts/Entity.json';
 import { AbiItem } from 'web3-utils';
 import Web3 from 'web3';
 import React, { useReducer, useCallback } from 'react';
-import { EntityType, Entity } from '../types';
+import { Entity } from '../types';
 
 type InitializeAction = {
   type: 'INITIALIZE';
