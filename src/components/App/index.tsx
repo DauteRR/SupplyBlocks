@@ -32,7 +32,8 @@ const useStyles = makeStyles({
     width: '100vw'
   },
   button: {
-    maxWidth: 200
+    maxWidth: 200,
+    color: 'white'
   }
 });
 
@@ -123,7 +124,7 @@ export const App: React.FC<Props> = (props) => {
         errorMessage="In order to use the dapp Metamask should have account authorization"
       >
         <Button
-          color="primary"
+          color="secondary"
           className={classes.button}
           variant="contained"
           onClick={enableMetamaskCallback}

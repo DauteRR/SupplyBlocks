@@ -10,9 +10,9 @@ const entityTypes = [
   'None',
   'Admin',
   'Factory',
-  'Retailer',
+  'Transport',
   'Warehouse',
-  'Transport'
+  'Retailer'
 ] as const;
 
 export type NonVisibleEntityType = typeof entityTypes[number];

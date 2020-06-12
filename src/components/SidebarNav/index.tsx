@@ -46,7 +46,7 @@ const useStyles = makeStyles<Theme>((theme) => ({
     }
   },
   active: {
-    color: theme.palette.primary.main,
+    color: theme.palette.secondary.main,
     '& span': {
       fontSize: 18
     }
