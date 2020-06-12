@@ -20,7 +20,6 @@ import { useHistory } from 'react-router-dom';
 const useStyles = makeStyles<Theme>((theme) => ({
   root: {
     paddingTop: 56,
-    height: '100%',
     [theme.breakpoints.up('sm')]: {
       paddingTop: 64
     }
