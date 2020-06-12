@@ -55,13 +55,6 @@ export const DashboardRoutes: DashboardRoutes = {
     path: '/dashboard/deliveries',
     view: <Typography>Deliveries</Typography>,
     icon: <GpsFixedIcon />
-  },
-  account: {
-    label: 'Account',
-    exact: true,
-    path: '/dashboard/account',
-    view: <Typography>Account</Typography>,
-    icon: <AccountBoxIcon />
   }
 };
 
