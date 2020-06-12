@@ -16,7 +16,7 @@ import TrustPNG from '../../assets/handshake.png';
 import TrackingPNG from '../../assets/product-delivery-tracking.png';
 import VerifiedPNG from '../../assets/result-pass.png';
 import SecurityPNG from '../../assets/security.png';
-import SupplyChainPNG from '../../assets/supply-chain.png';
+import WelcomeTimeline from './Timeline';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({
   advantages: {
@@ -36,12 +36,24 @@ const useStyles = makeStyles<Theme>((theme: Theme) => ({
     minHeight: 400,
     backgroundColor: theme.palette.secondary.light
   },
+  howDoesItWork: {
+    display: 'flex',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    minHeight: 400
+  },
   agentsTitle: {
     color: 'white',
     margin: theme.spacing(4, 0)
   },
   advantagesTitle: {
     color: theme.palette.primary.main,
+    margin: theme.spacing(4, 0)
+  },
+  howDoesItWorkTitle: {
+    color: theme.palette.secondary.main,
     margin: theme.spacing(4, 0)
   },
   sentence: {
@@ -168,7 +180,7 @@ const Item: React.FC<ItemProps> = (props) => {
   );
 };
 
-const Agents: React.FC = (props) => {
+export const Agents: React.FC = (props) => {
   const classes = useStyles();
   return (
     <div className={classes.agents}>
@@ -189,7 +201,7 @@ const Agents: React.FC = (props) => {
   );
 };
 
-const Advantages: React.FC = (props) => {
+export const Advantages: React.FC = (props) => {
   const classes = useStyles();
   return (
     <div className={classes.advantages}>
@@ -211,18 +223,18 @@ const Advantages: React.FC = (props) => {
   );
 };
 
-interface Props {}
-
-export const WelcomeViewBody: React.FC<Props> = (props) => {
+export const HowDoesItWork: React.FC = (props) => {
   const classes = useStyles();
-  const theme = useTheme();
-
   return (
-    <>
-      <Advantages />
-      <Agents />
-    </>
+    <div className={classes.howDoesItWork}>
+      <Typography
+        className={classes.howDoesItWorkTitle}
+        align="center"
+        variant="h4"
+      >
+        How does it work?
+      </Typography>
+      <WelcomeTimeline />
+    </div>
   );
 };
-
-export default WelcomeViewBody;

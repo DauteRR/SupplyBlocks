@@ -26,6 +26,8 @@ export const visibleEntityTypes = [
 
 export type EntityType = typeof entityTypes[number];
 
+export type VisibleEntityType = typeof visibleEntityTypes[number];
+
 export interface Entity {
   name: string;
   email: string;

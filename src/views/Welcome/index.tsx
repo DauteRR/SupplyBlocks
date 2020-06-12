@@ -1,15 +1,9 @@
 import React from 'react';
-import {
-  makeStyles,
-  Theme,
-  useTheme,
-  useMediaQuery,
-  AppBar
-} from '@material-ui/core';
+import { makeStyles, Theme, useTheme } from '@material-ui/core';
 import WelcomeTopbar from './WelcomeTopbar';
 import WelcomeJumbotron from './WelcomeJumbotron';
 import Footer from '../../components/Footer/Footer';
-import WelcomeAdvantages, { WelcomeViewBody } from './WelcomeViewBody';
+import { Advantages, Agents, HowDoesItWork } from './WelcomeSections';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({
   root: {
@@ -29,8 +23,9 @@ export const WelcomeView: React.FC<Props> = (props) => {
     <div className={classes.root}>
       <WelcomeTopbar />
       <WelcomeJumbotron />
-      <WelcomeViewBody />
-      {/* <Footer background={'#352f2f'} /> */}
+      <Advantages />
+      <Agents />
+      <HowDoesItWork />
       <Footer background={'#FFFFFF'} />
     </div>
   );

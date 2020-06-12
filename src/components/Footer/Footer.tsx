@@ -9,7 +9,7 @@ import {
 
 const useStyles = makeStyles<Theme>((theme) => ({
   root: {
-    padding: theme.spacing(0.5, 0),
+    padding: theme.spacing(2, 0),
     width: '100%',
     textAlign: 'center'
   }
