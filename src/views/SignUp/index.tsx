@@ -3,8 +3,9 @@ import {
   makeStyles,
   Typography,
   Container,
-  CssBaseline,
-  Theme
+  Theme,
+  Tooltip,
+  Button
 } from '@material-ui/core';
 import { SignUpForm, SignUpFormFields } from './Form';
 import { Formik, FormikHelpers } from 'formik';
@@ -14,10 +15,15 @@ import { useSnackbar } from 'notistack';
 import { EntityContractContext } from '../../contexts/EntityContract';
 import { GlobalContext } from '../../contexts/Global';
 import { EntityType, entityTypeConversion } from '../../types';
+import { ApplicationRoutes } from '../../routes';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({
   root: {
-    margin: theme.spacing(6)
+    height: '100vh',
+    width: '100vw',
+    display: 'flex',
+    alignItems: 'center'
   },
   paper: {
     display: 'flex',
@@ -37,6 +43,15 @@ const useStyles = makeStyles<Theme>((theme: Theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2)
+  },
+  text: {
+    color: theme.palette.secondary.main,
+    marginBottom: theme.spacing(4)
+  },
+  cancelButton: {
+    maxWidth: 200,
+    background: 'linear-gradient(45deg, #ef6666 30%, #ef6666 90%)',
+    color: 'white'
   }
 }));
 
@@ -47,6 +62,7 @@ export const SignUpView: React.FC<Props> = (props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { globalState, dispatch } = useContext(GlobalContext);
   const { createEntity, getEntity } = useContext(EntityContractContext);
+  let history = useHistory();
 
   const submitCallback = useCallback(
     (values: SignUpFormFields, helpers: FormikHelpers<SignUpFormFields>) => {
@@ -83,7 +99,6 @@ export const SignUpView: React.FC<Props> = (props) => {
   // TODO: Change component return value if the address is pending of admin approval or the address already is assigned to an existing entity
   return (
     <Container className={classes.root} component="main" maxWidth="sm">
-      <CssBaseline />
       <div className={classes.paper}>
         <Logo width={200} smallDevicesWidth={200} />
         <Typography
@@ -96,6 +111,10 @@ export const SignUpView: React.FC<Props> = (props) => {
           <Typography className={classes.name} display="inline">
             SupplyBlocks
           </Typography>
+        </Typography>
+        <Typography className={classes.text} variant="h6" align="center">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin tempus
+          placerat leo, sed egestas libero malesuada at
         </Typography>
         <Formik<SignUpFormFields>
           validationSchema={SignUpFormValidationSchema}
@@ -113,6 +132,20 @@ export const SignUpView: React.FC<Props> = (props) => {
             return <SignUpForm {...props} />;
           }}
         </Formik>
+        <Tooltip title="Cancel" aria-label="cancel">
+          <Button
+            classes={{
+              contained: classes.cancelButton
+            }}
+            fullWidth
+            variant="contained"
+            onClick={useCallback(() => {
+              history.push(ApplicationRoutes.welcome.path);
+            }, [history])}
+          >
+            Cancel
+          </Button>
+        </Tooltip>
       </div>
     </Container>
   );
