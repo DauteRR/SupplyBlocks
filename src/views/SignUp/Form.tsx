@@ -29,6 +29,9 @@ const useStyles = makeStyles<Theme>((theme: Theme) => ({
   },
   selectField: {
     width: '100%'
+  },
+  submit: {
+    color: 'white'
   }
 }));
 
@@ -55,6 +58,7 @@ export const SignUpForm: React.FC<FormikProps<SignUpFormFields>> = (props) => {
           <Field
             component={TextField}
             variant="outlined"
+            color="secondary"
             required
             fullWidth
             id="name"
@@ -66,6 +70,7 @@ export const SignUpForm: React.FC<FormikProps<SignUpFormFields>> = (props) => {
           <Field
             component={TextField}
             variant="outlined"
+            color="secondary"
             required
             fullWidth
             id="email"
@@ -77,6 +82,7 @@ export const SignUpForm: React.FC<FormikProps<SignUpFormFields>> = (props) => {
           <Field
             component={TextField}
             variant="outlined"
+            color="secondary"
             required
             fullWidth
             id="phoneNumber"
@@ -90,6 +96,7 @@ export const SignUpForm: React.FC<FormikProps<SignUpFormFields>> = (props) => {
             <Field
               component={Select}
               variant="outlined"
+              color="secondary"
               required
               fullWidth
               id="type"
@@ -113,10 +120,10 @@ export const SignUpForm: React.FC<FormikProps<SignUpFormFields>> = (props) => {
               <Field
                 type="checkbox"
                 component={Checkbox}
+                color="secondary"
                 required
                 id="awareness"
                 name="awareness"
-                color="primary"
               />
             }
             label="I'm aware that registering an entity the active Metamask account is associated permanently to that entity."
@@ -128,7 +135,7 @@ export const SignUpForm: React.FC<FormikProps<SignUpFormFields>> = (props) => {
           type="submit"
           fullWidth
           variant="contained"
-          color="primary"
+          color="secondary"
           className={classes.submit}
           onClick={submitForm}
           disabled={isSubmitting || !isValid}

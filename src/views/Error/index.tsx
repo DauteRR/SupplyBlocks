@@ -36,16 +36,16 @@ export const ErrorView: React.FC<Props> = (props) => {
   const classes = useStyles();
   return (
     <Container maxWidth="sm" className={classes.root}>
-      <Typography color="primary" className={classes.sadEmoticon}>
+      <Typography color="secondary" className={classes.sadEmoticon}>
         :(
       </Typography>
       <div className={classes.errorNameBox}>
         <WarningRoundedIcon
           fontSize="large"
           className={classes.icon}
-          color="primary"
+          color="secondary"
         />
-        <Typography align="center" variant="h5" color="primary">
+        <Typography align="center" variant="h5" color="secondary">
           {props.errorName + ' error'}
         </Typography>
       </div>
