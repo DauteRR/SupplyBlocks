@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import {
   makeStyles,
   Typography,
@@ -35,14 +35,11 @@ const useStyles = makeStyles<Theme>((theme: Theme) => ({
     color: theme.palette.secondary.main
   },
   title: {
-    margin: theme.spacing(4)
+    margin: theme.spacing(2)
   },
-  form: {
-    width: '100%',
-    marginTop: theme.spacing(3)
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2)
+  message: {
+    marginBottom: theme.spacing(4),
+    color: theme.palette.secondary.main
   },
   text: {
     marginBottom: theme.spacing(4)
@@ -64,6 +61,9 @@ export const SignUpView: React.FC<Props> = (props) => {
   const { enqueueSnackbar } = useSnackbar();
   const { globalState, dispatch } = useContext(GlobalContext);
   const { createEntity, getEntity } = useContext(EntityContractContext);
+  const [alreadyRegistered, setAlreadyRegistered] = useState(false);
+  const [pending, setPending] = useState(false);
+
   let history = useHistory();
 
   const submitCallback = useCallback(
@@ -96,9 +96,11 @@ export const SignUpView: React.FC<Props> = (props) => {
     [createEntity, globalState]
   );
 
-  // TODO: LoadingSpinner and redirect to dashboard after successfull sign-up
-  // TODO: Add descriptive text under the title explaining that the petition should be approved by admin
-  // TODO: Change component return value if the address is pending of admin approval or the address already is assigned to an existing entity
+  useEffect(() => {
+    setAlreadyRegistered(globalState.entity.approved);
+    setPending(globalState.entity.set && !globalState.entity.approved);
+  }, [globalState.entity]);
+
   return (
     <Container className={classes.root} component="main" maxWidth="sm">
       <div className={classes.paper}>
@@ -114,6 +116,16 @@ export const SignUpView: React.FC<Props> = (props) => {
             SupplyBlocks
           </Typography>
         </Typography>
+        {pending && (
+          <Typography className={classes.message} variant="h6" align="center">
+            Your petition is being studied
+          </Typography>
+        )}
+        {alreadyRegistered && (
+          <Typography className={classes.message} variant="h6" align="center">
+            Already registered
+          </Typography>
+        )}
         <Formik<SignUpFormFields>
           validationSchema={SignUpFormValidationSchema}
           initialValues={{
@@ -127,7 +139,9 @@ export const SignUpView: React.FC<Props> = (props) => {
           onSubmit={submitCallback}
         >
           {(props) => {
-            return <SignUpForm {...props} />;
+            return (
+              <SignUpForm disabled={pending || alreadyRegistered} {...props} />
+            );
           }}
         </Formik>
         <Tooltip title="Cancel" aria-label="cancel">

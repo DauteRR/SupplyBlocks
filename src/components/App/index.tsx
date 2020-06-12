@@ -52,6 +52,7 @@ const SetOnAccountChange = (callback: (accounts: string[]) => void) => {
 
 interface Props {}
 
+// TODO: Clean unused classes and imports
 export const App: React.FC<Props> = (props) => {
   const { globalState, dispatch } = useContext(GlobalContext);
   const classes = useStyles();

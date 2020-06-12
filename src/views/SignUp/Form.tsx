@@ -44,7 +44,11 @@ export interface SignUpFormFields {
   awareness: boolean;
 }
 
-export const SignUpForm: React.FC<FormikProps<SignUpFormFields>> = (props) => {
+interface Props extends FormikProps<SignUpFormFields> {
+  disabled?: boolean;
+}
+
+export const SignUpForm: React.FC<Props> = (props) => {
   const classes = useStyles();
   const { submitForm, isSubmitting, isValid } = props;
 
@@ -57,6 +61,7 @@ export const SignUpForm: React.FC<FormikProps<SignUpFormFields>> = (props) => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Field
+            disabled={props.disabled}
             component={TextField}
             variant="outlined"
             color="secondary"
@@ -69,6 +74,7 @@ export const SignUpForm: React.FC<FormikProps<SignUpFormFields>> = (props) => {
         </Grid>
         <Grid item xs={12}>
           <Field
+            disabled={props.disabled}
             component={TextField}
             variant="outlined"
             color="secondary"
@@ -81,6 +87,7 @@ export const SignUpForm: React.FC<FormikProps<SignUpFormFields>> = (props) => {
         </Grid>
         <Grid item xs={6}>
           <Field
+            disabled={props.disabled}
             component={TextField}
             variant="outlined"
             color="secondary"
@@ -95,6 +102,7 @@ export const SignUpForm: React.FC<FormikProps<SignUpFormFields>> = (props) => {
           <FormControl variant="outlined" className={classes.selectField}>
             <InputLabel>Company type</InputLabel>
             <Field
+              disabled={props.disabled}
               component={Select}
               variant="outlined"
               color="secondary"
@@ -119,6 +127,7 @@ export const SignUpForm: React.FC<FormikProps<SignUpFormFields>> = (props) => {
           <FormControlLabel
             control={
               <Field
+                disabled={props.disabled}
                 type="checkbox"
                 component={Checkbox}
                 color="secondary"
