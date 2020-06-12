@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core';
 import WelcomeTopbar from './WelcomeTopbar';
 import WelcomeJumbotron from './WelcomeJumbotron';
+import Footer from '../../components/Footer/Footer';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({
   root: {
@@ -27,6 +28,8 @@ export const WelcomeView: React.FC<Props> = (props) => {
     <div className={classes.root}>
       <WelcomeTopbar />
       <WelcomeJumbotron />
+      {/* <Footer background={'#352f2f'} /> */}
+      <Footer background={'#FFFFFF'} />
     </div>
   );
 };
