@@ -9,11 +9,14 @@ interface Props {
   smallDevicesWidth: number;
   width: number;
   withTitle?: boolean;
+  breakpoint?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 }
 
 export const Logo: React.FC<Props> = (props) => {
   const theme = useTheme();
-  const smallDevice = useMediaQuery(theme.breakpoints.down('sm'));
+  const smallDevice = useMediaQuery(
+    theme.breakpoints.down(props.breakpoint ? props.breakpoint : 'sm')
+  );
   const width = smallDevice ? props.smallDevicesWidth : props.width;
 
   let history = useHistory();
