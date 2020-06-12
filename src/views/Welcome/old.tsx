@@ -15,7 +15,7 @@ import TruckIconPNG from '../../assets/TruckIcon.png';
 import FactoryIconPNG from '../../assets/FactoryIcon.png';
 import RetailerIconPNG from '../../assets/RetailerIcon.png';
 import WarehouseIconPNG from '../../assets/WarehouseIcon.png';
-import JoinButton from './Button';
+import JoinButton from './WelcomeButton';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({
   root: {
@@ -131,7 +131,6 @@ const GridItem: React.FC<GridItemType> = (props) => {
 
 interface Props {}
 
-//TODO: Fix horizontal scroll CSS issue
 export const WelcomeView: React.FC<Props> = (props) => {
   const classes = useStyles();
   const theme = useTheme();

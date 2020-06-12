@@ -6,7 +6,7 @@ import { ApplicationRoutes } from '../../routes';
 const useStyles = makeStyles<Theme>((theme: Theme) => ({
   root: {
     display: 'flex',
-    width: '100vw',
+    width: '100%',
     height: '100%'
   }
 }));
