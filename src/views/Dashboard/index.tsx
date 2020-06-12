@@ -1,12 +1,21 @@
 import React, { useState, useCallback, useContext } from 'react';
 import clsx from 'clsx';
-import { useMediaQuery, makeStyles, Theme, useTheme } from '@material-ui/core';
+import {
+  useMediaQuery,
+  makeStyles,
+  Theme,
+  useTheme,
+  Button,
+  Tooltip
+} from '@material-ui/core';
 import Topbar from '../../components/Topbar';
 import Sidebar from '../../components/Sidebar';
 import { GlobalContext } from '../../contexts/Global';
-import { DashboardRoutes } from '../../routes';
+import { DashboardRoutes, ApplicationRoutes } from '../../routes';
 import Footer from '../../components/Footer/Footer';
 import DashboardBody from './body';
+import { ErrorView } from '../Error';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles<Theme>((theme) => ({
   root: {
@@ -19,17 +28,19 @@ const useStyles = makeStyles<Theme>((theme) => ({
   shiftContent: {
     display: 'flex',
     width: '100%',
-    height: '100%',
     paddingLeft: 240
   },
   content: {
     display: 'flex',
     width: '100%',
-    flexDirection: 'column',
-    padding: theme.spacing(2)
+    flexDirection: 'column'
   },
   flexGrow: {
     flex: 1
+  },
+  signUpButton: {
+    maxWidth: 200,
+    color: 'white'
   }
 }));
 
@@ -41,10 +52,10 @@ const Dashboard: React.FC = (props) => {
   });
   const [openSidebar, setOpenSidebar] = useState(false);
   const { globalState } = useContext(GlobalContext);
-
-  if (!globalState.entity.set) {
-    //TODO: Redirect "smoothly" to /sign-up
-  }
+  let history = useHistory();
+  const clickCallback = useCallback(() => {
+    history.push(ApplicationRoutes.signUp.path);
+  }, [history]);
 
   const handleSidebarOpen = useCallback(() => {
     setOpenSidebar(true);
@@ -69,11 +80,32 @@ const Dashboard: React.FC = (props) => {
         open={shouldOpenSidebar}
         variant={isDesktop ? 'persistent' : 'temporary'}
       />
-      <main className={classes.content}>
-        <DashboardBody pages={DashboardRoutes} />
-        <div className={classes.flexGrow} />
-        <Footer background={'#FFFFFF'} />
-      </main>
+      <div className={classes.content}>
+        {globalState.entity.approved ? (
+          <>
+            <DashboardBody pages={DashboardRoutes} />
+            <div className={classes.flexGrow} />
+            <Footer background={'#FFFFFF'} />
+          </>
+        ) : (
+          <ErrorView
+            errorName="Unauthorized"
+            errorMessage="Create an account and wait for SupplyBlocks admin approval before using dashboard"
+          >
+            <Tooltip title="Sign up" aria-label="sign-up">
+              <Button
+                className={classes.signUpButton}
+                fullWidth
+                variant="contained"
+                onClick={clickCallback}
+                color="secondary"
+              >
+                Sign up
+              </Button>
+            </Tooltip>
+          </ErrorView>
+        )}
+      </div>
     </div>
   );
 };
