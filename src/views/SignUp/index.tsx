@@ -50,8 +50,11 @@ const useStyles = makeStyles<Theme>((theme: Theme) => ({
   },
   cancelButton: {
     maxWidth: 200,
-    background: 'linear-gradient(45deg, #ef6666 30%, #ef6666 90%)',
-    color: 'white'
+    background: '#ef6666',
+    color: 'white',
+    '&:hover': {
+      background: '#d85d5d'
+    }
   }
 }));
 
@@ -134,9 +137,7 @@ export const SignUpView: React.FC<Props> = (props) => {
         </Formik>
         <Tooltip title="Cancel" aria-label="cancel">
           <Button
-            classes={{
-              contained: classes.cancelButton
-            }}
+            className={classes.cancelButton}
             fullWidth
             variant="contained"
             onClick={useCallback(() => {

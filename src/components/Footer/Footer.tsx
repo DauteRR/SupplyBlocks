@@ -38,8 +38,8 @@ const Footer: React.FC<Props> = (props) => {
           &copy; SupplyBlocks. 2020
         </Typography>
         <Typography style={{ color: fontColor }} variant="caption">
-          Created as Cybersecurity and Data Intelligence Master's Degree final
-          project by{' '}
+          Cybersecurity and Data Intelligence Master's Degree final project,
+          created by{' '}
           <Link component="a" href="https://github.com/DauteRR" target="_blank">
             Daute Rodríguez Rodríguez.
           </Link>

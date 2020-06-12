@@ -7,7 +7,8 @@ import {
   IconButton,
   makeStyles,
   Theme,
-  Tooltip
+  Tooltip,
+  Typography
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
@@ -23,6 +24,10 @@ const useStyles = makeStyles<Theme>((theme) => ({
   },
   exitButton: {
     marginLeft: theme.spacing(1)
+  },
+  title: {
+    color: 'white',
+    marginLeft: theme.spacing(2)
   }
 }));
 
@@ -41,7 +46,10 @@ const Topbar: React.FC<Props> = (props) => {
   return (
     <AppBar className={classes.root}>
       <Toolbar>
-        <Logo width={40} smallDevicesWidth={40} />
+        <Logo width={100} smallDevicesWidth={100} />
+        <Typography variant="h4" className={classes.title}>
+          SupplyBlocks
+        </Typography>
         <div className={classes.flexGrow} />
         <Hidden mdDown>
           <Tooltip title="Go back" aria-label="go-back">

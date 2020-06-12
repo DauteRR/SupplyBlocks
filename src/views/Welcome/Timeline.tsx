@@ -23,9 +23,6 @@ const useStyles = makeStyles<Theme>((theme: Theme) => ({
       padding: 0
     }
   },
-  icon: {
-    fontSize: 50
-  },
   elementTitle: {
     marginBottom: theme.spacing(2)
   }
