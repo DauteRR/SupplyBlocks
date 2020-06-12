@@ -15,8 +15,6 @@ const entityTypes = [
   'Retailer'
 ] as const;
 
-export type NonVisibleEntityType = typeof entityTypes[number];
-
 export const visibleEntityTypes = [
   'Factory',
   'Retailer',
@@ -56,46 +54,43 @@ export interface EntityTypeData {
   label: string;
 }
 
-export const getEntityTypeData = (
-  type: EntityType | 'Admin',
-  classes: Record<string, string>
-): EntityTypeData => {
-  switch (type) {
-    case 'Admin':
-      return {
-        icon: <StarIcon classes={{ root: classes.icon }} />,
-        color: 'gold',
-        label: 'Admin'
-      };
-    case 'Factory':
-      return {
-        icon: <BuildIcon classes={{ root: classes.icon }} />,
-        color: '#f5ab25',
-        label: 'Factory'
-      };
-    case 'Retailer':
-      return {
-        icon: <StoreIcon classes={{ root: classes.icon }} />,
-        color: '#51c151',
-        label: 'Retailer'
-      };
-    case 'Transport':
-      return {
-        icon: <LocalShippingIcon classes={{ root: classes.icon }} />,
-        color: '#ef6666',
-        label: 'Transport'
-      };
-    case 'Warehouse':
-      return {
-        icon: <HomeWorkIcon classes={{ root: classes.icon }} />,
-        color: '#6b6be0',
-        label: 'Warehouse'
-      };
-    default:
-      return {
-        icon: <ErrorIcon classes={{ root: classes.icon }} />,
-        color: 'black',
-        label: 'Error'
-      };
-  }
+export const getEntityTypesData = (
+  color: string,
+  size: number
+): {
+  [key in EntityType | 'Admin']: EntityTypeData;
+} => {
+  const styles = { fontSize: size, color: color };
+  return {
+    Admin: {
+      icon: <StarIcon style={styles} />,
+      color: '#f6ae9aff',
+      label: 'Admin'
+    },
+    Factory: {
+      icon: <BuildIcon style={styles} />,
+      color: '#f5ab25',
+      label: 'Factory'
+    },
+    Retailer: {
+      icon: <StoreIcon style={styles} />,
+      color: '#51c151',
+      label: 'Retailer'
+    },
+    Transport: {
+      icon: <LocalShippingIcon style={styles} />,
+      color: '#ef6666',
+      label: 'Transport'
+    },
+    Warehouse: {
+      icon: <HomeWorkIcon style={styles} />,
+      color: '#6b6be0',
+      label: 'Warehouse'
+    },
+    None: {
+      icon: <ErrorIcon style={styles} />,
+      color: 'black',
+      label: 'Error'
+    }
+  };
 };

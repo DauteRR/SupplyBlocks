@@ -1,6 +1,6 @@
 import React from 'react';
 import { Avatar, Theme, makeStyles } from '@material-ui/core';
-import { EntityType, getEntityTypeData } from '../../types';
+import { EntityType, getEntityTypesData } from '../../types';
 
 const useStyles = makeStyles<Theme>((theme) => ({
   avatar: {
@@ -16,9 +16,11 @@ interface Props {
   type: EntityType | 'Admin';
 }
 
+const entityTypesData = getEntityTypesData('white', 50);
+
 const EntityTypeAvatar: React.FC<Props> = (props) => {
   const classes = useStyles();
-  const data = getEntityTypeData(props.type, classes);
+  const data = entityTypesData[props.type];
   return (
     <Avatar
       style={{ background: data.color }}

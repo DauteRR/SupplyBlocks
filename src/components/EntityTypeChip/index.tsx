@@ -1,15 +1,11 @@
 import React from 'react';
 import { Theme, makeStyles, Chip, useTheme } from '@material-ui/core';
-import { EntityType, getEntityTypeData } from '../../types';
+import { EntityType, getEntityTypesData } from '../../types';
 
 const useStyles = makeStyles<Theme>((theme) => ({
   root: {
     marginTop: theme.spacing(1),
     border: '0px'
-  },
-  icon: {
-    fontSize: 25,
-    color: 'white'
   }
 }));
 
@@ -18,10 +14,12 @@ interface Props {
   showIcon: boolean;
 }
 
+const entityTypesData = getEntityTypesData('white', 25);
+
 const EntityTypeChip: React.FC<Props> = (props) => {
   const classes = useStyles();
   const theme = useTheme();
-  const data = getEntityTypeData(props.type, classes);
+  const data = entityTypesData[props.type];
   return (
     <Chip
       style={{

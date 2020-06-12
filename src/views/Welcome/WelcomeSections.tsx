@@ -1,5 +1,11 @@
 import React from 'react';
-import { makeStyles, Theme, Typography, Grid } from '@material-ui/core';
+import {
+  makeStyles,
+  Theme,
+  Typography,
+  Grid,
+  Container
+} from '@material-ui/core';
 import FactoryPNG from '../../assets/factory.png';
 import WarehousePNG from '../../assets/warehouse.png';
 import RetailerPNG from '../../assets/retailer.png';
@@ -10,7 +16,8 @@ import TrustPNG from '../../assets/handshake.png';
 import TrackingPNG from '../../assets/product-delivery-tracking.png';
 import VerifiedPNG from '../../assets/result-pass.png';
 import SecurityPNG from '../../assets/security.png';
-import WelcomeTimeline from './Timeline';
+import Timeline, { TimelineElement } from '../../components/Timeline';
+import { getEntityTypesData, EntityType } from '../../types';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({
   advantages: {
@@ -175,14 +182,16 @@ export const Agents: React.FC = (props) => {
       <Typography className={classes.agentsTitle} align="center" variant="h4">
         Supply chain agents
       </Typography>
-      <Typography
-        className={classes.agentsSentence}
-        align="center"
-        variant="h5"
-      >
-        SuppyBlocks usage is intended to aid supply chain management for
-        different kind of companies:
-      </Typography>
+      <Container maxWidth="md">
+        <Typography
+          className={classes.agentsSentence}
+          align="center"
+          variant="h5"
+        >
+          SuppyBlocks usage is intended to aid supply chain management for
+          different kind of companies:
+        </Typography>
+      </Container>
       <Grid className={classes.itemsGrid} container>
         {agents.map((agent, index) => (
           <Grid key={index} item xs={12} sm={6} lg={3}>
@@ -216,6 +225,86 @@ export const Advantages: React.FC = (props) => {
   );
 };
 
+const customStyles = (color: string) => {
+  const customUseStyles = makeStyles(() => ({
+    elementSideText: {
+      color: color
+    }
+  }));
+  const customClasses = customUseStyles();
+  return customClasses;
+};
+
+const getTimelineElements = (): TimelineElement[] => {
+  const entityTypesData = getEntityTypesData('white', 25);
+
+  const getCommonProps = (key: EntityType) => ({
+    dateClassName: customStyles(entityTypesData[key].color).elementSideText,
+    iconStyle: {
+      backgroundColor: entityTypesData[key].color,
+      color: 'white'
+    },
+    contentStyle: {
+      backgroundColor: entityTypesData[key].color,
+      color: 'white'
+    },
+    contentArrowStyle: {
+      borderRight: `7px solid  ${entityTypesData[key].color}`
+    },
+    icon: entityTypesData[key].icon
+  });
+
+  return [
+    {
+      label: 'Factory',
+      title: 'Registry',
+      text: 'Factories and manufacturers creates and registry their goods',
+      ...getCommonProps('Factory')
+    },
+    {
+      label: 'Retailer',
+      title: 'Purchase',
+      text: 'Retailers and small businesses purchase registered products',
+      ...getCommonProps('Retailer')
+    },
+    {
+      label: 'SupplyBlocks',
+      title: 'Delivery route',
+      text:
+        'SupplyBlocks "autonomously calculates" the route for delivering the purchased products by retailers and small businesses, composed of transport and warehousing companies. The delivery starts when the involved agents accepts',
+      ...getCommonProps('Admin')
+    },
+    {
+      label: 'Transport',
+      title: 'Delivery - Transport 1',
+      text:
+        'Assigned transport company moves the products to the next point on the route, which may be the end customer (one-transport route) or a warehouse. In both cases the transport company registers that the product has been delivered',
+      ...getCommonProps('Transport')
+    },
+    {
+      label: 'Warehouse',
+      title: 'Delivery - Warehouse',
+      text:
+        'Products are kept in the warehouse until a transport company picks them up for delivery. When products leave the warehouse the warehousing company registers this information',
+      ...getCommonProps('Warehouse')
+    },
+    {
+      label: 'Transport',
+      title: 'Delivery - Transport 2',
+      text:
+        'Again, assigned transport company moves the products to the next point on the route (this cycle could be reproduced repeatedly)',
+      ...getCommonProps('Transport')
+    },
+    {
+      label: 'Retailer',
+      title: 'Delivery - Retailer',
+      text:
+        'Once the products are delivered, the buyer records the delivery and the process ends',
+      ...getCommonProps('Retailer')
+    }
+  ];
+};
+
 export const HowDoesItWork: React.FC = (props) => {
   const classes = useStyles();
   return (
@@ -227,14 +316,17 @@ export const HowDoesItWork: React.FC = (props) => {
       >
         How does it work?
       </Typography>
-      <Typography
-        className={classes.howDoesItWorkSentence}
-        align="center"
-        variant="h5"
-      >
-        The following timeline briefly illustrates how SupplyBlocks works:
-      </Typography>
-      <WelcomeTimeline />
+      <Container maxWidth="md">
+        <Typography
+          className={classes.howDoesItWorkSentence}
+          align="center"
+          variant="h5"
+        >
+          The following timeline briefly illustrates how SupplyBlocks works.
+          Every action described is timestamped and added to the blockchain:
+        </Typography>
+      </Container>
+      <Timeline elements={getTimelineElements()} />
     </div>
   );
 };
