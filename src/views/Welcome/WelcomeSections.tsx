@@ -1,16 +1,10 @@
 import React from 'react';
-import {
-  makeStyles,
-  Theme,
-  useTheme,
-  Typography,
-  Grid
-} from '@material-ui/core';
+import { makeStyles, Theme, Typography, Grid } from '@material-ui/core';
 import FactoryPNG from '../../assets/factory.png';
 import WarehousePNG from '../../assets/warehouse.png';
 import RetailerPNG from '../../assets/retailer.png';
 import TransportPNG from '../../assets/transport.png';
-import BoxesPNG from '../../assets/boxes.png';
+import CostsPNG from '../../assets/costs.png';
 import PresentationPNG from '../../assets/business-presentation.png';
 import TrustPNG from '../../assets/handshake.png';
 import TrackingPNG from '../../assets/product-delivery-tracking.png';
@@ -56,8 +50,13 @@ const useStyles = makeStyles<Theme>((theme: Theme) => ({
     color: theme.palette.secondary.main,
     margin: theme.spacing(4, 0)
   },
-  sentence: {
-    color: 'white'
+  agentsSentence: {
+    color: 'white',
+    marginBottom: theme.spacing(4)
+  },
+  howDoesItWorkSentence: {
+    color: theme.palette.secondary.main,
+    marginBottom: theme.spacing(4)
   },
   itemsGrid: {
     margin: theme.spacing(2, 0)
@@ -88,75 +87,64 @@ const useStyles = makeStyles<Theme>((theme: Theme) => ({
 interface Item {
   label: string;
   src: string;
-  alt: string;
   text?: string;
 }
 
 const advantages: Item[] = [
   {
-    label: 'Lorem',
+    label: 'Trust',
     src: TrustPNG,
-    alt: 'IPSUM',
     text:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin tempus placerat leo, sed egestas libero malesuada at.'
+      'Enhanced trust between supply chain parties due to the immutability and crowd-validation features that Blockchain ensures.'
   },
   {
-    label: 'Lorem',
+    label: 'Security',
     src: SecurityPNG,
-    alt: 'IPSUM',
     text:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin tempus placerat leo, sed egestas libero malesuada at.'
+      'Blockchain cryptography mechanisms increments the overall security of the processes involved in supply chain.'
   },
   {
-    label: 'Lorem',
-    src: BoxesPNG,
-    alt: 'IPSUM',
+    label: 'Expenses',
+    src: CostsPNG,
     text:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin tempus placerat leo, sed egestas libero malesuada at.'
+      'Supply chain agents can transact with each other without the need for intermediaries, reducing significantly the expenses of their processes.'
   },
   {
-    label: 'Lorem',
+    label: 'Business Intelligence',
     src: PresentationPNG,
-    alt: 'IPSUM',
     text:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin tempus placerat leo, sed egestas libero malesuada at.'
+      'Recollected data could be used for detect deficiencies in the supply chain processes with the goal of perform corrective measures accurately.'
   },
   {
-    label: 'Lorem',
+    label: 'Traceability',
     src: TrackingPNG,
-    alt: 'IPSUM',
     text:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin tempus placerat leo, sed egestas libero malesuada at.'
+      'Each supply chain agent know at any moment the exact state of a delivery, without error or tampering possibilities.'
   },
   {
-    label: 'Lorem',
+    label: 'Auditabiliy',
     src: VerifiedPNG,
-    alt: 'IPSUM',
     text:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin tempus placerat leo, sed egestas libero malesuada at.'
+      'Shipments carried out are recorded permanently and can be audited by any agent in the supply chain.'
   }
 ];
 
 const agents: Item[] = [
   {
-    label: 'Factory',
-    src: FactoryPNG,
-    alt: 'Factory'
+    label: 'Factories and manufacturers',
+    src: FactoryPNG
   },
   {
-    label: 'Transport',
-    src: TransportPNG,
-    alt: 'Transport'
+    label: 'Transport companies',
+    src: TransportPNG
   },
   {
-    label: 'Warehouse',
-    src: WarehousePNG,
-    alt: 'Warehouse'
+    label: 'Warehousing companies',
+    src: WarehousePNG
   },
   {
-    label: 'Retailer',
-    src: RetailerPNG,
-    alt: 'Retailer'
+    label: 'Retailers and small businesses',
+    src: RetailerPNG
   }
 ];
 
@@ -166,11 +154,11 @@ interface ItemProps extends Item {
 
 const Item: React.FC<ItemProps> = (props) => {
   const classes = useStyles();
-  const { label, typographyClassname, ...rest } = props;
+  const { label, typographyClassname, src, text } = props;
   return (
     <div className={classes.item}>
       <div className={classes.itemImage}>
-        <img {...rest}></img>
+        <img alt={text} src={src}></img>
       </div>
       <Typography className={typographyClassname} variant="h5" align="center">
         {label}
@@ -185,10 +173,15 @@ export const Agents: React.FC = (props) => {
   return (
     <div className={classes.agents}>
       <Typography className={classes.agentsTitle} align="center" variant="h4">
-        Multiple agents
+        Supply chain agents
       </Typography>
-      <Typography className={classes.sentence} align="center" variant="h5">
-        Sentence sentence sentence sentence sentence sentence
+      <Typography
+        className={classes.agentsSentence}
+        align="center"
+        variant="h5"
+      >
+        SuppyBlocks usage is intended to aid supply chain management for
+        different kind of companies:
       </Typography>
       <Grid className={classes.itemsGrid} container>
         {agents.map((agent, index) => (
@@ -233,6 +226,13 @@ export const HowDoesItWork: React.FC = (props) => {
         variant="h4"
       >
         How does it work?
+      </Typography>
+      <Typography
+        className={classes.howDoesItWorkSentence}
+        align="center"
+        variant="h5"
+      >
+        The following timeline briefly illustrates how SupplyBlocks works:
       </Typography>
       <WelcomeTimeline />
     </div>
