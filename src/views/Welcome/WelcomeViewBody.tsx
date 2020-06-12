@@ -28,8 +28,7 @@ const useStyles = makeStyles<Theme>((theme: Theme) => ({
     justifyContent: 'center',
     flexDirection: 'column',
     minHeight: 400,
-    backgroundColor: theme.palette.secondary.light,
-    padding: theme.spacing(4)
+    backgroundColor: theme.palette.secondary.light
   },
   agentsTitle: {
     color: 'white',
@@ -45,7 +44,8 @@ const useStyles = makeStyles<Theme>((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    margin: theme.spacing(2)
   },
   itemImage: {
     width: 126,
@@ -114,7 +114,7 @@ const Agents: React.FC = (props) => {
       <Typography className={classes.sentence} align="center" variant="h5">
         Sentence sentence sentence sentence sentence sentence
       </Typography>
-      <Grid className={classes.itemsGrid} container spacing={4}>
+      <Grid className={classes.itemsGrid} container>
         {agents.map((agent, index) => (
           <Grid key={index} item xs={12} sm={6} lg={3}>
             <Item {...agent} />
