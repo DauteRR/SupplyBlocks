@@ -4,6 +4,7 @@ import WelcomeTopbar from './WelcomeTopbar';
 import WelcomeJumbotron from './WelcomeJumbotron';
 import Footer from '../../components/Footer/Footer';
 import { Advantages, Agents, HowDoesItWork } from './WelcomeSections';
+import { ScrollToTopButton } from '../../components/ScrollToTopButton';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({
   root: {
@@ -26,6 +27,7 @@ export const WelcomeView: React.FC<Props> = (props) => {
       <Advantages />
       <Agents />
       <HowDoesItWork />
+      <ScrollToTopButton />
       <Footer background={'#FFFFFF'} />
     </div>
   );

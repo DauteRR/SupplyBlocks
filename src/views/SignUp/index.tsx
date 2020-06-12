@@ -45,7 +45,6 @@ const useStyles = makeStyles<Theme>((theme: Theme) => ({
     margin: theme.spacing(3, 0, 2)
   },
   text: {
-    color: theme.palette.secondary.main,
     marginBottom: theme.spacing(4)
   },
   cancelButton: {
@@ -103,21 +102,17 @@ export const SignUpView: React.FC<Props> = (props) => {
   return (
     <Container className={classes.root} component="main" maxWidth="sm">
       <div className={classes.paper}>
-        <Logo width={200} smallDevicesWidth={200} />
+        <Logo width={260} smallDevicesWidth={260} />
         <Typography
           className={classes.title}
           component="h1"
           variant="h4"
           align="center"
         >
-          Join{' '}
+          Send a petition for joining{' '}
           <Typography className={classes.name} display="inline">
             SupplyBlocks
           </Typography>
-        </Typography>
-        <Typography className={classes.text} variant="h6" align="center">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin tempus
-          placerat leo, sed egestas libero malesuada at
         </Typography>
         <Formik<SignUpFormFields>
           validationSchema={SignUpFormValidationSchema}
