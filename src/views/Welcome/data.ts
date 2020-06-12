@@ -1,16 +1,16 @@
-import FactoryPNG from '../../assets/factory.png';
-import WarehousePNG from '../../assets/warehouse.png';
-import RetailerPNG from '../../assets/retailer.png';
-import TransportPNG from '../../assets/transport.png';
-import CostsPNG from '../../assets/costs.png';
+import { makeStyles } from '@material-ui/core';
 import PresentationPNG from '../../assets/business-presentation.png';
+import CostsPNG from '../../assets/costs.png';
+import FactoryPNG from '../../assets/factory.png';
 import TrustPNG from '../../assets/handshake.png';
 import TrackingPNG from '../../assets/product-delivery-tracking.png';
 import VerifiedPNG from '../../assets/result-pass.png';
+import RetailerPNG from '../../assets/retailer.png';
 import SecurityPNG from '../../assets/security.png';
-import { makeStyles } from '@material-ui/core';
+import TransportPNG from '../../assets/transport.png';
+import WarehousePNG from '../../assets/warehouse.png';
 import { TimelineElement } from '../../components/Timeline';
-import { getEntityTypesData, EntityType } from '../../types';
+import { EntityType, getEntityTypesData } from '../../types';
 
 export interface ItemData {
   label: string;

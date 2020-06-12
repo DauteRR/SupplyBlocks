@@ -1,14 +1,13 @@
-import React from 'react';
 import {
+  Container,
+  Grid,
   makeStyles,
   Theme,
-  Typography,
-  Grid,
-  Container
+  Typography
 } from '@material-ui/core';
-import Timeline, { TimelineElement } from '../../components/Timeline';
-import { getEntityTypesData, EntityType } from '../../types';
-import { agents, advantages, getTimelineElements, ItemData } from './data';
+import React from 'react';
+import Timeline from '../../components/Timeline';
+import { advantages, agents, getTimelineElements, ItemData } from './data';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({
   advantages: {

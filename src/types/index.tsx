@@ -1,10 +1,10 @@
-import React from 'react';
+import BuildIcon from '@material-ui/icons/Build';
+import ErrorIcon from '@material-ui/icons/Error';
+import HomeWorkIcon from '@material-ui/icons/HomeWork';
 import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 import StarIcon from '@material-ui/icons/Star';
 import StoreIcon from '@material-ui/icons/Store';
-import HomeWorkIcon from '@material-ui/icons/HomeWork';
-import ErrorIcon from '@material-ui/icons/Error';
-import BuildIcon from '@material-ui/icons/Build';
+import React from 'react';
 
 const entityTypes = [
   'None',

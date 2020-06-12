@@ -1,6 +1,6 @@
 import React from 'react';
-import { DashboardRoutes, ApplicationRoutes } from '../../routes';
-import { Route, Redirect } from 'react-router-dom';
+import { Redirect, Route } from 'react-router-dom';
+import { ApplicationRoutes, DashboardRoutes } from '../../routes';
 
 interface Props {
   pages: DashboardRoutes;

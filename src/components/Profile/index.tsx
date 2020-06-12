@@ -1,8 +1,8 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { Typography, Theme, makeStyles } from '@material-ui/core';
+import { makeStyles, Theme, Typography } from '@material-ui/core';
+import React, { useContext, useEffect, useState } from 'react';
 import { GlobalContext } from '../../contexts/Global';
-import EntityTypeAvatar from '../EntityTypeAvatar';
 import { getEntityType } from '../../types';
+import EntityTypeAvatar from '../EntityTypeAvatar';
 import EntityTypeChip from '../EntityTypeChip';
 
 const useStyles = makeStyles<Theme>((theme) => ({

@@ -1,5 +1,5 @@
+import { Chip, makeStyles, Theme } from '@material-ui/core';
 import React from 'react';
-import { Theme, makeStyles, Chip } from '@material-ui/core';
 import { EntityType, getEntityTypesData } from '../../types';
 
 const useStyles = makeStyles<Theme>((theme) => ({

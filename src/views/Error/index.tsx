@@ -1,6 +1,6 @@
-import React from 'react';
-import { makeStyles, Typography, Container, Theme } from '@material-ui/core';
+import { Container, makeStyles, Theme, Typography } from '@material-ui/core';
 import WarningRoundedIcon from '@material-ui/icons/WarningRounded';
+import React from 'react';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({
   root: {

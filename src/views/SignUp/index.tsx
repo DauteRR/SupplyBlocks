@@ -1,22 +1,22 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
 import {
-  makeStyles,
-  Typography,
+  Button,
   Container,
+  makeStyles,
   Theme,
   Tooltip,
-  Button
+  Typography
 } from '@material-ui/core';
-import { SignUpForm, SignUpFormFields } from './Form';
 import { Formik, FormikHelpers } from 'formik';
-import Logo from '../../components/Logo';
-import { SignUpFormValidationSchema } from './ValidationSchema';
 import { useSnackbar } from 'notistack';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import Logo from '../../components/Logo';
 import { EntityContractContext } from '../../contexts/EntityContract';
 import { GlobalContext } from '../../contexts/Global';
-import { EntityType, entityTypeConversion } from '../../types';
 import { ApplicationRoutes } from '../../routes';
-import { useHistory } from 'react-router-dom';
+import { EntityType, entityTypeConversion } from '../../types';
+import { SignUpForm, SignUpFormFields } from './Form';
+import { SignUpFormValidationSchema } from './ValidationSchema';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({
   root: {

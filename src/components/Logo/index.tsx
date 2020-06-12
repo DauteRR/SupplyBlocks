@@ -1,9 +1,11 @@
+import { useMediaQuery, useTheme } from '@material-ui/core';
 import React, { useCallback } from 'react';
-import { useTheme, useMediaQuery } from '@material-ui/core';
-import LogoPNG from '../../assets/Logo.png';
-import LogoWithTitlePNG from '../../assets/Logo.png';
-import { ApplicationRoutes } from '../../routes';
 import { useHistory } from 'react-router-dom';
+import {
+  default as LogoPNG,
+  default as LogoWithTitlePNG
+} from '../../assets/Logo.png';
+import { ApplicationRoutes } from '../../routes';
 
 interface Props {
   smallDevicesWidth: number;

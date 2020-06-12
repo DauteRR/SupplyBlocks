@@ -1,5 +1,5 @@
+import { Avatar, makeStyles, Theme } from '@material-ui/core';
 import React from 'react';
-import { Avatar, Theme, makeStyles } from '@material-ui/core';
 import { EntityType, getEntityTypesData } from '../../types';
 
 const useStyles = makeStyles<Theme>((theme) => ({

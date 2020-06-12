@@ -1,10 +1,10 @@
-import React from 'react';
 import { makeStyles, Theme } from '@material-ui/core';
-import WelcomeTopbar from './WelcomeTopbar';
-import WelcomeJumbotron from './WelcomeJumbotron';
+import React from 'react';
 import Footer from '../../components/Footer/Footer';
-import { Advantages, Agents, HowDoesItWork } from './WelcomeSections';
 import { ScrollToTopButton } from '../../components/ScrollToTopButton';
+import WelcomeJumbotron from './WelcomeJumbotron';
+import { Advantages, Agents, HowDoesItWork } from './WelcomeSections';
+import WelcomeTopbar from './WelcomeTopbar';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({
   root: {

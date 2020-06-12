@@ -1,21 +1,21 @@
-import React, { useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
 import {
   AppBar,
-  Toolbar,
   Hidden,
   IconButton,
   makeStyles,
   Theme,
+  Toolbar,
   Tooltip,
   Typography,
-  useTheme,
-  useMediaQuery
+  useMediaQuery,
+  useTheme
 } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import Logo from '../Logo';
+import MenuIcon from '@material-ui/icons/Menu';
+import React, { useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 import { ApplicationRoutes } from '../../routes';
+import Logo from '../Logo';
 
 const useStyles = makeStyles<Theme>((theme) => ({
   root: {

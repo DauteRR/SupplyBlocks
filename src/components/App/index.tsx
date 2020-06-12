@@ -1,19 +1,19 @@
-import React, { useEffect, useState, useContext, useCallback } from 'react';
 import {
-  makeStyles,
+  Button,
   createMuiTheme,
-  ThemeProvider,
-  Button
+  makeStyles,
+  ThemeProvider
 } from '@material-ui/core';
-import ErrorView from '../../views/Error';
-import { GlobalContextProvider, GlobalContext } from '../../contexts/Global';
-import { useInterval } from '../../hooks/useInterval';
-import AppBody from '../AppBody';
 import { SnackbarProvider } from 'notistack';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import {
   EntityContractContext,
   EntityContractContextProvider
 } from '../../contexts/EntityContract';
+import { GlobalContext, GlobalContextProvider } from '../../contexts/Global';
+import { useInterval } from '../../hooks/useInterval';
+import ErrorView from '../../views/Error';
+import AppBody from '../AppBody';
 
 declare global {
   interface Window {

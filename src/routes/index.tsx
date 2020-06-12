@@ -1,12 +1,11 @@
+import { Typography } from '@material-ui/core';
+import BusinessIcon from '@material-ui/icons/Business';
+import GpsFixedIcon from '@material-ui/icons/GpsFixed';
+import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import React from 'react';
+import Dashboard from '../views/Dashboard';
 import { SignUpView } from '../views/SignUp';
 import { WelcomeView } from '../views/Welcome';
-import Dashboard from '../views/Dashboard';
-import { Typography } from '@material-ui/core';
-import AccountBoxIcon from '@material-ui/icons/AccountBox';
-import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
-import GpsFixedIcon from '@material-ui/icons/GpsFixed';
-import BusinessIcon from '@material-ui/icons/Business';
 
 export interface Route {
   path: string;

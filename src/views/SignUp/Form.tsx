@@ -1,18 +1,18 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
-import { TextField, Checkbox, Select } from 'formik-material-ui';
-import { Field, FormikProps } from 'formik';
-import Grid from '@material-ui/core/Grid';
 import {
-  FormControlLabel,
-  makeStyles,
-  Theme,
   CircularProgress,
   FormControl,
+  FormControlLabel,
   InputLabel,
+  makeStyles,
   MenuItem,
+  Theme,
   Tooltip
 } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import { Field, FormikProps } from 'formik';
+import { Checkbox, Select, TextField } from 'formik-material-ui';
+import React from 'react';
 import { EntityType, visibleEntityTypes } from '../../types';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({

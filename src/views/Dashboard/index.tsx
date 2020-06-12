@@ -1,21 +1,21 @@
-import React, { useState, useCallback, useContext } from 'react';
-import clsx from 'clsx';
 import {
-  useMediaQuery,
+  Button,
   makeStyles,
   Theme,
-  useTheme,
-  Button,
-  Tooltip
+  Tooltip,
+  useMediaQuery,
+  useTheme
 } from '@material-ui/core';
-import Topbar from '../../components/Topbar';
-import Sidebar from '../../components/Sidebar';
-import { GlobalContext } from '../../contexts/Global';
-import { DashboardRoutes, ApplicationRoutes } from '../../routes';
-import Footer from '../../components/Footer/Footer';
-import DashboardBody from './body';
-import { ErrorView } from '../Error';
+import clsx from 'clsx';
+import React, { useCallback, useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import Footer from '../../components/Footer/Footer';
+import Sidebar from '../../components/Sidebar';
+import Topbar from '../../components/Topbar';
+import { GlobalContext } from '../../contexts/Global';
+import { ApplicationRoutes, DashboardRoutes } from '../../routes';
+import { ErrorView } from '../Error';
+import DashboardBody from './body';
 
 const useStyles = makeStyles<Theme>((theme) => ({
   root: {

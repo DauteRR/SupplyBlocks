@@ -1,11 +1,11 @@
-import React from 'react';
 import {
-  Typography,
   Link,
   makeStyles,
   Theme,
+  Typography,
   useTheme
 } from '@material-ui/core';
+import React from 'react';
 
 const useStyles = makeStyles<Theme>((theme) => ({
   root: {

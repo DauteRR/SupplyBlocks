@@ -1,13 +1,13 @@
-import React, { useContext, useState, useEffect, useCallback } from 'react';
 import {
+  Button,
+  Container,
   makeStyles,
   Theme,
-  Container,
-  Button,
   Tooltip
 } from '@material-ui/core';
-import { GlobalContext, isEmptyEntity } from '../../contexts/Global';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { GlobalContext, isEmptyEntity } from '../../contexts/Global';
 import { ApplicationRoutes } from '../../routes';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({

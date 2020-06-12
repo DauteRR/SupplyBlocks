@@ -1,17 +1,17 @@
-import React, { useState, useCallback, useEffect } from 'react';
 import {
+  colors,
   List,
   ListItem,
-  colors,
-  makeStyles,
-  Theme,
   ListItemIcon,
   ListItemText,
+  makeStyles,
+  Theme,
   Tooltip
 } from '@material-ui/core';
-import { DashboardRoutes, ExtendedRoute } from '../../routes';
-import { useHistory } from 'react-router-dom';
 import clsx from 'clsx';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { DashboardRoutes, ExtendedRoute } from '../../routes';
 
 const useStyles = makeStyles<Theme>((theme) => ({
   root: {

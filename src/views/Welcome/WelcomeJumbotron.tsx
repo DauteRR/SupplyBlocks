@@ -1,11 +1,11 @@
-import React from 'react';
 import {
   makeStyles,
   Theme,
   Typography,
-  useTheme,
-  useMediaQuery
+  useMediaQuery,
+  useTheme
 } from '@material-ui/core';
+import React from 'react';
 import Logo from '../../components/Logo';
 import JoinButton from './WelcomeButton';
 

@@ -1,14 +1,14 @@
-import React from 'react';
 import {
-  DrawerProps,
   Divider,
   Drawer,
+  DrawerProps,
   makeStyles,
   Theme
 } from '@material-ui/core';
+import React from 'react';
+import { DashboardRoutes } from '../../routes';
 import Profile from '../Profile';
 import SidebarNav from '../SidebarNav';
-import { DashboardRoutes } from '../../routes';
 
 const useStyles = makeStyles<Theme>((theme) => ({
   drawer: {
