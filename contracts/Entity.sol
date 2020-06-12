@@ -19,7 +19,7 @@ contract Entity {
     addressLUT.push(msg.sender);
     entities[msg.sender] = EntityData({
       name: 'Supplyblocks',
-      email: 'supplyblocks@ull.edu.es',
+      email: 'supplyblocks@.ull.edu.es',
       phoneNumber: '',
       entityType: EntityType.Admin,
       set: true,
@@ -36,6 +36,7 @@ contract Entity {
   ) public {
     require(!entities[_address].set, 'Address already registered');
     require(_type != EntityType.Admin, 'Unauthorized');
+    require(_address == msg.sender, 'Unauthorized');
 
     addressLUT.push(_address);
     entities[_address] = EntityData({
@@ -61,5 +62,9 @@ contract Entity {
     );
 
     entities[_entity].approved = true;
+  }
+
+  function getAddressLUT() public view returns (address[] memory) {
+    return addressLUT;
   }
 }

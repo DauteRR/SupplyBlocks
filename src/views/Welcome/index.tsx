@@ -9,6 +9,7 @@ import {
 import WelcomeTopbar from './WelcomeTopbar';
 import WelcomeJumbotron from './WelcomeJumbotron';
 import Footer from '../../components/Footer/Footer';
+import WelcomeAdvantages, { WelcomeViewBody } from './WelcomeViewBody';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({
   root: {
@@ -28,6 +29,7 @@ export const WelcomeView: React.FC<Props> = (props) => {
     <div className={classes.root}>
       <WelcomeTopbar />
       <WelcomeJumbotron />
+      <WelcomeViewBody />
       {/* <Footer background={'#352f2f'} /> */}
       <Footer background={'#FFFFFF'} />
     </div>

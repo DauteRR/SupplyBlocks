@@ -7,7 +7,7 @@ import {
   useMediaQuery
 } from '@material-ui/core';
 import Logo from '../../components/Logo';
-import JoinButton from './Button';
+import JoinButton from './WelcomeButton';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({
   root: {
