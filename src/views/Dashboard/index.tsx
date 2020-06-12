@@ -4,8 +4,9 @@ import { useMediaQuery, makeStyles, Theme, useTheme } from '@material-ui/core';
 import Topbar from '../../components/Topbar';
 import Sidebar from '../../components/Sidebar';
 import { GlobalContext } from '../../contexts/Global';
-import { useHistory } from 'react-router-dom';
-import { ApplicationRoutes } from '../../routes';
+import { DashboardRoutes } from '../../routes';
+import Footer from '../../components/Footer/Footer';
+import DashboardBody from './body';
 
 const useStyles = makeStyles<Theme>((theme) => ({
   root: {
@@ -16,15 +17,23 @@ const useStyles = makeStyles<Theme>((theme) => ({
     }
   },
   shiftContent: {
+    display: 'flex',
+    width: '100%',
+    height: '100%',
     paddingLeft: 240
   },
   content: {
-    height: '100%'
+    display: 'flex',
+    width: '100%',
+    flexDirection: 'column',
+    padding: theme.spacing(2)
+  },
+  flexGrow: {
+    flex: 1
   }
 }));
 
 const Dashboard: React.FC = (props) => {
-  const { children } = props;
   const classes = useStyles();
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'), {
@@ -32,7 +41,6 @@ const Dashboard: React.FC = (props) => {
   });
   const [openSidebar, setOpenSidebar] = useState(false);
   const { globalState } = useContext(GlobalContext);
-  let history = useHistory();
 
   if (!globalState.entity.set) {
     //TODO: Redirect "smoothly" to /sign-up
@@ -61,10 +69,11 @@ const Dashboard: React.FC = (props) => {
         open={shouldOpenSidebar}
         variant={isDesktop ? 'persistent' : 'temporary'}
       />
-      {/* <main className={classes.content}>
-        {children}
-        <Footer />
-      </main> */}
+      <main className={classes.content}>
+        <DashboardBody pages={DashboardRoutes} />
+        <div className={classes.flexGrow} />
+        <Footer background={'#FFFFFF'} />
+      </main>
     </div>
   );
 };
