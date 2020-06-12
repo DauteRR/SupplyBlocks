@@ -73,16 +73,19 @@ const SidebarNav: React.FC<Props> = (props) => {
     [history]
   );
 
+  useEffect(() => {
+    setActive(history.location.pathname);
+  }, [history.location]);
+
   return (
     <List className={classes.root}>
       {Object.keys(pages).map((key, index) => {
         const page = pages[key];
         const activePage = page.path == active;
         return (
-          <Tooltip title={page.label} aria-label={page.label}>
+          <Tooltip key={index} title={page.label} aria-label={page.label}>
             <ListItem
               className={classes.button}
-              key={index}
               button
               onClick={clickCallback(page)}
             >
