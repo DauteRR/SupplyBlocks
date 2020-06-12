@@ -28,7 +28,6 @@ export interface ExtendedRoute extends Route {
 
 export interface DashboardRoutes {
   [key: string]: ExtendedRoute;
-  account: ExtendedRoute;
   products: ExtendedRoute;
   deliveries: ExtendedRoute;
   companies: ExtendedRoute;

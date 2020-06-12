@@ -6,9 +6,6 @@ const useStyles = makeStyles<Theme>((theme) => ({
   avatar: {
     width: 60,
     height: 60
-  },
-  icon: {
-    fontSize: 50
   }
 }));
 

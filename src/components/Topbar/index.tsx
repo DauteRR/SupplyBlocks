@@ -50,6 +50,7 @@ const Topbar: React.FC<Props> = (props) => {
   }, [history]);
 
   return (
+    // TODO: Fix flex grow
     <AppBar className={classes.root}>
       <Toolbar>
         <Logo width={100} smallDevicesWidth={60} breakpoint="md" />

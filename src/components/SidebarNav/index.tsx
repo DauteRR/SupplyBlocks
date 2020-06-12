@@ -17,11 +17,6 @@ const useStyles = makeStyles<Theme>((theme) => ({
   root: {
     marginBottom: theme.spacing(2)
   },
-  item: {
-    display: 'flex',
-    paddingTop: 0,
-    paddingBottom: 0
-  },
   button: {
     color: colors.blueGrey[800],
     padding: '6px 8px',

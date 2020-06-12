@@ -41,9 +41,6 @@ const useStyles = makeStyles<Theme>((theme: Theme) => ({
     marginBottom: theme.spacing(4),
     color: theme.palette.secondary.main
   },
-  text: {
-    marginBottom: theme.spacing(4)
-  },
   cancelButton: {
     maxWidth: 200,
     background: '#ef6666',
