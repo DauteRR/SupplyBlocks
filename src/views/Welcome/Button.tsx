@@ -1,5 +1,11 @@
 import React, { useContext, useState, useEffect, useCallback } from 'react';
-import { makeStyles, Theme, Container, Button } from '@material-ui/core';
+import {
+  makeStyles,
+  Theme,
+  Container,
+  Button,
+  Tooltip
+} from '@material-ui/core';
 import { GlobalContext, isEmptyEntity } from '../../contexts/Global';
 import { useHistory } from 'react-router-dom';
 import { ApplicationRoutes } from '../../routes';
@@ -41,15 +47,17 @@ export const JoinButton: React.FC<Props> = (props) => {
 
   return (
     <Container maxWidth="xs" className={classes.root}>
-      <Button
-        className={classes.button}
-        fullWidth
-        variant="contained"
-        color="secondary"
-        onClick={clickCallback}
-      >
-        {text}
-      </Button>
+      <Tooltip title={text} aria-label={text}>
+        <Button
+          className={classes.button}
+          fullWidth
+          variant="contained"
+          color="secondary"
+          onClick={clickCallback}
+        >
+          {text}
+        </Button>
+      </Tooltip>
     </Container>
   );
 };

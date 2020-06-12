@@ -7,7 +7,8 @@ import {
   Theme,
   ListItemIcon,
   ListItemText,
-  ListItemProps
+  ListItemProps,
+  Tooltip
 } from '@material-ui/core';
 import { DashboardRoutes, ExtendedRoute } from '../../routes';
 import { useHistory } from 'react-router-dom';
@@ -78,28 +79,30 @@ const SidebarNav: React.FC<Props> = (props) => {
         const page = pages[key];
         const activePage = page.path == active;
         return (
-          <ListItem
-            className={classes.button}
-            key={index}
-            button
-            onClick={clickCallback(page)}
-          >
-            <ListItemIcon
-              className={clsx({
-                [classes.icon]: true,
-                [classes.active]: activePage
-              })}
+          <Tooltip title={page.label} aria-label={page.label}>
+            <ListItem
+              className={classes.button}
+              key={index}
+              button
+              onClick={clickCallback(page)}
             >
-              {page.icon}
-            </ListItemIcon>
-            <ListItemText
-              className={clsx({
-                [classes.label]: true,
-                [classes.active]: activePage
-              })}
-              primary={page.label}
-            />
-          </ListItem>
+              <ListItemIcon
+                className={clsx({
+                  [classes.icon]: true,
+                  [classes.active]: activePage
+                })}
+              >
+                {page.icon}
+              </ListItemIcon>
+              <ListItemText
+                className={clsx({
+                  [classes.label]: true,
+                  [classes.active]: activePage
+                })}
+                primary={page.label}
+              />
+            </ListItem>
+          </Tooltip>
         );
       })}
     </List>

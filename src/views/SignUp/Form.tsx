@@ -10,7 +10,8 @@ import {
   CircularProgress,
   FormControl,
   InputLabel,
-  MenuItem
+  MenuItem,
+  Tooltip
 } from '@material-ui/core';
 import { EntityType, visibleEntityTypes } from '../../types';
 
@@ -131,17 +132,19 @@ export const SignUpForm: React.FC<FormikProps<SignUpFormFields>> = (props) => {
         </Grid>
       </Grid>
       <div className={classes.wrapper}>
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="secondary"
-          className={classes.submit}
-          onClick={submitForm}
-          disabled={isSubmitting || !isValid}
-        >
-          Sign Up
-        </Button>
+        <Tooltip title="Send petition" aria-label="send-petition">
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="secondary"
+            className={classes.submit}
+            onClick={submitForm}
+            disabled={isSubmitting || !isValid}
+          >
+            Send petition
+          </Button>
+        </Tooltip>
         {isSubmitting && (
           <CircularProgress size={24} className={classes.buttonProgress} />
         )}
