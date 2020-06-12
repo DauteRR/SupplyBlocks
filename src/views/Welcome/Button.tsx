@@ -6,7 +6,11 @@ import { ApplicationRoutes } from '../../routes';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({
   root: {
-    marginBottom: theme.spacing(8)
+    margin: theme.spacing(6, 0, 2)
+  },
+  button: {
+    minHeight: theme.spacing(8),
+    color: 'white'
   }
 }));
 
@@ -38,9 +42,10 @@ export const JoinButton: React.FC<Props> = (props) => {
   return (
     <Container maxWidth="xs" className={classes.root}>
       <Button
+        className={classes.button}
         fullWidth
         variant="contained"
-        color="primary"
+        color="secondary"
         onClick={clickCallback}
       >
         {text}

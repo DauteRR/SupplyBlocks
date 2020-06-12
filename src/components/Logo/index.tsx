@@ -1,21 +1,22 @@
 import React, { useCallback } from 'react';
-import { useTheme } from '@material-ui/core';
-import LogoPNG from '../../assets/logo.png';
+import { useTheme, useMediaQuery } from '@material-ui/core';
+import LogoPNG from '../../assets/Logo.png';
+import LogoWithTitlePNG from '../../assets/Logo.png';
 import { ApplicationRoutes } from '../../routes';
 import { useHistory } from 'react-router-dom';
 
 interface Props {
-  smallDevicesWidth?: number;
-  width?: number;
+  smallDevicesWidth: number;
+  width: number;
+  withTitle?: boolean;
 }
 
 export const Logo: React.FC<Props> = (props) => {
-  const width = useTheme().breakpoints.up('sm')
-    ? props.width
-    : props.smallDevicesWidth;
+  const theme = useTheme();
+  const smallDevice = useMediaQuery(theme.breakpoints.down('sm'));
+  const width = smallDevice ? props.smallDevicesWidth : props.width;
 
   let history = useHistory();
-
   const clickCallback = useCallback(() => {
     history.push(ApplicationRoutes.welcome.path);
   }, [history]);
@@ -24,16 +25,11 @@ export const Logo: React.FC<Props> = (props) => {
     <img
       style={{ cursor: 'pointer' }}
       width={width}
-      src={LogoPNG}
+      src={props.withTitle ? LogoWithTitlePNG : LogoPNG}
       onClick={clickCallback}
       alt="Supplyblocks Logo"
     />
   );
-};
-
-Logo.defaultProps = {
-  smallDevicesWidth: 200,
-  width: 240
 };
 
 export default Logo;
