@@ -25,8 +25,7 @@ const useStyles = makeStyles<Theme>((theme: Theme) => ({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    flexDirection: 'column',
-    minHeight: 600
+    flexDirection: 'column'
   },
   agents: {
     display: 'flex',
@@ -34,7 +33,6 @@ const useStyles = makeStyles<Theme>((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'column',
-    minHeight: 400,
     backgroundColor: theme.palette.secondary.light
   },
   howDoesItWork: {
@@ -42,8 +40,7 @@ const useStyles = makeStyles<Theme>((theme: Theme) => ({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    flexDirection: 'column',
-    minHeight: 400
+    flexDirection: 'column'
   },
   agentsTitle: {
     color: 'white',
