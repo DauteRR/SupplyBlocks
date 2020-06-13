@@ -14,6 +14,9 @@ const useStyles = makeStyles<Theme>((theme) => ({
   },
   name: {
     marginTop: theme.spacing(1)
+  },
+  chipContainer: {
+    marginTop: theme.spacing(1)
   }
 }));
 
@@ -38,7 +41,9 @@ const Profile: React.FC = (props) => {
       <Typography align="center" variant="body2">
         {entity.phoneNumber}
       </Typography>
-      <EntityTypeChip showIcon={false} type={getEntityType(entity.type)} />
+      <div className={classes.chipContainer}>
+        <EntityTypeChip showIcon={false} type={getEntityType(entity.type)} />
+      </div>
     </div>
   );
 };

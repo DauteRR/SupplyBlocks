@@ -4,6 +4,7 @@ import GpsFixedIcon from '@material-ui/icons/GpsFixed';
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import React from 'react';
 import Dashboard from '../views/Dashboard';
+import CompaniesView from '../views/Dashboard/Companies';
 import { SignUpView } from '../views/SignUp';
 import { WelcomeView } from '../views/Welcome';
 
@@ -37,7 +38,7 @@ export const DashboardRoutes: DashboardRoutes = {
     label: 'Companies',
     exact: true,
     path: '/dashboard/companies',
-    view: <Typography>Companies</Typography>,
+    view: <CompaniesView />,
     icon: <BusinessIcon />
   },
   products: {

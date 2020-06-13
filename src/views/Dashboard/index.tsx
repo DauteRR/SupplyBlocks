@@ -10,9 +10,10 @@ import clsx from 'clsx';
 import React, { useCallback, useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Footer from '../../components/Footer/Footer';
+import LoadingSpinner from '../../components/LoadingSpinner';
 import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
-import { GlobalContext } from '../../contexts/Global';
+import { GlobalContext, isEmptyEntity } from '../../contexts/Global';
 import { ApplicationRoutes, DashboardRoutes } from '../../routes';
 import { ErrorView } from '../Error';
 import DashboardBody from './body';
@@ -65,6 +66,40 @@ const Dashboard: React.FC = (props) => {
   }, []);
 
   const shouldOpenSidebar = isDesktop ? true : openSidebar;
+  const loading = isEmptyEntity(globalState.entity);
+
+  let content: JSX.Element;
+
+  if (globalState.entity.approved) {
+    content = (
+      <>
+        <DashboardBody pages={DashboardRoutes} />
+        <div className={classes.flexGrow} />
+        <Footer background={'#FFFFFF'} />
+      </>
+    );
+  } else {
+    content = (
+      <ErrorView
+        errorName="Unauthorized"
+        errorMessage="Create an account and wait for SupplyBlocks admin approval before using dashboard"
+      >
+        <Tooltip title="Sign up" aria-label="sign-up">
+          <Button
+            className={classes.signUpButton}
+            fullWidth
+            variant="contained"
+            onClick={clickCallback}
+            color="secondary"
+          >
+            Sign up
+          </Button>
+        </Tooltip>
+      </ErrorView>
+    );
+  }
+
+  if (loading) content = <LoadingSpinner />;
 
   return (
     <div
@@ -79,32 +114,7 @@ const Dashboard: React.FC = (props) => {
         open={shouldOpenSidebar}
         variant={isDesktop ? 'persistent' : 'temporary'}
       />
-      <div className={classes.content}>
-        {globalState.entity.approved ? (
-          <>
-            <DashboardBody pages={DashboardRoutes} />
-            <div className={classes.flexGrow} />
-            <Footer background={'#FFFFFF'} />
-          </>
-        ) : (
-          <ErrorView
-            errorName="Unauthorized"
-            errorMessage="Create an account and wait for SupplyBlocks admin approval before using dashboard"
-          >
-            <Tooltip title="Sign up" aria-label="sign-up">
-              <Button
-                className={classes.signUpButton}
-                fullWidth
-                variant="contained"
-                onClick={clickCallback}
-                color="secondary"
-              >
-                Sign up
-              </Button>
-            </Tooltip>
-          </ErrorView>
-        )}
-      </div>
+      <div className={classes.content}>{content}</div>
     </div>
   );
 };

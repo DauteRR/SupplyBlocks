@@ -4,7 +4,6 @@ import { EntityType, getEntityTypesData } from '../../types/Entity';
 
 const useStyles = makeStyles<Theme>((theme) => ({
   root: {
-    marginTop: theme.spacing(1),
     border: '0px'
   }
 }));
