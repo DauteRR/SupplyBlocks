@@ -9,21 +9,18 @@ contract Entity {
   string public phoneNumber;
   TypesLib.EntityType public entityType;
   bool public set;
-  bool public approved;
 
   constructor(
     string memory _name,
     string memory _email,
     string memory _phoneNumber,
     TypesLib.EntityType _type,
-    bool _set,
-    bool _approved
+    bool _set
   ) public {
     name = _name;
     email = _email;
     phoneNumber = _phoneNumber;
     entityType = _type;
     set = _set;
-    approved = _approved;
   }
 }

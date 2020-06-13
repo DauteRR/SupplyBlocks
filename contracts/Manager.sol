@@ -8,10 +8,16 @@ contract Manager {
 
   Entity supplyBlocks;
 
+  mapping(address => bool) public approvedEntities;
   mapping(address => Entity) public entitiesMapping;
+
   address[] public products;
   mapping(address => Product) public productsMapping;
+  mapping(address => bool) public registeredProducts;
+
   address[] public deliveries;
+  mapping(address => Delivery) public deliveriesMapping;
+  mapping(address => bool) public registeredDeliveries;
 
   constructor() public {
     supplyBlocks = new Entity(
@@ -19,10 +25,10 @@ contract Manager {
       'supplyblocks@ull.edu.es',
       '123456789',
       TypesLib.EntityType.Admin,
-      true,
       true
     );
     entitiesMapping[msg.sender] = supplyBlocks;
+    approvedEntities[msg.sender] = true;
   }
 
   function checkAccount(address _address) public view returns (bool) {
@@ -30,7 +36,6 @@ contract Manager {
   }
 
   function createEntity(
-    address _address,
     string memory _name,
     string memory _email,
     string memory _phoneNumber,
@@ -40,28 +45,41 @@ contract Manager {
       _type != TypesLib.EntityType.Admin,
       'Trying to create an Admin user'
     );
-    require(!checkAccount(_address), 'Account already registered');
-    entitiesMapping[_address] = new Entity(
+    require(!checkAccount(msg.sender), 'Account already registered');
+    entitiesMapping[msg.sender] = new Entity(
       _name,
       _email,
       _phoneNumber,
       _type,
-      true,
-      false
+      true
     );
   }
 
-  function createProduct(address _address, string memory _name) public {
-    Product newProduct = new Product(_name, entitiesMapping[_address]);
+  function createProduct(string memory _name) public {
+    require(approvedEntities[msg.sender], 'Non approved account');
+    Product newProduct = new Product(_name, entitiesMapping[msg.sender]);
     productsMapping[address(newProduct)] = newProduct;
+    registeredProducts[address(newProduct)] = true;
     products.push(address(newProduct));
   }
 
-  function createDelivery(address _delivery, Entity _entity) public {
+  function createDelivery(address _productAddress) public {
+    require(approvedEntities[msg.sender], 'Non approved account');
+    require(registeredProducts[_productAddress], 'Non registered product');
+
+    Delivery newDelivery = new Delivery(productsMapping[_productAddress]);
+    deliveriesMapping[address(newDelivery)] = newDelivery;
+    registeredDeliveries[address(newDelivery)] = true;
+    deliveries.push(address(newDelivery));
+  }
+
+  function approveEntity(address _address) public {
+    require(checkAccount(_address), 'Entity not registered');
     require(
-      _entity.entityType() == TypesLib.EntityType.Factory,
-      'Non factory entity'
+      entitiesMapping[msg.sender].entityType() == TypesLib.EntityType.Admin,
+      'Unauthorized'
     );
-    deliveries.push(_delivery);
+
+    approvedEntities[_address] = true;
   }
 }
