@@ -21,7 +21,7 @@ const useStyles = makeStyles<Theme>((theme: Theme) => ({
     position: 'relative'
   },
   buttonProgress: {
-    color: theme.palette.primary.main,
+    color: theme.palette.secondary.main,
     position: 'absolute',
     top: '50%',
     left: '50%',
@@ -142,17 +142,19 @@ export const SignUpForm: React.FC<Props> = (props) => {
       </Grid>
       <div className={classes.wrapper}>
         <Tooltip title="Send petition" aria-label="send-petition">
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="secondary"
-            className={classes.submit}
-            onClick={submitForm}
-            disabled={isSubmitting || !isValid}
-          >
-            Send petition
-          </Button>
+          <div>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="secondary"
+              className={classes.submit}
+              onClick={submitForm}
+              disabled={isSubmitting || !isValid}
+            >
+              Send petition
+            </Button>
+          </div>
         </Tooltip>
         {isSubmitting && (
           <CircularProgress size={24} className={classes.buttonProgress} />
