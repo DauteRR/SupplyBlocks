@@ -10,10 +10,9 @@ import clsx from 'clsx';
 import React, { useCallback, useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Footer from '../../components/Footer/Footer';
-import LoadingSpinner from '../../components/LoadingSpinner';
 import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
-import { GlobalContext, isEmptyEntity } from '../../contexts/Global';
+import { GlobalContext } from '../../contexts/Global';
 import { ApplicationRoutes, DashboardRoutes } from '../../routes';
 import { ErrorView } from '../Error';
 import DashboardBody from './body';
@@ -66,8 +65,6 @@ const Dashboard: React.FC = (props) => {
   }, []);
 
   const shouldOpenSidebar = isDesktop ? true : openSidebar;
-  const loading = isEmptyEntity(globalState.entity);
-
   let content: JSX.Element;
 
   if (globalState.entity.approved) {
@@ -98,8 +95,6 @@ const Dashboard: React.FC = (props) => {
       </ErrorView>
     );
   }
-
-  if (loading) content = <LoadingSpinner />;
 
   return (
     <div

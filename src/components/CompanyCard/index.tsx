@@ -95,7 +95,8 @@ const InfoItem: React.FC<InfoItemProps> = (props) => {
 
 interface CardButtonProps {
   onClickCallback: () => void;
-  submitting?: boolean;
+  disabled: boolean;
+  transacting: boolean;
 }
 
 const CardButton: React.FC<CardButtonProps> = (props) => {
@@ -109,13 +110,13 @@ const CardButton: React.FC<CardButtonProps> = (props) => {
             color="secondary"
             className={classes.button}
             onClick={props.onClickCallback}
-            disabled={props.submitting}
+            disabled={props.disabled || props.transacting}
           >
             Accept
           </Button>
         </div>
       </Tooltip>
-      {props.submitting && (
+      {props.transacting && (
         <CircularProgress size={24} className={classes.buttonProgress} />
       )}
     </div>
@@ -124,6 +125,8 @@ const CardButton: React.FC<CardButtonProps> = (props) => {
 
 interface Props extends Entity {
   onClickCallback: () => void;
+  disabled: boolean;
+  transacting: boolean;
 }
 
 const CompanyCard: React.FC<Props> = (props) => {
@@ -169,7 +172,11 @@ const CompanyCard: React.FC<Props> = (props) => {
       </CardContent>
       {!props.approved && (
         <CardActions className={classes.cardActions}>
-          <CardButton onClickCallback={onClickCallback} submitting={false} />
+          <CardButton
+            onClickCallback={onClickCallback}
+            transacting={props.transacting}
+            disabled={props.disabled}
+          />
         </CardActions>
       )}
     </Card>

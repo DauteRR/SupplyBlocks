@@ -23,12 +23,21 @@ const useStyles = makeStyles<Theme>((theme) => ({
   }
 }));
 
-const CompaniesList: React.FC<{ companies: Entity[] }> = ({ companies }) => {
+const CompaniesList: React.FC<{
+  companies: Entity[];
+  updateCallback: () => void;
+}> = ({ companies, updateCallback }) => {
   const classes = useStyles();
+  const { globalState } = useContext(GlobalContext);
+  const { approveEntity } = useContext(EntityContractContext);
+  const [current, setCurrent] = useState('');
 
   const clickCallback = useCallback((address: string) => {
     return () => {
-      console.log(address);
+      setCurrent(address);
+      approveEntity(globalState.account, address)
+        .then(updateCallback)
+        .finally(() => setCurrent(''));
     };
   }, []);
 
@@ -44,6 +53,8 @@ const CompaniesList: React.FC<{ companies: Entity[] }> = ({ companies }) => {
           md={4}
         >
           <CompanyCard
+            disabled={current !== company.id && current !== ''}
+            transacting={current === company.id}
             onClickCallback={clickCallback(company.id)}
             {...company}
           ></CompanyCard>
@@ -65,13 +76,13 @@ interface Props {}
 const CompaniesView: React.FC<Props> = (props) => {
   const classes = useStyles();
   const { globalState } = useContext(GlobalContext);
-  const [isLoading, setIsLoading] = useState(true);
   const { state, convertEntity } = useContext(EntityContractContext);
+  const [isLoading, setIsLoading] = useState(true);
   const [companies, setCompanies] = useState<Entity[]>([]);
   const [pendingCompanies, setPendingCompanies] = useState<Entity[]>([]);
   const isAdmin = getEntityType(globalState.entity.type) === 'Admin';
 
-  useEffect(() => {
+  const UpdateCompanies = () => {
     state.contract.methods
       .getEntities()
       .call()
@@ -83,7 +94,9 @@ const CompaniesView: React.FC<Props> = (props) => {
         isAdmin && setPendingCompanies(pending);
         setIsLoading(false);
       });
-  }, [state, isAdmin]);
+  };
+
+  useEffect(UpdateCompanies, []);
 
   if (isLoading) {
     return <></>;
@@ -91,14 +104,17 @@ const CompaniesView: React.FC<Props> = (props) => {
 
   return (
     <div className={classes.root}>
-      {isAdmin && (
+      {isAdmin && pendingCompanies.length > 0 && (
         <>
           <Title title={'Pending'} />
-          <CompaniesList companies={pendingCompanies} />
+          <CompaniesList
+            companies={pendingCompanies}
+            updateCallback={UpdateCompanies}
+          />
         </>
       )}
       <Title title={'Companies'} />
-      <CompaniesList companies={companies} />
+      <CompaniesList companies={companies} updateCallback={UpdateCompanies} />
     </div>
   );
 };

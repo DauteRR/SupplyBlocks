@@ -33,6 +33,7 @@ type Context = {
   createEntity: (params: EntityCreationArgs) => any;
   getEntity: (address: string) => Promise<Entity | undefined>;
   convertEntity: (obj: any) => Entity;
+  approveEntity: (address: string, entityAddress: string) => any;
 };
 
 const DefaultContext: Context = {
@@ -40,7 +41,8 @@ const DefaultContext: Context = {
   dispatch: () => null,
   createEntity: (params: EntityCreationArgs) => null,
   getEntity: (address: string) => new Promise<undefined>(() => {}),
-  convertEntity: (obj: any) => EmptyEntity
+  convertEntity: (obj: any) => EmptyEntity,
+  approveEntity: (address: string, entityAddress: string) => null
 };
 
 const EntityContractContext = React.createContext<Context>(DefaultContext);
@@ -102,9 +104,25 @@ const EntityContractContextProvider: React.FC = ({ children }) => {
     [state]
   );
 
+  const approveEntity = useCallback(
+    (address: string, entityAddress: string) => {
+      return state.contract.methods
+        .approveEntity(entityAddress)
+        .send({ from: address });
+    },
+    [state]
+  );
+
   return (
     <Provider
-      value={{ state: state, dispatch, createEntity, getEntity, convertEntity }}
+      value={{
+        state: state,
+        dispatch,
+        createEntity,
+        getEntity,
+        convertEntity,
+        approveEntity
+      }}
     >
       {children}
     </Provider>
