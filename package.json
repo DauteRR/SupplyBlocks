@@ -24,6 +24,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "react-vertical-timeline-component": "^3.0.1",
+    "truffle": "^5.1.30",
     "typescript": "^3.7.5",
     "web3": "^1.2.8",
     "web3-utils": "^1.2.8",
@@ -33,7 +34,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "postinstall": "npx truffle compile && npx truffle migrate && npx typechain --target=truffle-v5 --outDir src/types/generated 'src/contracts/**/*.json'"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -49,5 +51,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@typechain/truffle-v5": "^2.0.2",
+    "typechain": "^2.0.0"
   }
 }

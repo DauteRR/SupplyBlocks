@@ -54,4 +54,8 @@ blockchain/history
 # Ignore all local history of files
 .history
 
+
+### Typechain ###
+src/types/generated
+
 # End of https://www.gitignore.io/api/react,soliditytruffle,visualstudiocode
