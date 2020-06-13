@@ -35,13 +35,21 @@ const Footer: React.FC<Props> = (props) => {
         className={classes.root}
       >
         <Typography style={{ color: fontColor }} variant="body1">
-          &copy; SupplyBlocks. 2020
+          &copy;
+          <Link
+            component="a"
+            href="https://github.com/DauteRR/SupplyBlocks"
+            target="_blank"
+          >
+            SupplyBlocks
+          </Link>{' '}
+          2020
         </Typography>
         <Typography style={{ color: fontColor }} variant="caption">
           Cybersecurity and Data Intelligence Master's Degree final project,
           created by{' '}
           <Link component="a" href="https://github.com/DauteRR" target="_blank">
-            Daute Rodríguez Rodríguez.
+            Daute Rodríguez Rodríguez
           </Link>
         </Typography>
       </div>
