@@ -57,5 +57,6 @@ blockchain/history
 
 ### Typechain ###
 src/types/generated
+migrations/*.js
 
 # End of https://www.gitignore.io/api/react,soliditytruffle,visualstudiocode
