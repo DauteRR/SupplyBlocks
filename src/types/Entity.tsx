@@ -27,6 +27,7 @@ export type EntityType = typeof entityTypes[number];
 export type VisibleEntityType = typeof visibleEntityTypes[number];
 
 export interface Entity {
+  id: string;
   name: string;
   email: string;
   phoneNumber: string;
@@ -34,6 +35,16 @@ export interface Entity {
   set: boolean;
   approved: boolean;
 }
+
+export const EmptyEntity: Entity = {
+  id: '',
+  email: '',
+  name: '',
+  phoneNumber: '',
+  type: 0,
+  set: false,
+  approved: false
+};
 
 export const entityTypeConversion: { [key in EntityType]: number } = {
   None: 0,

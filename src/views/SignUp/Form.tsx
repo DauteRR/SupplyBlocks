@@ -13,7 +13,7 @@ import Grid from '@material-ui/core/Grid';
 import { Field, FormikProps } from 'formik';
 import { Checkbox, Select, TextField } from 'formik-material-ui';
 import React from 'react';
-import { EntityType, visibleEntityTypes } from '../../types';
+import { EntityType, visibleEntityTypes } from '../../types/Entity';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({
   wrapper: {

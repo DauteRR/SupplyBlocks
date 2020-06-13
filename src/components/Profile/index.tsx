@@ -1,7 +1,7 @@
 import { makeStyles, Theme, Typography } from '@material-ui/core';
 import React, { useContext, useEffect, useState } from 'react';
 import { GlobalContext } from '../../contexts/Global';
-import { getEntityType } from '../../types';
+import { getEntityType } from '../../types/Entity';
 import EntityTypeAvatar from '../EntityTypeAvatar';
 import EntityTypeChip from '../EntityTypeChip';
 

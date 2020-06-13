@@ -2,7 +2,7 @@ import React, { useCallback, useReducer } from 'react';
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
 import EntityContractJSON from '../contracts/Entity.json';
-import { Entity } from '../types';
+import { EmptyEntity, Entity } from '../types/Entity';
 
 type InitializeAction = {
   type: 'INITIALIZE';
@@ -32,13 +32,15 @@ type Context = {
   dispatch: React.Dispatch<any>;
   createEntity: (params: EntityCreationArgs) => any;
   getEntity: (address: string) => Promise<Entity | undefined>;
+  convertEntity: (obj: any) => Entity;
 };
 
 const DefaultContext: Context = {
   state: initialState,
   dispatch: () => null,
   createEntity: (params: EntityCreationArgs) => null,
-  getEntity: (address: string) => new Promise<undefined>(() => {})
+  getEntity: (address: string) => new Promise<undefined>(() => {}),
+  convertEntity: (obj: any) => EmptyEntity
 };
 
 const EntityContractContext = React.createContext<Context>(DefaultContext);
@@ -77,27 +79,33 @@ const EntityContractContextProvider: React.FC = ({ children }) => {
     [state]
   );
 
+  const convertEntity = useCallback(
+    (obj: any): Entity => ({
+      id: obj.id,
+      approved: obj.approved,
+      email: obj.email,
+      name: obj.name,
+      phoneNumber: obj.phoneNumber,
+      set: obj.set,
+      type: parseInt(obj.entityType)
+    }),
+    []
+  );
+
   const getEntity = useCallback(
     async (address: string) => {
       if (state.contract && address) {
         const result = await state.contract.methods.entities(address).call();
-
-        const entity: Entity = {
-          approved: result.approved,
-          email: result.email,
-          name: result.name,
-          phoneNumber: result.phoneNumber,
-          set: result.set,
-          type: parseInt(result.entityType)
-        };
-        return entity;
+        return convertEntity(result);
       }
     },
     [state]
   );
 
   return (
-    <Provider value={{ state: state, dispatch, createEntity, getEntity }}>
+    <Provider
+      value={{ state: state, dispatch, createEntity, getEntity, convertEntity }}
+    >
       {children}
     </Provider>
   );

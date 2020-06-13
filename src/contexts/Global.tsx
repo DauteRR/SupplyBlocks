@@ -1,6 +1,6 @@
 import React, { useReducer } from 'react';
 import Web3 from 'web3';
-import { Entity } from '../types';
+import { EmptyEntity, Entity } from '../types/Entity';
 
 type SetWeb3Action = {
   type: 'SET_WEB3';
@@ -23,15 +23,6 @@ type State = {
   web3: Web3;
   account: string;
   entity: Entity;
-};
-
-export const EmptyEntity: Entity = {
-  email: '',
-  name: '',
-  phoneNumber: '',
-  type: 0,
-  set: false,
-  approved: false
 };
 
 export const isEmptyEntity = (entity: Entity) => {

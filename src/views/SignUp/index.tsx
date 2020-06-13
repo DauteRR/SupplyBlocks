@@ -14,7 +14,7 @@ import Logo from '../../components/Logo';
 import { EntityContractContext } from '../../contexts/EntityContract';
 import { GlobalContext } from '../../contexts/Global';
 import { ApplicationRoutes } from '../../routes';
-import { EntityType, entityTypeConversion } from '../../types';
+import { EntityType, entityTypeConversion } from '../../types/Entity';
 import { SignUpForm, SignUpFormFields } from './Form';
 import { SignUpFormValidationSchema } from './ValidationSchema';
 

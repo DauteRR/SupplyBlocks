@@ -10,7 +10,7 @@ import SecurityPNG from '../../assets/security.png';
 import TransportPNG from '../../assets/transport.png';
 import WarehousePNG from '../../assets/warehouse.png';
 import { TimelineElement } from '../../components/Timeline';
-import { EntityType, getEntityTypesData } from '../../types';
+import { EntityType, getEntityTypesData } from '../../types/Entity';
 
 export interface ItemData {
   label: string;

@@ -1,9 +1,11 @@
 pragma solidity >=0.4.21 <0.7.0;
+pragma experimental ABIEncoderV2;
 
 contract Entity {
   enum EntityType { None, Admin, Factory, Transport, Warehouse, Retailer }
 
   struct EntityData {
+    address id;
     string name;
     string email;
     string phoneNumber;
@@ -18,9 +20,10 @@ contract Entity {
   constructor() public {
     addressLUT.push(msg.sender);
     entities[msg.sender] = EntityData({
+      id: msg.sender,
       name: 'SupplyBlocks',
-      email: 'supplyblocks@.ull.edu.es',
-      phoneNumber: '',
+      email: 'supplyblocks@ull.edu.es',
+      phoneNumber: '123456789',
       entityType: EntityType.Admin,
       set: true,
       approved: true
@@ -40,6 +43,7 @@ contract Entity {
 
     addressLUT.push(_address);
     entities[_address] = EntityData({
+      id: _address,
       name: _name,
       email: _email,
       phoneNumber: _phoneNumber,
@@ -47,10 +51,6 @@ contract Entity {
       set: true,
       approved: false
     });
-  }
-
-  function entitiesCount() public view returns (uint256) {
-    return (addressLUT.length);
   }
 
   function approveEntity(address _entity) public {
@@ -66,5 +66,17 @@ contract Entity {
 
   function getAddressLUT() public view returns (address[] memory) {
     return addressLUT;
+  }
+
+  function getEntities() public view returns (EntityData[] memory) {
+    require(entities[msg.sender].approved, 'Address not approved');
+    uint256 size = addressLUT.length;
+    EntityData[] memory array = new EntityData[](size);
+    for (uint256 index = 0; index < addressLUT.length; index++) {
+      address _address = addressLUT[index];
+      array[index] = entities[_address];
+    }
+
+    return array;
   }
 }
