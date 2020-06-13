@@ -37,7 +37,7 @@ export interface Entity {
 }
 
 export const EmptyEntity: Entity = {
-  id: '',
+  id: '0x0000000000000000000000000000000000000000',
   email: '',
   name: '',
   phoneNumber: '',
