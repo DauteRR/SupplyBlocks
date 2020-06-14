@@ -15,21 +15,21 @@ contract Product {
 
   constructor(string memory _name, Entity _factory) public {
     require(
-      _factory.entityType() == TypesLib.EntityType.Factory,
+      _factory.getType() == TypesLib.EntityType.Factory,
       'Non factory entity'
     );
 
     name = _name;
     state = TypesLib.ProductState.Created;
     creatorID = address(_factory);
-    creationTimestamp = block.timestamp;
+    creationTimestamp = now;
     purchaserID = address(0);
     deliveredTimestamp = 0;
   }
 
   function setShipped(Entity _transport, Delivery _delivery) public {
     require(
-      _transport.entityType() == TypesLib.EntityType.Transport,
+      _transport.getType() == TypesLib.EntityType.Transport,
       'Non transport entity'
     );
     require(
@@ -38,28 +38,28 @@ contract Product {
       'Wrong previous state'
     );
     state = TypesLib.ProductState.Shipped;
-    _delivery.addStep(state, address(_transport), block.timestamp);
+    _delivery.addStep(state, address(_transport), now);
   }
 
   function setStored(Entity _warehouse, Delivery _delivery) public {
     require(
-      _warehouse.entityType() == TypesLib.EntityType.Warehouse,
+      _warehouse.getType() == TypesLib.EntityType.Warehouse,
       'Non warehouse entity'
     );
     require(state == TypesLib.ProductState.Shipped, 'Wrong previous state');
     state = TypesLib.ProductState.Stored;
-    _delivery.addStep(state, address(_warehouse), block.timestamp);
+    _delivery.addStep(state, address(_warehouse), now);
   }
 
   function setDelivered(Entity _retailer, Delivery _delivery) public {
     require(
-      _retailer.entityType() == TypesLib.EntityType.Retailer,
+      _retailer.getType() == TypesLib.EntityType.Retailer,
       'Non retailer entity'
     );
     require(state == TypesLib.ProductState.Shipped, 'Wrong previous state');
     state = TypesLib.ProductState.Delivered;
     purchaserID = address(_retailer);
-    deliveredTimestamp = block.timestamp;
+    deliveredTimestamp = now;
     _delivery.addStep(state, address(_retailer), deliveredTimestamp);
   }
 }

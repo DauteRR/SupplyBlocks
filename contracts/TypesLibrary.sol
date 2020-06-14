@@ -10,4 +10,14 @@ library TypesLib {
     ProductState productState;
     uint256 timestamp;
   }
+
+  struct EntityData {
+    address id;
+    string name;
+    string email;
+    string phoneNumber;
+    TypesLib.EntityType entityType;
+    bool set;
+    bool approved;
+  }
 }
