@@ -1,10 +1,10 @@
 import { Grid, makeStyles, Theme } from '@material-ui/core';
+import { useSnackbar } from 'notistack';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import CompanyCard from '../../../components/CompanyCard';
 import Title from '../../../components/Title';
-import { EntityContractContext } from '../../../contexts/EntityContract';
 import { GlobalContext } from '../../../contexts/Global';
-import { Entity, getEntityType } from '../../../types/Entity';
+import { Entity } from '../../../types/Entity';
 
 const useStyles = makeStyles<Theme>((theme) => ({
   root: {
@@ -28,15 +28,21 @@ const CompaniesList: React.FC<{
   updateCallback: () => void;
 }> = ({ companies, updateCallback }) => {
   const classes = useStyles();
-  const { globalState } = useContext(GlobalContext);
-  const { approveEntity } = useContext(EntityContractContext);
+  const { globalState, approveEntity } = useContext(GlobalContext);
   const [current, setCurrent] = useState('');
+  const { enqueueSnackbar } = useSnackbar();
 
   const clickCallback = useCallback((address: string) => {
     return () => {
       setCurrent(address);
-      approveEntity(globalState.account, address)
-        .then(updateCallback)
+      approveEntity(address)
+        .then(() => {
+          updateCallback();
+          enqueueSnackbar('Approved', { variant: 'success' });
+        })
+        .catch(() => {
+          enqueueSnackbar('Error', { variant: 'error' });
+        })
         .finally(() => setCurrent(''));
     };
   }, []);
@@ -75,25 +81,19 @@ interface Props {}
 
 const CompaniesView: React.FC<Props> = (props) => {
   const classes = useStyles();
-  const { globalState } = useContext(GlobalContext);
-  const { state, convertEntity } = useContext(EntityContractContext);
+  const { globalState, convertEntity, getEntities } = useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState(true);
   const [companies, setCompanies] = useState<Entity[]>([]);
   const [pendingCompanies, setPendingCompanies] = useState<Entity[]>([]);
-  const isAdmin = getEntityType(globalState.entity.type) === 'Admin';
+  const isAdmin = globalState.entity.type === 'Admin';
 
   const UpdateCompanies = () => {
-    state.contract.methods
-      .getEntities()
-      .call()
-      .then((result: any[]) => {
-        const { pending, approved } = filterCompanies(
-          result.map(convertEntity)
-        );
-        setCompanies(approved);
-        isAdmin && setPendingCompanies(pending);
-        setIsLoading(false);
-      });
+    getEntities().then((result: any[]) => {
+      const { pending, approved } = filterCompanies(result.map(convertEntity));
+      setCompanies(approved);
+      isAdmin && setPendingCompanies(pending);
+      setIsLoading(false);
+    });
   };
 
   useEffect(UpdateCompanies, []);

@@ -1,7 +1,6 @@
 import { makeStyles, Theme, Typography } from '@material-ui/core';
 import React, { useContext, useEffect, useState } from 'react';
 import { GlobalContext } from '../../contexts/Global';
-import { getEntityType } from '../../types/Entity';
 import EntityTypeAvatar from '../EntityTypeAvatar';
 import EntityTypeChip from '../EntityTypeChip';
 
@@ -31,7 +30,7 @@ const Profile: React.FC = (props) => {
 
   return (
     <div className={classes.root}>
-      <EntityTypeAvatar type={getEntityType(entity.type)} />
+      <EntityTypeAvatar type={entity.type} />
       <Typography align="center" className={classes.name} variant="h5">
         {entity.name}
       </Typography>
@@ -42,7 +41,7 @@ const Profile: React.FC = (props) => {
         {entity.phoneNumber}
       </Typography>
       <div className={classes.chipContainer}>
-        <EntityTypeChip showIcon={false} type={getEntityType(entity.type)} />
+        <EntityTypeChip showIcon={false} type={entity.type} />
       </div>
     </div>
   );

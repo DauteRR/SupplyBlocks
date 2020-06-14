@@ -6,6 +6,11 @@ import StarIcon from '@material-ui/icons/Star';
 import StoreIcon from '@material-ui/icons/Store';
 import React from 'react';
 
+export type Address = string;
+
+export const defaultAddress: Address =
+  '0x0000000000000000000000000000000000000000';
+
 const entityTypes = [
   'None',
   'Admin',
@@ -31,17 +36,25 @@ export interface Entity {
   name: string;
   email: string;
   phoneNumber: string;
-  type: number;
+  type: EntityType;
   set: boolean;
   approved: boolean;
 }
 
+export interface EntityCreationArgs {
+  account: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  type: EntityType;
+}
+
 export const EmptyEntity: Entity = {
-  id: '0x0000000000000000000000000000000000000000',
+  id: defaultAddress,
   email: '',
   name: '',
   phoneNumber: '',
-  type: 0,
+  type: 'None',
   set: false,
   approved: false
 };

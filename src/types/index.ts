@@ -1,2 +1,7 @@
 export * from './Entity';
-export * from './generated/index';
+
+declare global {
+  interface Window {
+    ethereum: any;
+  }
+}

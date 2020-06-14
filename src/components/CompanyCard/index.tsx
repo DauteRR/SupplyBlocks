@@ -13,8 +13,9 @@ import {
 import EmailIcon from '@material-ui/icons/Email';
 import FingerprintIcon from '@material-ui/icons/Fingerprint';
 import PhoneIcon from '@material-ui/icons/Phone';
-import React from 'react';
-import { Entity, getEntityType, getEntityTypesData } from '../../types/Entity';
+import React, { useContext } from 'react';
+import { GlobalContext } from '../../contexts/Global';
+import { Entity, getEntityTypesData } from '../../types/Entity';
 import EntityTypeChip from '../EntityTypeChip';
 
 const useStyles = makeStyles<Theme>((theme) => ({
@@ -131,7 +132,16 @@ interface Props extends Entity {
 
 const CompanyCard: React.FC<Props> = (props) => {
   const classes = useStyles();
-  const { email, id, name, phoneNumber, type, onClickCallback } = props;
+  const { globalState } = useContext(GlobalContext);
+  const {
+    email,
+    name,
+    phoneNumber,
+    type,
+    approved,
+    id,
+    onClickCallback
+  } = props;
 
   return (
     <Card className={classes.root}>
@@ -142,9 +152,7 @@ const CompanyCard: React.FC<Props> = (props) => {
               variant="h5"
               noWrap
               className={
-                customStyles(
-                  getEntityTypesData('', 0)[getEntityType(type)].color
-                ).companyName
+                customStyles(getEntityTypesData('', 0)[type].color).companyName
               }
             >
               {name}
@@ -152,7 +160,7 @@ const CompanyCard: React.FC<Props> = (props) => {
           </Grid>
           <Grid item xs={4}>
             <div className={classes.chipContainer}>
-              <EntityTypeChip type={getEntityType(type)} showIcon />
+              <EntityTypeChip type={type} showIcon />
             </div>
           </Grid>
         </Grid>
@@ -170,7 +178,7 @@ const CompanyCard: React.FC<Props> = (props) => {
           icon={<PhoneIcon className={classes.icon} color="primary" />}
         />
       </CardContent>
-      {!props.approved && (
+      {!approved && (
         <CardActions className={classes.cardActions}>
           <CardButton
             onClickCallback={onClickCallback}

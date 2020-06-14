@@ -11,10 +11,9 @@ import { useSnackbar } from 'notistack';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Logo from '../../components/Logo';
-import { EntityContractContext } from '../../contexts/EntityContract';
 import { GlobalContext } from '../../contexts/Global';
 import { ApplicationRoutes } from '../../routes';
-import { EntityType, entityTypeConversion } from '../../types/Entity';
+import { EntityType } from '../../types/Entity';
 import { SignUpForm, SignUpFormFields } from './Form';
 import { SignUpFormValidationSchema } from './ValidationSchema';
 
@@ -56,8 +55,7 @@ interface Props {}
 export const SignUpView: React.FC<Props> = (props) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-  const { globalState, dispatch } = useContext(GlobalContext);
-  const { createEntity, getEntity } = useContext(EntityContractContext);
+  const { globalState, updateEntity, createEntity } = useContext(GlobalContext);
   const [alreadyRegistered, setAlreadyRegistered] = useState(false);
   const [pending, setPending] = useState(false);
 
@@ -70,18 +68,14 @@ export const SignUpView: React.FC<Props> = (props) => {
         email: values.email,
         phoneNumber: values.phoneNumber,
         account: globalState.account,
-        type: entityTypeConversion[values.type as EntityType]
+        type: values.type as EntityType
       })
         .then((result: any) => {
           helpers.setSubmitting(false);
-          enqueueSnackbar('Petition send', {
+          enqueueSnackbar('Success', {
             variant: 'success'
           });
-          getEntity(globalState.account).then((entity) => {
-            if (entity) {
-              dispatch({ type: 'SET_ENTITY', entity: entity });
-            }
-          });
+          updateEntity(globalState.account);
         })
         .catch((error: any) => {
           helpers.setSubmitting(false);

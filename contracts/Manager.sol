@@ -2,9 +2,11 @@ pragma solidity >=0.4.21 <0.7.0;
 import './TypesLibrary.sol';
 import './Entity.sol';
 import './Product.sol';
+pragma experimental ABIEncoderV2;
 
 contract Manager {
   using TypesLib for TypesLib.EntityType;
+  using TypesLib for TypesLib.EntityData;
 
   address[] public accounts;
   Entity[] public entities;
@@ -81,5 +83,16 @@ contract Manager {
 
     approvedEntities[_address] = true;
     entitiesMapping[_address].setApproved(true);
+  }
+
+  function getEntities() public view returns (TypesLib.EntityData[] memory) {
+    require(approvedEntities[msg.sender], 'Address not approved');
+    uint256 size = entities.length;
+    TypesLib.EntityData[] memory array = new TypesLib.EntityData[](size);
+    for (uint256 index = 0; index < entities.length; index++) {
+      array[index] = entities[index].getData();
+    }
+
+    return array;
   }
 }

@@ -4,24 +4,12 @@ import {
   makeStyles,
   ThemeProvider
 } from '@material-ui/core';
-import { SnackbarProvider } from 'notistack';
+import { SnackbarProvider, useSnackbar } from 'notistack';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import {
-  EntityContractContext,
-  EntityContractContextProvider
-} from '../../contexts/EntityContract';
 import { GlobalContext, GlobalContextProvider } from '../../contexts/Global';
 import { useInterval } from '../../hooks/useInterval';
 import ErrorView from '../../views/Error';
 import AppBody from '../AppBody';
-
-declare global {
-  interface Window {
-    ethereum: any;
-  }
-}
-
-window.ethereum = window.ethereum || undefined;
 
 const useStyles = makeStyles({
   appContainer: {
@@ -52,22 +40,15 @@ const SetOnAccountChange = (callback: (accounts: string[]) => void) => {
 interface Props {}
 
 export const App: React.FC<Props> = (props) => {
-  const { globalState, dispatch } = useContext(GlobalContext);
+  const { globalState, updateAccount, updateEntity } = useContext(
+    GlobalContext
+  );
   const classes = useStyles();
   const [connectionError, setConnectionError] = useState(false);
   const [web3ProviderError, setWeb3ProviderError] = useState(false);
   const [isMetamaskEnabled, setIsMetamaskEnabled] = useState(true);
   const { web3 } = globalState;
-  const entityContractContext = useContext(EntityContractContext);
-
-  const UpdateAccount = useCallback(
-    (address: string) =>
-      dispatch({
-        type: 'SET_ACCOUNT',
-        account: address
-      }),
-    []
-  );
+  const { enqueueSnackbar } = useSnackbar();
 
   const CheckMetamask = useCallback(() => {
     if (!window.ethereum) {
@@ -85,7 +66,7 @@ export const App: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if (isMetamaskEnabled) {
-      UpdateAccount(window.ethereum.selectedAddress);
+      updateAccount(window.ethereum.selectedAddress);
     }
   }, [isMetamaskEnabled]);
 
@@ -100,21 +81,17 @@ export const App: React.FC<Props> = (props) => {
 
   useEffect(() => {
     SetOnAccountChange((accounts: string[]) => {
-      UpdateAccount(accounts[0]);
+      updateAccount(accounts[0]);
       if (accounts.length === 0) {
         setIsMetamaskEnabled(false);
       }
     });
-    entityContractContext.dispatch({ type: 'INITIALIZE', web3: web3 });
   }, []);
 
   useEffect(() => {
-    entityContractContext.getEntity(globalState.account).then((entity) => {
-      if (entity) {
-        dispatch({ type: 'SET_ENTITY', entity: entity });
-      }
-    });
-  }, [entityContractContext.state, globalState.account]);
+    enqueueSnackbar('Account change', { variant: 'info' });
+    updateEntity(globalState.account);
+  }, [globalState.account]);
 
   let appBody: JSX.Element = <AppBody />;
 
@@ -158,20 +135,18 @@ export const App: React.FC<Props> = (props) => {
 };
 
 const WrappedApp: React.FC = () => (
-  <GlobalContextProvider>
-    <ThemeProvider theme={theme}>
-      <SnackbarProvider
-        maxSnack={3}
-        preventDuplicate
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-        autoHideDuration={3000}
-      >
-        <EntityContractContextProvider>
-          <App />
-        </EntityContractContextProvider>
-      </SnackbarProvider>
-    </ThemeProvider>
-  </GlobalContextProvider>
+  <ThemeProvider theme={theme}>
+    <SnackbarProvider
+      maxSnack={3}
+      preventDuplicate
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+      autoHideDuration={3000}
+    >
+      <GlobalContextProvider>
+        <App />
+      </GlobalContextProvider>
+    </SnackbarProvider>
+  </ThemeProvider>
 );
 
 export default WrappedApp;

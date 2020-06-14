@@ -5,9 +5,9 @@ import {
   Theme,
   Tooltip
 } from '@material-ui/core';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { GlobalContext, isEmptyEntity } from '../../contexts/Global';
+import { GlobalContext } from '../../contexts/Global';
 import { ApplicationRoutes } from '../../routes';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({
@@ -25,25 +25,16 @@ interface Props {}
 export const JoinButton: React.FC<Props> = (props) => {
   const classes = useStyles();
   const [text, setText] = useState('Join SupplyBlocks');
-  const [redirectTarget, setRedirectTarget] = useState(
-    ApplicationRoutes.signUp.path
-  );
   const { globalState } = useContext(GlobalContext);
   let history = useHistory();
 
-  useEffect(() => {
-    const emptyEntity = isEmptyEntity(globalState.entity);
-    setText(emptyEntity ? 'Join SupplyBlocks' : 'Enter dashboard');
-    setRedirectTarget(
-      emptyEntity
-        ? ApplicationRoutes.signUp.path
-        : ApplicationRoutes.dashboard.path
-    );
-  }, [globalState.entity]);
-
   const clickCallback = useCallback(() => {
-    history.push(redirectTarget);
-  }, [history, redirectTarget]);
+    history.push(
+      globalState.entity.approved
+        ? ApplicationRoutes.dashboard.path
+        : ApplicationRoutes.signUp.path
+    );
+  }, [history, globalState.entity]);
 
   return (
     <Container maxWidth="xs" className={classes.root}>
@@ -55,7 +46,9 @@ export const JoinButton: React.FC<Props> = (props) => {
           color="secondary"
           onClick={clickCallback}
         >
-          {text}
+          {globalState.entity.approved
+            ? 'Enter dashboard'
+            : 'Join SupplyBlocks'}
         </Button>
       </Tooltip>
     </Container>
