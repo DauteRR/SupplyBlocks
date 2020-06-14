@@ -20,4 +20,13 @@ library TypesLib {
     bool set;
     bool approved;
   }
+
+  struct ProductData {
+    string name;
+    TypesLib.ProductState state;
+    address creatorID;
+    uint256 creationTimestamp;
+    address purchaserID;
+    uint256 deliveredTimestamp;
+  }
 }

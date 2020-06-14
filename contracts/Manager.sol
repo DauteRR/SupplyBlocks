@@ -7,6 +7,7 @@ pragma experimental ABIEncoderV2;
 contract Manager {
   using TypesLib for TypesLib.EntityType;
   using TypesLib for TypesLib.EntityData;
+  using TypesLib for TypesLib.ProductData;
 
   address[] public accounts;
   Entity[] public entities;
@@ -47,7 +48,11 @@ contract Manager {
   ) public {
     require(
       _type != TypesLib.EntityType.Admin,
-      'Trying to create an Admin user'
+      'Trying to create an Admin entity'
+    );
+    require(
+      _type != TypesLib.EntityType.None,
+      'Trying to create an empty entity'
     );
     require(!setEntities[msg.sender], 'Account already registered');
     entities.push(new Entity(_name, _email, _phoneNumber, _type, msg.sender));
@@ -93,6 +98,40 @@ contract Manager {
       array[index] = entities[index].getData();
     }
 
+    return array;
+  }
+
+  function getProducts(Entity _entity)
+    public
+    view
+    returns (TypesLib.ProductData[] memory)
+  {
+    require(approvedEntities[msg.sender], 'Address not approved');
+    require(entitiesMapping[msg.sender] == _entity, 'Unauthorized');
+
+    uint256 size = 0;
+    uint256[] memory indexes = new uint256[](products.length);
+    Entity entity = Entity(entitiesMapping[msg.sender]);
+    TypesLib.EntityType entityType = entity.getType();
+    for (uint256 index = 0; index < products.length; index++) {
+      Product product = Product(products[index]);
+      if (
+        entityType == TypesLib.EntityType.Admin ||
+        entityType == TypesLib.EntityType.Retailer
+      ) {
+        indexes[size] = index;
+        size += 1;
+      } else if (product.associatedEntities(address(entity))) {
+        indexes[size] = index;
+        size += 1;
+      }
+    }
+
+    TypesLib.ProductData[] memory array = new TypesLib.ProductData[](size);
+    for (uint256 it = 0; it < size; it++) {
+      Product product = Product(products[indexes[it]]);
+      array[it] = product.getData();
+    }
     return array;
   }
 }

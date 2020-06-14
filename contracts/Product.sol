@@ -2,16 +2,15 @@ pragma solidity >=0.4.21 <0.7.0;
 import './TypesLibrary.sol';
 import './Entity.sol';
 import './Delivery.sol';
+pragma experimental ABIEncoderV2;
 
 contract Product {
   using TypesLib for TypesLib.ProductState;
+  using TypesLib for TypesLib.ProductData;
 
-  string public name;
-  TypesLib.ProductState public state;
-  address public creatorID;
-  uint256 public creationTimestamp;
-  address public purchaserID;
-  uint256 public deliveredTimestamp;
+  TypesLib.ProductData public data;
+
+  mapping(address => bool) public associatedEntities;
 
   constructor(string memory _name, Entity _factory) public {
     require(
@@ -19,12 +18,16 @@ contract Product {
       'Non factory entity'
     );
 
-    name = _name;
-    state = TypesLib.ProductState.Created;
-    creatorID = address(_factory);
-    creationTimestamp = now;
-    purchaserID = address(0);
-    deliveredTimestamp = 0;
+    data = TypesLib.ProductData({
+      name: _name,
+      state: TypesLib.ProductState.Created,
+      creatorID: address(_factory),
+      creationTimestamp: now,
+      purchaserID: address(0),
+      deliveredTimestamp: 0
+    });
+
+    associatedEntities[address(_factory)] = true;
   }
 
   function setShipped(Entity _transport, Delivery _delivery) public {
@@ -33,12 +36,13 @@ contract Product {
       'Non transport entity'
     );
     require(
-      state == TypesLib.ProductState.Created ||
-        state == TypesLib.ProductState.Stored,
+      data.state == TypesLib.ProductState.Created ||
+        data.state == TypesLib.ProductState.Stored,
       'Wrong previous state'
     );
-    state = TypesLib.ProductState.Shipped;
-    _delivery.addStep(state, address(_transport), now);
+    data.state = TypesLib.ProductState.Shipped;
+    _delivery.addStep(data.state, address(_transport), now);
+    associatedEntities[address(_transport)] = true;
   }
 
   function setStored(Entity _warehouse, Delivery _delivery) public {
@@ -46,9 +50,13 @@ contract Product {
       _warehouse.getType() == TypesLib.EntityType.Warehouse,
       'Non warehouse entity'
     );
-    require(state == TypesLib.ProductState.Shipped, 'Wrong previous state');
-    state = TypesLib.ProductState.Stored;
-    _delivery.addStep(state, address(_warehouse), now);
+    require(
+      data.state == TypesLib.ProductState.Shipped,
+      'Wrong previous state'
+    );
+    data.state = TypesLib.ProductState.Stored;
+    _delivery.addStep(data.state, address(_warehouse), now);
+    associatedEntities[address(_warehouse)] = true;
   }
 
   function setDelivered(Entity _retailer, Delivery _delivery) public {
@@ -56,10 +64,30 @@ contract Product {
       _retailer.getType() == TypesLib.EntityType.Retailer,
       'Non retailer entity'
     );
-    require(state == TypesLib.ProductState.Shipped, 'Wrong previous state');
-    state = TypesLib.ProductState.Delivered;
-    purchaserID = address(_retailer);
-    deliveredTimestamp = now;
-    _delivery.addStep(state, address(_retailer), deliveredTimestamp);
+    require(
+      data.state == TypesLib.ProductState.Shipped,
+      'Wrong previous state'
+    );
+    data.state = TypesLib.ProductState.Delivered;
+    data.purchaserID = address(_retailer);
+    data.deliveredTimestamp = now;
+    _delivery.addStep(data.state, address(_retailer), data.deliveredTimestamp);
+    associatedEntities[address(_retailer)] = true;
+  }
+
+  function getData() public view returns (TypesLib.ProductData memory) {
+    return data;
+  }
+
+  function getState() public view returns (TypesLib.ProductState) {
+    return data.state;
+  }
+
+  function getCreatorID() public view returns (address) {
+    return data.creatorID;
+  }
+
+  function getCreationTimestamp() public view returns (uint256) {
+    return data.creationTimestamp;
   }
 }

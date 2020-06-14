@@ -11,15 +11,15 @@ contract Delivery {
 
   constructor(Product _product) public {
     require(
-      _product.state() == TypesLib.ProductState.Created,
+      _product.getState() == TypesLib.ProductState.Created,
       'Invalid product initial state'
     );
     productID = address(_product);
     steps.push(
       TypesLib.DeliveryStep(
-        _product.creatorID(),
-        _product.state(),
-        _product.creationTimestamp()
+        _product.getCreatorID(),
+        _product.getState(),
+        _product.getCreationTimestamp()
       )
     );
   }
