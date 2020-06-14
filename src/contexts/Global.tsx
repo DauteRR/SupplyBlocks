@@ -187,7 +187,7 @@ const GlobalContextProvider: React.FC = ({ children }) => {
 
   const convertProduct = useCallback((obj: any): Product => {
     return {
-      id: defaultAddress,
+      id: obj.id,
       name: obj.name,
       creatorID: obj.creatorID,
       creationTimestamp: new Date(parseInt(obj.creationTimestamp) * 1000),
