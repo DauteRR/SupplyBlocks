@@ -75,16 +75,6 @@ interface InfoItemProps {
   textClassName?: string;
 }
 
-const customStyles = (color: string) => {
-  const customUseStyles = makeStyles(() => ({
-    companyName: {
-      color: color
-    }
-  }));
-  const customClasses = customUseStyles();
-  return customClasses;
-};
-
 const InfoItem: React.FC<InfoItemProps> = (props) => {
   const classes = useStyles();
   return (

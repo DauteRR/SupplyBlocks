@@ -100,8 +100,6 @@ const ProductsView: React.FC<Props> = (props) => {
     getProducts().then((result: any[]) => {
       setProducts(result.map(convertProduct));
       setIsLoading(false);
-      console.log(result);
-      console.log(result.map(convertProduct));
     });
   };
 
@@ -125,7 +123,7 @@ const ProductsView: React.FC<Props> = (props) => {
         })
         .finally(() => helpers.setSubmitting(false));
     },
-    [createProduct, globalState, enqueueSnackbar]
+    [createProduct, globalState, enqueueSnackbar, UpdateProducts]
   );
 
   if (isLoading) {
