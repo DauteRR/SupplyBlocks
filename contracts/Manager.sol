@@ -73,9 +73,9 @@ contract Manager {
   }
 
   function approveEntity(address _address) public {
-    require(entitiesMapping[_address].set(), 'Entity not registered');
+    require(entitiesMapping[_address].getSet(), 'Entity not registered');
     require(
-      entitiesMapping[msg.sender].entityType() == TypesLib.EntityType.Admin,
+      entitiesMapping[msg.sender].getType() == TypesLib.EntityType.Admin,
       'Unauthorized'
     );
 

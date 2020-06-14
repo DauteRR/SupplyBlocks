@@ -36,4 +36,8 @@ contract Entity {
   function getType() public view returns (TypesLib.EntityType) {
     return data.entityType;
   }
+
+  function getSet() public view returns (bool) {
+    return data.set;
+  }
 }
