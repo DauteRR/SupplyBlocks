@@ -34,8 +34,7 @@ const ProductsList: React.FC<{
   updateCallback: () => void;
 }> = ({ products, updateCallback }) => {
   const classes = useStyles();
-  // TODO:
-  // const { purchaseProduct } = useContext(GlobalContext);
+  const { purchaseProduct } = useContext(GlobalContext);
   const [current, setCurrent] = useState('');
   const { enqueueSnackbar } = useSnackbar();
 
@@ -43,19 +42,18 @@ const ProductsList: React.FC<{
     (address: string) => {
       return () => {
         setCurrent(address);
-        // purchaseProduct(address)
-        //   .then(() => {
-        //     updateCallback();
-        //     enqueueSnackbar('Purchased', { variant: 'success' });
-        //   })
-        //   .catch(() => {
-        //     enqueueSnackbar('Error', { variant: 'error' });
-        //   })
-        //   .finally(() => setCurrent(''));
+        purchaseProduct(address)
+          .then(() => {
+            updateCallback();
+            enqueueSnackbar('Purchased', { variant: 'success' });
+          })
+          .catch(() => {
+            enqueueSnackbar('Error', { variant: 'error' });
+          })
+          .finally(() => setCurrent(''));
       };
     },
-    // TODO: add purchaseProduct
-    [enqueueSnackbar, updateCallback]
+    [enqueueSnackbar, updateCallback, purchaseProduct]
   );
 
   return (

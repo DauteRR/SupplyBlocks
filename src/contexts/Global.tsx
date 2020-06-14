@@ -1,3 +1,4 @@
+import { OptionsObject, useSnackbar } from 'notistack';
 import React, { useCallback, useReducer } from 'react';
 import Web3 from 'web3';
 import { Contract } from 'web3-eth-contract';
@@ -61,6 +62,7 @@ type Context = {
   createProduct: (params: ProductCreationArgs) => Promise<any>;
   convertProduct: (obj: any) => Product;
   getProducts: () => Promise<any>;
+  purchaseProduct: (address: Address) => Promise<any>;
 };
 
 const DefaultContext: Context = {
@@ -73,7 +75,8 @@ const DefaultContext: Context = {
   getEntities: () => new Promise<any>(() => {}),
   createProduct: () => new Promise<any>(() => {}),
   convertProduct: () => ({} as Product),
-  getProducts: () => new Promise<any>(() => {})
+  getProducts: () => new Promise<any>(() => {}),
+  purchaseProduct: () => new Promise<any>(() => {})
 };
 
 const GlobalContext = React.createContext<Context>(DefaultContext);
@@ -91,8 +94,79 @@ const Reducer = (state: State, action: Action): State => {
   }
 };
 
+const getRandomIntInclusive = (min: number, max: number) => {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+const getNRandom = (collection: any[], n: number) => {
+  if (n < collection.length) {
+    throw new Error(
+      `Collection size too small, n = ${n} size = ${collection.length}`
+    );
+  }
+  let selected = 0;
+  const selection = [];
+  while (selected < n) {
+    const index = getRandomIntInclusive(0, collection.length);
+    selection.push(collection[index]);
+    collection.splice(index, 1);
+    selected += 1;
+  }
+
+  return selection;
+};
+
+interface Route {
+  transport: Entity[];
+  warehouse: Entity[];
+}
+
+// Route estimation mock
+const getRoute = (
+  entities: Entity[],
+  enqueueSnackbar: (
+    message: React.ReactNode,
+    options?: OptionsObject | undefined
+  ) => React.ReactText
+): Route => {
+  const warehouseCount = entities.filter(
+    (entity) => entity.type === 'Warehouse'
+  ).length;
+  const transportCount = entities.length - warehouseCount;
+  const max = warehouseCount < transportCount ? warehouseCount : transportCount;
+
+  if (max === 0) {
+    enqueueSnackbar('Not enough transport/warehouse companies', {
+      variant: 'error'
+    });
+    return { transport: [], warehouse: [] };
+  }
+
+  const transportSteps = max > 1 ? getRandomIntInclusive(1, max) : 1;
+  console.log(transportSteps);
+  const selectedTransportEntities: Entity[] = getNRandom(
+    entities.filter((entity) => entity.type === 'Transport'),
+    transportSteps
+  );
+  const selectedWarehousingEntities: Entity[] =
+    transportSteps > 1
+      ? getNRandom(
+          entities.filter((entity) => entity.type === 'Warehouse'),
+          transportSteps - 1
+        )
+      : [];
+
+  return {
+    transport: selectedTransportEntities,
+    warehouse: selectedWarehousingEntities
+  };
+};
+
 const GlobalContextProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(Reducer, initialState);
+  const { enqueueSnackbar } = useSnackbar();
 
   const updateAccount = useCallback(
     (address: Address) => dispatch({ type: 'SET_ACCOUNT', account: address }),
@@ -213,6 +287,32 @@ const GlobalContextProvider: React.FC = ({ children }) => {
       .call({ from: state.account });
   }, [state]);
 
+  const calculateRoute = useCallback(async (): Promise<Route> => {
+    const route: Route = await getEntities().then((result: any) => {
+      const entities: Entity[] = result
+        .map(convertEntity)
+        .filter(
+          (entity: Entity) =>
+            entity.type === 'Warehouse' || entity.type === 'Transport'
+        );
+
+      return getRoute(entities, enqueueSnackbar);
+    });
+
+    return route;
+  }, []);
+
+  const purchaseProduct = useCallback(
+    async (productAddress: string) => {
+      const route = await calculateRoute();
+      // TODO: CHECK
+      return state.managerContract.methods
+        .purchaseProduct(productAddress, route.transport, route.warehouse)
+        .call({ from: state.account });
+    },
+    [state]
+  );
+
   return (
     <Provider
       value={{
@@ -225,7 +325,8 @@ const GlobalContextProvider: React.FC = ({ children }) => {
         getEntities,
         getProducts,
         createProduct,
-        convertProduct
+        convertProduct,
+        purchaseProduct
       }}
     >
       {children}
