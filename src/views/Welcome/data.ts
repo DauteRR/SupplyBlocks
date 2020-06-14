@@ -122,14 +122,14 @@ export const getTimelineElements = (): TimelineElement[] => {
       label: 'SupplyBlocks',
       title: 'Delivery route',
       text:
-        'SupplyBlocks "autonomously calculates" the route for delivering the purchased products by retailers and small businesses, composed of transport and warehousing companies. The delivery starts when the involved agents accepts',
+        'SupplyBlocks "autonomously calculates" the route for delivering the purchased products by retailers and small businesses, composed of transport and warehousing companies',
       ...getCommonProps('Admin')
     },
     {
       label: 'Transport',
       title: 'Delivery - Transport 1',
       text:
-        'Assigned transport company moves the products to the next point on the route, which may be the end customer (one-transport route) or a warehouse. In both cases the transport company registers that the product has been delivered',
+        'Assigned transport company moves the products to the next point on the route, which may be the end customer or a warehouse. In both cases the transport company registers that the product has been delivered',
       ...getCommonProps('Transport')
     },
     {
