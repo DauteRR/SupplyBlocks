@@ -17,6 +17,7 @@ import React, { useContext } from 'react';
 import { GlobalContext } from '../../contexts/Global';
 import { defaultAddress, getEntityTypesData } from '../../types';
 import { Product } from '../../types/Product';
+import ProductStateChip from '../ProductStateChip';
 
 const useStyles = makeStyles<Theme>((theme) => ({
   root: {
@@ -129,6 +130,7 @@ const ProductCard: React.FC<Props> = (props) => {
   const {
     name,
     id,
+    state,
     creatorID,
     creationTimestamp,
     purchaserID,
@@ -144,9 +146,16 @@ const ProductCard: React.FC<Props> = (props) => {
     <Card className={classes.root}>
       <CardContent className={classes.cardContent}>
         <Grid container className={classes.header}>
-          <Typography variant="h5" color="primary" noWrap>
-            {name}
-          </Typography>
+          <Grid item xs={8}>
+            <Typography variant="h5" noWrap>
+              {name}
+            </Typography>
+          </Grid>
+          <Grid item xs={4}>
+            <div className={classes.chipContainer}>
+              <ProductStateChip state={state} showIcon />
+            </div>
+          </Grid>
         </Grid>
         <InfoItem
           text={id}

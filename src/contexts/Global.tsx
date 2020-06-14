@@ -13,7 +13,11 @@ import {
   entityTypeConversion,
   getEntityType
 } from '../types';
-import { Product, ProductCreationArgs } from '../types/Product';
+import {
+  getProductState,
+  Product,
+  ProductCreationArgs
+} from '../types/Product';
 
 type SetAccountAction = {
   type: 'SET_ACCOUNT';
@@ -189,6 +193,7 @@ const GlobalContextProvider: React.FC = ({ children }) => {
     return {
       id: obj.id,
       name: obj.name,
+      state: getProductState(parseInt(obj.state)),
       creatorID: obj.creatorID,
       creationTimestamp: new Date(parseInt(obj.creationTimestamp) * 1000),
       purchaserID:
