@@ -11,7 +11,11 @@ import {
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { DashboardRoutes, ExtendedRoute } from '../../routes';
+import {
+  ApplicationRoutes,
+  DashboardRoutes,
+  ExtendedRoute
+} from '../../routes';
 
 const useStyles = makeStyles<Theme>((theme) => ({
   root: {
@@ -56,6 +60,14 @@ const SidebarNav: React.FC<Props> = (props) => {
   const classes = useStyles();
   let history = useHistory();
   const [active, setActive] = useState(history.location.pathname);
+
+  useEffect(() => {
+    if (active === ApplicationRoutes.dashboard.path) {
+      setActive(DashboardRoutes.companies.path);
+      history.push(DashboardRoutes.companies.path);
+    }
+    // Callback for component mount => empty deps array
+  }, []);
 
   const clickCallback = useCallback(
     (page: ExtendedRoute) => (
