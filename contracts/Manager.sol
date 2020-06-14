@@ -92,6 +92,7 @@ contract Manager {
 
   function getEntities() public view returns (TypesLib.EntityData[] memory) {
     require(approvedEntities[msg.sender], 'Address not approved');
+    // TODO: Return pending companies only if the sender is admin
     uint256 size = entities.length;
     TypesLib.EntityData[] memory array = new TypesLib.EntityData[](size);
     for (uint256 index = 0; index < entities.length; index++) {
@@ -101,13 +102,8 @@ contract Manager {
     return array;
   }
 
-  function getProducts(Entity _entity)
-    public
-    view
-    returns (TypesLib.ProductData[] memory)
-  {
+  function getProducts() public view returns (TypesLib.ProductData[] memory) {
     require(approvedEntities[msg.sender], 'Address not approved');
-    require(entitiesMapping[msg.sender] == _entity, 'Unauthorized');
 
     uint256 size = 0;
     uint256[] memory indexes = new uint256[](products.length);

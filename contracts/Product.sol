@@ -12,6 +12,7 @@ contract Product {
 
   mapping(address => bool) public associatedEntities;
 
+  // TODO: store address
   constructor(string memory _name, Entity _factory) public {
     require(
       _factory.getType() == TypesLib.EntityType.Factory,
@@ -24,7 +25,7 @@ contract Product {
       creatorID: address(_factory),
       creationTimestamp: now,
       purchaserID: address(0),
-      deliveredTimestamp: 0
+      deliveryTimestamp: 0
     });
 
     associatedEntities[address(_factory)] = true;
@@ -70,8 +71,8 @@ contract Product {
     );
     data.state = TypesLib.ProductState.Delivered;
     data.purchaserID = address(_retailer);
-    data.deliveredTimestamp = now;
-    _delivery.addStep(data.state, address(_retailer), data.deliveredTimestamp);
+    data.deliveryTimestamp = now;
+    _delivery.addStep(data.state, address(_retailer), data.deliveryTimestamp);
     associatedEntities[address(_retailer)] = true;
   }
 

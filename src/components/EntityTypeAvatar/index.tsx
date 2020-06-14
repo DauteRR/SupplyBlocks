@@ -13,7 +13,7 @@ interface Props {
   type: EntityType | 'Admin';
 }
 
-const entityTypesData = getEntityTypesData('white', 50);
+const entityTypesData = getEntityTypesData({ color: 'white', fontSize: 50 });
 
 const EntityTypeAvatar: React.FC<Props> = (props) => {
   const classes = useStyles();

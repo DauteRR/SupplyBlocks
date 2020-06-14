@@ -13,7 +13,7 @@ interface Props {
   showIcon: boolean;
 }
 
-const entityTypesData = getEntityTypesData('white', 25);
+const entityTypesData = getEntityTypesData({ color: 'white', fontSize: 25 });
 
 const EntityTypeChip: React.FC<Props> = (props) => {
   const classes = useStyles();

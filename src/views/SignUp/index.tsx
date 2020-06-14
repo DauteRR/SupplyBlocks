@@ -67,22 +67,20 @@ export const SignUpView: React.FC<Props> = (props) => {
         name: values.name,
         email: values.email,
         phoneNumber: values.phoneNumber,
-        account: globalState.account,
         type: values.type as EntityType
       })
         .then((result: any) => {
-          helpers.setSubmitting(false);
           enqueueSnackbar('Success', {
             variant: 'success'
           });
           updateEntity(globalState.account);
         })
         .catch((error: any) => {
-          helpers.setSubmitting(false);
           enqueueSnackbar('Error sending petition', {
             variant: 'error'
           });
-        });
+        })
+        .finally(() => helpers.setSubmitting(false));
     },
     [createEntity, globalState, enqueueSnackbar, updateEntity]
   );

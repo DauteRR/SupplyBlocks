@@ -87,7 +87,7 @@ const customStyles = (color: string) => {
 };
 
 export const getTimelineElements = (): TimelineElement[] => {
-  const entityTypesData = getEntityTypesData('white', 25);
+  const entityTypesData = getEntityTypesData({ color: 'white', fontSize: 25 });
 
   const getCommonProps = (key: EntityType) => ({
     dateClassName: customStyles(entityTypesData[key].color).elementSideText,

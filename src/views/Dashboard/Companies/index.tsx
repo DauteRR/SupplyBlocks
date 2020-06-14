@@ -73,7 +73,7 @@ const CompaniesList: React.FC<{
   );
 };
 
-const filterCompanies = (entities: Entity[]) => {
+const splitCompanies = (entities: Entity[]) => {
   const pending = entities.filter((entity) => !entity.approved);
   const approved = entities.filter((entity) => entity.approved);
 
@@ -82,6 +82,7 @@ const filterCompanies = (entities: Entity[]) => {
 
 interface Props {}
 
+// TODO: Highlight current entity card?
 const CompaniesView: React.FC<Props> = (props) => {
   const classes = useStyles();
   const { globalState, convertEntity, getEntities } = useContext(GlobalContext);
@@ -92,8 +93,9 @@ const CompaniesView: React.FC<Props> = (props) => {
 
   const UpdateCompanies = () => {
     getEntities().then((result: any[]) => {
-      const { pending, approved } = filterCompanies(result.map(convertEntity));
+      const { pending, approved } = splitCompanies(result.map(convertEntity));
       setCompanies(approved);
+      // TODO: remove
       isAdmin && setPendingCompanies(pending);
       setIsLoading(false);
     });

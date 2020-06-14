@@ -6,6 +6,7 @@ import StarIcon from '@material-ui/icons/Star';
 import StoreIcon from '@material-ui/icons/Store';
 import React from 'react';
 
+// TODO: Organize types
 export type Address = string;
 
 export const defaultAddress: Address =
@@ -42,7 +43,6 @@ export interface Entity {
 }
 
 export interface EntityCreationArgs {
-  account: string;
   name: string;
   email: string;
   phoneNumber: string;
@@ -79,40 +79,38 @@ export interface EntityTypeData {
 }
 
 export const getEntityTypesData = (
-  color: string,
-  size: number
+  style: React.CSSProperties
 ): {
   [key in EntityType | 'Admin']: EntityTypeData;
 } => {
-  const styles = { fontSize: size, color: color };
   return {
     Admin: {
-      icon: <StarIcon style={styles} />,
+      icon: <StarIcon style={style} />,
       color: '#f6ae9aff',
       label: 'Admin'
     },
     Factory: {
-      icon: <BuildIcon style={styles} />,
+      icon: <BuildIcon style={style} />,
       color: '#f5ab25',
       label: 'Factory'
     },
     Retailer: {
-      icon: <StoreIcon style={styles} />,
+      icon: <StoreIcon style={style} />,
       color: '#51c151',
       label: 'Retailer'
     },
     Transport: {
-      icon: <LocalShippingIcon style={styles} />,
+      icon: <LocalShippingIcon style={style} />,
       color: '#ef6666',
       label: 'Transport'
     },
     Warehouse: {
-      icon: <HomeWorkIcon style={styles} />,
+      icon: <HomeWorkIcon style={style} />,
       color: '#6b6be0',
       label: 'Warehouse'
     },
     None: {
-      icon: <ErrorIcon style={styles} />,
+      icon: <ErrorIcon style={style} />,
       color: 'black',
       label: 'Error'
     }

@@ -27,6 +27,6 @@ library TypesLib {
     address creatorID;
     uint256 creationTimestamp;
     address purchaserID;
-    uint256 deliveredTimestamp;
+    uint256 deliveryTimestamp;
   }
 }

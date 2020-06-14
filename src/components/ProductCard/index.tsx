@@ -8,14 +8,14 @@ import {
   makeStyles,
   Theme,
   Tooltip,
-  Typography
+  Typography,
+  useTheme
 } from '@material-ui/core';
-import EmailIcon from '@material-ui/icons/Email';
+import EventIcon from '@material-ui/icons/Event';
 import FingerprintIcon from '@material-ui/icons/Fingerprint';
-import PhoneIcon from '@material-ui/icons/Phone';
 import React from 'react';
-import { Entity, getEntityTypesData } from '../../types/Entity';
-import EntityTypeChip from '../EntityTypeChip';
+import { defaultAddress, getEntityTypesData } from '../../types';
+import { Product } from '../../types/Product';
 
 const useStyles = makeStyles<Theme>((theme) => ({
   root: {
@@ -37,6 +37,9 @@ const useStyles = makeStyles<Theme>((theme) => ({
   icon: {
     marginRight: theme.spacing(1)
   },
+  header: {
+    marginBottom: theme.spacing(3)
+  },
   cardActions: {
     justifyContent: 'center',
     padding: 0
@@ -44,9 +47,6 @@ const useStyles = makeStyles<Theme>((theme) => ({
   chipContainer: {
     display: 'flex',
     justifyContent: 'flex-end'
-  },
-  header: {
-    marginBottom: theme.spacing(3)
   },
   wrapper: {
     margin: theme.spacing(3, 0, 2),
@@ -103,7 +103,7 @@ const CardButton: React.FC<CardButtonProps> = (props) => {
   const classes = useStyles();
   return (
     <div className={classes.wrapper}>
-      <Tooltip title="Accept company" aria-label="accept-company">
+      <Tooltip title="Purchase product" aria-label="purchase-product">
         <div>
           <Button
             variant="contained"
@@ -112,7 +112,7 @@ const CardButton: React.FC<CardButtonProps> = (props) => {
             onClick={props.onClickCallback}
             disabled={props.disabled || props.transacting}
           >
-            Accept
+            Purchase
           </Button>
         </div>
       </Tooltip>
@@ -123,44 +123,34 @@ const CardButton: React.FC<CardButtonProps> = (props) => {
   );
 };
 
-interface Props extends Entity {
+interface Props extends Product {
   onClickCallback: () => void;
   disabled: boolean;
   transacting: boolean;
 }
 
-const CompanyCard: React.FC<Props> = (props) => {
+const ProductCard: React.FC<Props> = (props) => {
   const classes = useStyles();
+  const theme = useTheme();
   const {
-    email,
     name,
-    phoneNumber,
-    type,
-    approved,
     id,
+    creatorID,
+    creationTimestamp,
+    purchaserID,
+    deliveryTimestamp,
     onClickCallback
   } = props;
+
+  const purchased = purchaserID !== defaultAddress;
 
   return (
     <Card className={classes.root}>
       <CardContent className={classes.cardContent}>
         <Grid container className={classes.header}>
-          <Grid item xs={8}>
-            <Typography
-              variant="h5"
-              noWrap
-              className={
-                customStyles(getEntityTypesData({})[type].color).companyName
-              }
-            >
-              {name}
-            </Typography>
-          </Grid>
-          <Grid item xs={4}>
-            <div className={classes.chipContainer}>
-              <EntityTypeChip type={type} showIcon />
-            </div>
-          </Grid>
+          <Typography variant="h5" color="primary" noWrap>
+            {name}
+          </Typography>
         </Grid>
         <InfoItem
           text={id}
@@ -168,15 +158,41 @@ const CompanyCard: React.FC<Props> = (props) => {
           icon={<FingerprintIcon className={classes.icon} color="primary" />}
         />
         <InfoItem
-          text={email}
-          icon={<EmailIcon className={classes.icon} color="primary" />}
+          text={creatorID}
+          textClassName={classes.address}
+          icon={
+            getEntityTypesData({
+              color: theme.palette.primary.main,
+              fontSize: 24,
+              marginRight: theme.spacing(1)
+            }).Factory.icon
+          }
         />
         <InfoItem
-          text={phoneNumber}
-          icon={<PhoneIcon className={classes.icon} color="primary" />}
+          text={creationTimestamp.toUTCString()}
+          icon={<EventIcon className={classes.icon} color="primary" />}
         />
+        {purchased && (
+          <InfoItem
+            text={purchaserID!}
+            textClassName={classes.address}
+            icon={
+              getEntityTypesData({
+                color: theme.palette.primary.main,
+                fontSize: 24,
+                marginRight: theme.spacing(1)
+              }).Retailer.icon
+            }
+          />
+        )}
+        {purchased && (
+          <InfoItem
+            text={deliveryTimestamp!.toUTCString()}
+            icon={<EventIcon className={classes.icon} color="primary" />}
+          />
+        )}
       </CardContent>
-      {!approved && (
+      {!purchased && (
         <CardActions className={classes.cardActions}>
           <CardButton
             onClickCallback={onClickCallback}
@@ -189,4 +205,4 @@ const CompanyCard: React.FC<Props> = (props) => {
   );
 };
 
-export default CompanyCard;
+export default ProductCard;

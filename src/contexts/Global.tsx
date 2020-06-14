@@ -13,6 +13,7 @@ import {
   entityTypeConversion,
   getEntityType
 } from '../types';
+import { Product, ProductCreationArgs } from '../types/Product';
 
 type SetAccountAction = {
   type: 'SET_ACCOUNT';
@@ -53,6 +54,9 @@ type Context = {
   approveEntity: (address: Address | string) => Promise<any>;
   convertEntity: (obj: any) => Entity;
   getEntities: () => Promise<any>;
+  createProduct: (params: ProductCreationArgs) => Promise<any>;
+  convertProduct: (obj: any) => Product;
+  getProducts: () => Promise<any>;
 };
 
 const DefaultContext: Context = {
@@ -62,7 +66,10 @@ const DefaultContext: Context = {
   createEntity: () => new Promise<any>(() => {}),
   approveEntity: (address: Address) => new Promise<any>(() => {}),
   convertEntity: () => ({} as Entity),
-  getEntities: () => new Promise<any>(() => {})
+  getEntities: () => new Promise<any>(() => {}),
+  createProduct: () => new Promise<any>(() => {}),
+  convertProduct: () => ({} as Product),
+  getProducts: () => new Promise<any>(() => {})
 };
 
 const GlobalContext = React.createContext<Context>(DefaultContext);
@@ -149,7 +156,7 @@ const GlobalContextProvider: React.FC = ({ children }) => {
           params.phoneNumber,
           entityTypeConversion[params.type]
         )
-        .send({ from: params.account });
+        .send({ from: state.account });
     },
     [state]
   );
@@ -169,6 +176,38 @@ const GlobalContextProvider: React.FC = ({ children }) => {
       .call({ from: state.account });
   }, [state]);
 
+  const createProduct = useCallback(
+    (params: ProductCreationArgs) => {
+      return state.managerContract.methods
+        .createProduct(params.name)
+        .send({ from: state.account });
+    },
+    [state]
+  );
+
+  const convertProduct = useCallback((obj: any): Product => {
+    return {
+      id: defaultAddress,
+      name: obj.name,
+      creatorID: obj.creatorID,
+      creationTimestamp: new Date(parseInt(obj.creationTimestamp) * 1000),
+      purchaserID:
+        obj.purchaserID === defaultAddress
+          ? defaultAddress
+          : obj.purcharserAddress,
+      deliveryTimestamp:
+        obj.purchaserID === defaultAddress
+          ? undefined
+          : new Date(parseInt(obj.deliveryTimestamp) * 1000)
+    };
+  }, []);
+
+  const getProducts = useCallback(() => {
+    return state.managerContract.methods
+      .getProducts()
+      .call({ from: state.account });
+  }, [state]);
+
   return (
     <Provider
       value={{
@@ -178,7 +217,10 @@ const GlobalContextProvider: React.FC = ({ children }) => {
         createEntity,
         convertEntity,
         approveEntity,
-        getEntities
+        getEntities,
+        getProducts,
+        createProduct,
+        convertProduct
       }}
     >
       {children}

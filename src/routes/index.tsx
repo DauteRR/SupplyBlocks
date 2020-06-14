@@ -5,6 +5,7 @@ import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import React from 'react';
 import Dashboard from '../views/Dashboard';
 import CompaniesView from '../views/Dashboard/Companies';
+import ProductsView from '../views/Dashboard/Products';
 import { SignUpView } from '../views/SignUp';
 import { WelcomeView } from '../views/Welcome';
 
@@ -45,7 +46,7 @@ export const DashboardRoutes: DashboardRoutes = {
     label: 'Products',
     exact: true,
     path: '/dashboard/products',
-    view: <Typography>Products</Typography>,
+    view: <ProductsView />,
     icon: <ShoppingBasketIcon />
   },
   deliveries: {
