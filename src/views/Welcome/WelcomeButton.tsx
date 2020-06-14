@@ -5,7 +5,7 @@ import {
   Theme,
   Tooltip
 } from '@material-ui/core';
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { GlobalContext } from '../../contexts/Global';
 import { ApplicationRoutes } from '../../routes';
@@ -36,6 +36,12 @@ export const JoinButton: React.FC<Props> = (props) => {
     );
   }, [history, globalState.entity]);
 
+  useEffect(() => {
+    setText(
+      globalState.entity.approved ? 'Enter dashboard' : 'Join SupplyBlocks'
+    );
+  }, [globalState.entity]);
+
   return (
     <Container maxWidth="xs" className={classes.root}>
       <Tooltip title={text} aria-label={text}>
@@ -46,9 +52,7 @@ export const JoinButton: React.FC<Props> = (props) => {
           color="secondary"
           onClick={clickCallback}
         >
-          {globalState.entity.approved
-            ? 'Enter dashboard'
-            : 'Join SupplyBlocks'}
+          {text}
         </Button>
       </Tooltip>
     </Container>

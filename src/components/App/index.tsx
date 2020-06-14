@@ -68,13 +68,13 @@ export const App: React.FC<Props> = (props) => {
     if (isMetamaskEnabled) {
       updateAccount(window.ethereum.selectedAddress);
     }
-  }, [isMetamaskEnabled]);
+  }, [isMetamaskEnabled, updateAccount]);
 
   const CheckConnection = useCallback(() => {
     web3.eth.net.isListening().catch(() => {
       setConnectionError(true);
     });
-  }, []);
+  }, [web3]);
 
   useInterval(CheckConnection, 5000);
   useInterval(CheckMetamask, 5000);
@@ -82,15 +82,16 @@ export const App: React.FC<Props> = (props) => {
   useEffect(() => {
     SetOnAccountChange((accounts: string[]) => {
       updateAccount(accounts[0]);
+      enqueueSnackbar('Account change', { variant: 'info' });
       if (accounts.length === 0) {
         setIsMetamaskEnabled(false);
       }
     });
-  }, []);
+  }, [updateAccount, enqueueSnackbar]);
 
   useEffect(() => {
-    enqueueSnackbar('Account change', { variant: 'info' });
     updateEntity(globalState.account);
+    // including updateEntity in the deps cause updates constantly
   }, [globalState.account]);
 
   let appBody: JSX.Element = <AppBody />;

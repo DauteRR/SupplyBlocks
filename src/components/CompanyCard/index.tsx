@@ -13,8 +13,7 @@ import {
 import EmailIcon from '@material-ui/icons/Email';
 import FingerprintIcon from '@material-ui/icons/Fingerprint';
 import PhoneIcon from '@material-ui/icons/Phone';
-import React, { useContext } from 'react';
-import { GlobalContext } from '../../contexts/Global';
+import React from 'react';
 import { Entity, getEntityTypesData } from '../../types/Entity';
 import EntityTypeChip from '../EntityTypeChip';
 
@@ -132,7 +131,6 @@ interface Props extends Entity {
 
 const CompanyCard: React.FC<Props> = (props) => {
   const classes = useStyles();
-  const { globalState } = useContext(GlobalContext);
   const {
     email,
     name,

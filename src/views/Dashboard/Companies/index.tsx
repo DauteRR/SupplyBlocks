@@ -28,24 +28,27 @@ const CompaniesList: React.FC<{
   updateCallback: () => void;
 }> = ({ companies, updateCallback }) => {
   const classes = useStyles();
-  const { globalState, approveEntity } = useContext(GlobalContext);
+  const { approveEntity } = useContext(GlobalContext);
   const [current, setCurrent] = useState('');
   const { enqueueSnackbar } = useSnackbar();
 
-  const clickCallback = useCallback((address: string) => {
-    return () => {
-      setCurrent(address);
-      approveEntity(address)
-        .then(() => {
-          updateCallback();
-          enqueueSnackbar('Approved', { variant: 'success' });
-        })
-        .catch(() => {
-          enqueueSnackbar('Error', { variant: 'error' });
-        })
-        .finally(() => setCurrent(''));
-    };
-  }, []);
+  const clickCallback = useCallback(
+    (address: string) => {
+      return () => {
+        setCurrent(address);
+        approveEntity(address)
+          .then(() => {
+            updateCallback();
+            enqueueSnackbar('Approved', { variant: 'success' });
+          })
+          .catch(() => {
+            enqueueSnackbar('Error', { variant: 'error' });
+          })
+          .finally(() => setCurrent(''));
+      };
+    },
+    [approveEntity, enqueueSnackbar, updateCallback]
+  );
 
   return (
     <Grid className={classes.grid} container>

@@ -84,7 +84,7 @@ export const SignUpView: React.FC<Props> = (props) => {
           });
         });
     },
-    [createEntity, globalState]
+    [createEntity, globalState, enqueueSnackbar, updateEntity]
   );
 
   useEffect(() => {

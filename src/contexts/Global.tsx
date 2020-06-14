@@ -138,7 +138,7 @@ const GlobalContextProvider: React.FC = ({ children }) => {
           );
       });
     }
-  }, [state, getEntityAddress]);
+  }, [state, getEntityAddress, convertEntity]);
 
   const createEntity = useCallback(
     (params: EntityCreationArgs) => {

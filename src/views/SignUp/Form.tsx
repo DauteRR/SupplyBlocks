@@ -50,7 +50,7 @@ interface Props extends FormikProps<SignUpFormFields> {
 
 export const SignUpForm: React.FC<Props> = (props) => {
   const classes = useStyles();
-  const { submitForm, isSubmitting, isValid, submitCount } = props;
+  const { submitForm, isSubmitting, isValid } = props;
 
   return (
     <form
@@ -150,6 +150,7 @@ export const SignUpForm: React.FC<Props> = (props) => {
               color="secondary"
               className={classes.submit}
               onClick={submitForm}
+              // TODO: disabled button delay when submitting successfully
               disabled={isSubmitting || !isValid || props.disabled}
             >
               Send petition
