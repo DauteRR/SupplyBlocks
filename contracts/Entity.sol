@@ -40,4 +40,12 @@ contract Entity {
   function getSet() public view returns (bool) {
     return data.set;
   }
+
+  function getApproved() public view returns (bool) {
+    return data.approved;
+  }
+
+  function getID() public view returns (address) {
+    return data.id;
+  }
 }

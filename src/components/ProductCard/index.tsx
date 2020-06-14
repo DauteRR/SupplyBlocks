@@ -13,7 +13,8 @@ import {
 } from '@material-ui/core';
 import EventIcon from '@material-ui/icons/Event';
 import FingerprintIcon from '@material-ui/icons/Fingerprint';
-import React from 'react';
+import React, { useContext } from 'react';
+import { GlobalContext } from '../../contexts/Global';
 import { defaultAddress, getEntityTypesData } from '../../types';
 import { Product } from '../../types/Product';
 
@@ -61,7 +62,10 @@ const useStyles = makeStyles<Theme>((theme) => ({
     marginLeft: -12
   },
   cardContent: {
-    padding: 0
+    padding: 0,
+    '&:last-child': {
+      padding: 0
+    }
   }
 }));
 
@@ -141,8 +145,10 @@ const ProductCard: React.FC<Props> = (props) => {
     deliveryTimestamp,
     onClickCallback
   } = props;
+  const { globalState } = useContext(GlobalContext);
 
   const purchased = purchaserID !== defaultAddress;
+  const isRetailer = globalState.entity.type === 'Retailer';
 
   return (
     <Card className={classes.root}>
@@ -192,7 +198,7 @@ const ProductCard: React.FC<Props> = (props) => {
           />
         )}
       </CardContent>
-      {!purchased && (
+      {!purchased && isRetailer && (
         <CardActions className={classes.cardActions}>
           <CardButton
             onClickCallback={onClickCallback}

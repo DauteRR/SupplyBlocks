@@ -82,7 +82,6 @@ const splitCompanies = (entities: Entity[]) => {
 
 interface Props {}
 
-// TODO: Highlight current entity card?
 const CompaniesView: React.FC<Props> = (props) => {
   const classes = useStyles();
   const { globalState, convertEntity, getEntities } = useContext(GlobalContext);
@@ -95,8 +94,7 @@ const CompaniesView: React.FC<Props> = (props) => {
     getEntities().then((result: any[]) => {
       const { pending, approved } = splitCompanies(result.map(convertEntity));
       setCompanies(approved);
-      // TODO: remove
-      isAdmin && setPendingCompanies(pending);
+      setPendingCompanies(pending);
       setIsLoading(false);
     });
   };

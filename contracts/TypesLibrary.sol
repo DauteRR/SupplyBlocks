@@ -22,6 +22,7 @@ library TypesLib {
   }
 
   struct ProductData {
+    address id;
     string name;
     TypesLib.ProductState state;
     address creatorID;

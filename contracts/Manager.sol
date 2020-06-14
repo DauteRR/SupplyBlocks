@@ -19,10 +19,6 @@ contract Manager {
   mapping(address => Product) public productsMapping;
   mapping(address => bool) public registeredProducts;
 
-  address[] public deliveries;
-  mapping(address => Delivery) public deliveriesMapping;
-  mapping(address => bool) public registeredDeliveries;
-
   constructor() public {
     entities.push(
       new Entity(
@@ -73,10 +69,11 @@ contract Manager {
     require(approvedEntities[msg.sender], 'Non approved account');
     require(registeredProducts[_productAddress], 'Non registered product');
 
-    Delivery newDelivery = new Delivery(productsMapping[_productAddress]);
-    deliveriesMapping[address(newDelivery)] = newDelivery;
-    registeredDeliveries[address(newDelivery)] = true;
-    deliveries.push(address(newDelivery));
+    // TODO:
+    //Delivery newDelivery = new Delivery(productsMapping[_productAddress]);
+    //deliveriesMapping[address(newDelivery)] = newDelivery;
+    //registeredDeliveries[address(newDelivery)] = true;
+    //deliveries.push(address(newDelivery));
   }
 
   function approveEntity(address _address) public {
@@ -92,11 +89,24 @@ contract Manager {
 
   function getEntities() public view returns (TypesLib.EntityData[] memory) {
     require(approvedEntities[msg.sender], 'Address not approved');
-    // TODO: Return pending companies only if the sender is admin
-    uint256 size = entities.length;
-    TypesLib.EntityData[] memory array = new TypesLib.EntityData[](size);
+
+    uint256 size = 0;
+    uint256[] memory indexes = new uint256[](entities.length);
+    Entity entity = Entity(entitiesMapping[msg.sender]);
+    TypesLib.EntityType entityType = entity.getType();
     for (uint256 index = 0; index < entities.length; index++) {
-      array[index] = entities[index].getData();
+      if (entityType == TypesLib.EntityType.Admin) {
+        indexes[size] = index;
+        size += 1;
+      } else if (entities[index].getApproved()) {
+        indexes[size] = index;
+        size += 1;
+      }
+    }
+
+    TypesLib.EntityData[] memory array = new TypesLib.EntityData[](size);
+    for (uint256 it = 0; it < size; it++) {
+      array[it] = entities[indexes[it]].getData();
     }
 
     return array;
@@ -117,7 +127,7 @@ contract Manager {
       ) {
         indexes[size] = index;
         size += 1;
-      } else if (product.associatedEntities(address(entity))) {
+      } else if (product.associatedEntities(entity.getID())) {
         indexes[size] = index;
         size += 1;
       }

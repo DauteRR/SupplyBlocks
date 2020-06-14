@@ -61,7 +61,10 @@ const useStyles = makeStyles<Theme>((theme) => ({
     marginLeft: -12
   },
   cardContent: {
-    padding: 0
+    padding: 0,
+    '&:last-child': {
+      padding: 0
+    }
   }
 }));
 

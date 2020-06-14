@@ -1,7 +1,6 @@
 pragma solidity >=0.4.21 <0.7.0;
 import './TypesLibrary.sol';
 import './Entity.sol';
-import './Delivery.sol';
 pragma experimental ABIEncoderV2;
 
 contract Product {
@@ -10,9 +9,10 @@ contract Product {
 
   TypesLib.ProductData public data;
 
+  TypesLib.DeliveryStep[] steps;
+
   mapping(address => bool) public associatedEntities;
 
-  // TODO: store address
   constructor(string memory _name, Entity _factory) public {
     require(
       _factory.getType() == TypesLib.EntityType.Factory,
@@ -20,18 +20,19 @@ contract Product {
     );
 
     data = TypesLib.ProductData({
+      id: address(this),
       name: _name,
       state: TypesLib.ProductState.Created,
-      creatorID: address(_factory),
+      creatorID: _factory.getID(),
       creationTimestamp: now,
       purchaserID: address(0),
       deliveryTimestamp: 0
     });
 
-    associatedEntities[address(_factory)] = true;
+    associatedEntities[_factory.getID()] = true;
   }
 
-  function setShipped(Entity _transport, Delivery _delivery) public {
+  function setShipped(Entity _transport) public {
     require(
       _transport.getType() == TypesLib.EntityType.Transport,
       'Non transport entity'
@@ -42,11 +43,11 @@ contract Product {
       'Wrong previous state'
     );
     data.state = TypesLib.ProductState.Shipped;
-    _delivery.addStep(data.state, address(_transport), now);
-    associatedEntities[address(_transport)] = true;
+    addDeliveryStep(data.state, _transport.getID(), now);
+    associatedEntities[_transport.getID()] = true;
   }
 
-  function setStored(Entity _warehouse, Delivery _delivery) public {
+  function setStored(Entity _warehouse) public {
     require(
       _warehouse.getType() == TypesLib.EntityType.Warehouse,
       'Non warehouse entity'
@@ -56,11 +57,11 @@ contract Product {
       'Wrong previous state'
     );
     data.state = TypesLib.ProductState.Stored;
-    _delivery.addStep(data.state, address(_warehouse), now);
-    associatedEntities[address(_warehouse)] = true;
+    addDeliveryStep(data.state, _warehouse.getID(), now);
+    associatedEntities[_warehouse.getID()] = true;
   }
 
-  function setDelivered(Entity _retailer, Delivery _delivery) public {
+  function setDelivered(Entity _retailer) public {
     require(
       _retailer.getType() == TypesLib.EntityType.Retailer,
       'Non retailer entity'
@@ -70,10 +71,10 @@ contract Product {
       'Wrong previous state'
     );
     data.state = TypesLib.ProductState.Delivered;
-    data.purchaserID = address(_retailer);
+    data.purchaserID = _retailer.getID();
     data.deliveryTimestamp = now;
-    _delivery.addStep(data.state, address(_retailer), data.deliveryTimestamp);
-    associatedEntities[address(_retailer)] = true;
+    addDeliveryStep(data.state, _retailer.getID(), data.deliveryTimestamp);
+    associatedEntities[_retailer.getID()] = true;
   }
 
   function getData() public view returns (TypesLib.ProductData memory) {
@@ -90,5 +91,13 @@ contract Product {
 
   function getCreationTimestamp() public view returns (uint256) {
     return data.creationTimestamp;
+  }
+
+  function addDeliveryStep(
+    TypesLib.ProductState _state,
+    address _entityAddress,
+    uint256 _timestamp
+  ) public {
+    steps.push(TypesLib.DeliveryStep(_entityAddress, _state, _timestamp));
   }
 }

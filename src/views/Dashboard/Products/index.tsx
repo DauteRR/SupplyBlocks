@@ -105,7 +105,7 @@ const ProductsView: React.FC<Props> = (props) => {
     });
   };
 
-  useEffect(UpdateProducts, []);
+  useEffect(UpdateProducts, [globalState.account]);
 
   const submitCallback = useCallback(
     (values: CreateProductForm, helpers: FormikHelpers<CreateProductForm>) => {
