@@ -36,28 +36,24 @@ export const convertProduct = (obj: any): Product => {
   };
 };
 
-export const getRandomIntInclusive = (min: number, max: number) => {
+const getRandomIntInclusive = (min: number, max: number) => {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-export const getNRandom = (collection: any[], n: number) => {
-  if (n < collection.length) {
-    throw new Error(
-      `Collection size too small, n = ${n} size = ${collection.length}`
-    );
+const getNRandom = (arr: any[], n: number) => {
+  var result = new Array(n),
+    len = arr.length,
+    taken = new Array(len);
+  if (n > len)
+    throw new RangeError('getRandom: more elements taken than available');
+  while (n--) {
+    var x = Math.floor(Math.random() * len);
+    result[n] = arr[x in taken ? taken[x] : x];
+    taken[x] = --len in taken ? taken[len] : len;
   }
-  let selected = 0;
-  const selection = [];
-  while (selected < n) {
-    const index = getRandomIntInclusive(0, collection.length);
-    selection.push(collection[index]);
-    collection.splice(index, 1);
-    selected += 1;
-  }
-
-  return selection;
+  return result;
 };
 
 // Route estimation mock
@@ -87,18 +83,19 @@ export const getRoute = (
     entities.filter((entity) => entity.type === 'Transport'),
     transportSteps
   );
+  const warehouseSteps = transportSteps - 1;
   const selectedWarehousingEntities: Entity[] =
     transportSteps > 1
       ? getNRandom(
           entities.filter((entity) => entity.type === 'Warehouse'),
-          transportSteps - 1
+          warehouseSteps
         )
       : [];
 
   const route: Address[] = [];
   for (let i = 0; i < selectedTransportEntities.length; ++i) {
-    if (i > 1) {
-      route.push(selectedWarehousingEntities[i].id);
+    if (i > 0) {
+      route.push(selectedWarehousingEntities[i - 1].id);
     }
     route.push(selectedTransportEntities[i].id);
   }

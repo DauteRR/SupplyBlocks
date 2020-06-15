@@ -253,7 +253,6 @@ const GlobalContextProvider: React.FC = ({ children }) => {
   const purchaseProduct = useCallback(
     async (productAddress: string) => {
       if (!state.entity.approved) {
-        console.error('????');
         return EmptyPromise;
       }
       const entities = state.entities.filter(
@@ -262,7 +261,6 @@ const GlobalContextProvider: React.FC = ({ children }) => {
       );
       const route = getRoute(entities, enqueueSnackbar);
       if (route === []) {
-        console.error('wrong route');
         return;
       }
 
