@@ -20,6 +20,7 @@ contract Product {
       _factory.getType() == TypesLib.EntityType.Factory,
       'Non factory entity'
     );
+    require(_factory.getApproved(), 'Non approved factory');
 
     data = TypesLib.ProductData({
       id: address(this),
@@ -31,10 +32,7 @@ contract Product {
       deliveryTimestamp: 0
     });
 
-    deliveryEntities.push(_factory.getID());
-    deliveryTimestamps.push(0);
     deliveryPointer = 0;
-
     associatedEntities[_factory.getID()] = true;
   }
 
@@ -43,6 +41,8 @@ contract Product {
       msg.sender == data.creatorID,
       'Unauthorized for delivery preparation'
     );
+    require(!deliveryIsPrepared, 'Already prepared');
+    require(deliveryEntities.length >= 3, 'No valid delivery to prepare');
     deliveryIsPrepared = true;
   }
 
@@ -83,22 +83,22 @@ contract Product {
 
   function storeDeliveryStep(address _entityAddress) private {
     deliveryEntities.push(_entityAddress);
-    associatedEntities[_entityAddress] = true;
     deliveryTimestamps.push(0);
+    associatedEntities[_entityAddress] = true;
   }
 
   function purchase(address[] memory _routeEntities, address _managerAddress)
     public
   {
-    require(data.purchaserID != address(0), 'Product already purchased');
-    require(_routeEntities.length >= 2, 'Invalid delivery route');
+    require(data.purchaserID == address(0), 'Product already purchased');
+    require(_routeEntities.length >= 3, 'Invalid delivery route');
     require(
       msg.sender == _routeEntities[_routeEntities.length - 1],
       'Unauthorized'
     );
 
     Manager manager = Manager(_managerAddress);
-    require(manager.approvedEntities(msg.sender), 'Non approved account');
+    require(manager.approvedEntities(msg.sender), 'Non approved retailer');
     require(manager.registeredProducts(data.id), 'Non registered product');
     require(
       manager.entitiesMapping(msg.sender).getType() ==
@@ -108,28 +108,37 @@ contract Product {
 
     data.purchaserID = msg.sender;
 
-    Entity entity = Entity(_routeEntities[0]);
-    require(entity.getID() == getCreatorID(), 'Invalid first delivery step');
+    require(
+      manager.entitiesMapping(_routeEntities[0]).getID() == data.creatorID,
+      'Invalid first delivery step'
+    );
+
     storeDeliveryStep(_routeEntities[0]);
     for (uint256 index = 1; index < _routeEntities.length - 1; index++) {
-      entity = Entity(_routeEntities[index]);
+      require(
+        manager.approvedEntities(_routeEntities[index]),
+        'Non approved entity'
+      );
       bool shouldBeTransportEntity = (index % 2 == 1);
       if (shouldBeTransportEntity) {
         require(
-          entity.getType() == TypesLib.EntityType.Transport,
+          manager.entitiesMapping(_routeEntities[index]).getType() ==
+            TypesLib.EntityType.Transport,
           'Invalid transport delivery step'
         );
       } else {
         require(
-          entity.getType() == TypesLib.EntityType.Warehouse,
+          manager.entitiesMapping(_routeEntities[index]).getType() ==
+            TypesLib.EntityType.Warehouse,
           'Invalid warehouse delivery step'
         );
       }
       storeDeliveryStep(_routeEntities[index]);
     }
-    entity = Entity(_routeEntities[_routeEntities.length - 1]);
     require(
-      entity.getType() == TypesLib.EntityType.Retailer,
+      manager
+        .entitiesMapping(_routeEntities[_routeEntities.length - 1])
+        .getType() == TypesLib.EntityType.Retailer,
       'Invalid last delivery step'
     );
     storeDeliveryStep(_routeEntities[_routeEntities.length - 1]);
