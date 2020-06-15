@@ -76,7 +76,7 @@ contract Product {
         data.state = TypesLib.ProductState.Shipped;
       }
     }
-    data.deliveryTimestamps.push(now);
+    data.deliveryTimestamps[data.deliveryStep] = now;
     data.deliveryStep += 1;
   }
 

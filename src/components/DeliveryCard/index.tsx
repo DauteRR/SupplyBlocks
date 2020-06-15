@@ -15,8 +15,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import clsx from 'clsx';
 import React, { useCallback, useContext, useState } from 'react';
 import { GlobalContext } from '../../contexts';
+import { Address } from '../../types';
 import { Product } from '../../types/Product';
-import { convertProduct, getTimelineElements } from '../../utils';
+import { getTimelineElements } from '../../utils';
 import ProductStateChip from '../ProductStateChip';
 import Timeline from '../Timeline';
 
@@ -120,6 +121,7 @@ const DeliveryCard: React.FC<Props> = (props) => {
   const classes = useStyles();
   const theme = useTheme();
   const {
+    id,
     name,
     state,
     deliveryEntities,
@@ -133,6 +135,16 @@ const DeliveryCard: React.FC<Props> = (props) => {
   const handleExpandClick = useCallback(() => {
     setExpanded(!expanded);
   }, [expanded]);
+
+  const getProduct = useCallback((id: Address) => {
+    const filtered = globalState.products.filter(
+      (product) => product.id === id
+    );
+    if (filtered.length !== 1) {
+      throw new Error('Something is wrong');
+    }
+    return filtered[0];
+  }, globalState.products);
 
   const nextEntity = deliveryEntities[deliveryStep] === globalState.account;
 
@@ -167,7 +179,7 @@ const DeliveryCard: React.FC<Props> = (props) => {
         </div>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <div className={classes.timelineContainer}>
-            <DeliveryTimeline delivery={convertProduct(props)} />
+            <DeliveryTimeline delivery={getProduct(id)} />
           </div>
         </Collapse>
       </CardContent>

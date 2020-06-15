@@ -34,6 +34,10 @@ export const convertEntity = (obj: any): Entity => ({
 });
 
 export const convertProduct = (obj: any): Product => {
+  // obj.deliveryEntities.forEach(console.log);
+  console.log(obj.deliveryEntities.length);
+  console.log(obj.deliveryTimestamps.length);
+
   return {
     id: obj.id,
     name: obj.name,
@@ -122,38 +126,79 @@ export const getTimelineElements = (
   entities: Entity[],
   theme: Theme
 ): TimelineElement[] => {
-  console.log(delivery);
+  const {
+    deliveryEntities,
+    deliveryTimestamps,
+    creationTimestamp,
+    deliveryStep
+  } = delivery;
 
-  if (delivery.deliveryEntities.length < 3) {
+  if (deliveryEntities.length < 3) {
+    throw new Error('Something is wrong');
+  }
+  if (deliveryTimestamps.length < 4) {
     throw new Error('Something is wrong');
   }
 
   const entityTypesData = getEntityTypesData({ color: 'white', fontSize: 25 });
 
-  const getCommonProps = (key: EntityType) => ({
-    dateClassName: customColorStyles(entityTypesData[key].color).customColor,
+  const getCommonProps = (key: EntityType, grey?: boolean) => ({
+    dateClassName: customColorStyles(grey ? 'grey' : entityTypesData[key].color)
+      .customColor,
     iconStyle: {
-      backgroundColor: entityTypesData[key].color,
+      backgroundColor: grey ? 'grey' : entityTypesData[key].color,
       color: 'white'
     },
     contentStyle: {
       color: 'white',
-      backgroundColor: entityTypesData[key].color
+      backgroundColor: grey ? 'grey' : entityTypesData[key].color
     },
     contentArrowStyle: {
-      borderRight: `7px solid  ${entityTypesData[key].color}`
+      borderRight: `7px solid  ${grey ? 'grey' : entityTypesData[key].color}`
     },
     icon: entityTypesData[key].icon
   });
 
-  const elements: TimelineElement[] = [];
+  const getEntity = (id: Address): Entity => {
+    const filtered = entities.filter((entity) => entity.id === id);
+    if (filtered.length !== 1) {
+      throw new Error('Something is wrong');
+    }
+    return filtered[0];
+  };
+  console.log(delivery);
 
+  const elements: TimelineElement[] = [];
   elements.push({
-    label: delivery.creationTimestamp.toUTCString(),
-    title: 'Created',
-    body: <></>,
+    title: creationTimestamp.toUTCString(),
+    label: 'Created',
+    body: <p>TODO: show icon and fingerprint</p>,
     ...getCommonProps('Factory')
   });
+
+  let pending: boolean = deliveryStep === 1;
+
+  // elements.push({
+  //   label: delivery.deliveryTimestamps[0].toUTCString(),
+  //   title: 'Prepared',
+  //   body: <></>,
+  //   ...getCommonProps('Factory', pending)
+  // });
+
+  for (let i = 0; i < deliveryTimestamps.length; ++i) {
+    pending = deliveryStep >= i;
+    // console.log(deliveryEntities[i]);
+
+    // const currentEntity = getEntity(deliveryEntities[i - 1]);
+    // console.log(currentEntity.type);
+
+    // elements.push({
+    //   label: 'Prepared',
+    //   title: delivery.deliveryTimestamps[i].toUTCString(),
+    //   body: <></>,
+    //   ...getCommonProps(currentEntity.type, pending)
+    // });
+  }
 
   return elements;
 };
