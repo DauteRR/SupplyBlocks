@@ -39,7 +39,7 @@ contract Product {
     require(data.state != TypesLib.ProductState.Prepared, 'Already prepared');
     data.deliveryTimestamps[data.deliveryStep] = now;
     data.state = TypesLib.ProductState.Prepared;
-    data.deliveryStep = 1;
+    data.deliveryStep += 1;
   }
 
   function timestampDeliveryStep() public {
@@ -62,7 +62,7 @@ contract Product {
       );
       data.state = TypesLib.ProductState.Shipped;
     } else {
-      if (data.deliveryStep % 2 == 0) {
+      if (data.deliveryStep % 2 == 1) {
         require(
           data.state == TypesLib.ProductState.Stored,
           'Wrong Shipped previous step'
@@ -73,7 +73,7 @@ contract Product {
           data.state == TypesLib.ProductState.Shipped,
           'Wrong Stored previous step'
         );
-        data.state = TypesLib.ProductState.Shipped;
+        data.state = TypesLib.ProductState.Stored;
       }
     }
     data.deliveryTimestamps[data.deliveryStep] = now;

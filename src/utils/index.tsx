@@ -196,11 +196,11 @@ export const getTimelineElements = (
   });
 
   for (let i = 0; i < deliveryTimestamps.length; ++i) {
-    const pending = deliveryStep < i;
+    const pending = deliveryStep <= i;
     const currentEntity = getEntity(deliveryEntities[i], entities);
     elements.push({
       label: entityTypeToProductState(currentEntity.type),
-      title: delivery.deliveryTimestamps[i].toUTCString(),
+      title: pending ? '-' : delivery.deliveryTimestamps[i].toUTCString(),
       body: fingerprint(currentEntity.id, theme),
       ...getCommonProps(currentEntity.type, pending)
     });

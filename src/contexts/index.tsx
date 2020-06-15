@@ -112,6 +112,7 @@ const Reducer = (
   }
 };
 
+// TODO: Fix renderer hooks
 const GlobalContextProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(Reducer, initialState);
   const { enqueueSnackbar } = useSnackbar();
@@ -188,27 +189,22 @@ const GlobalContextProvider: React.FC = ({ children }) => {
 
   const updateEntities = useCallback(() => {
     const result: Promise<any> = getEntities();
-    if (result) {
-      return result.then((entities: any[]) => {
-        dispatch({
-          type: 'UPDATE_ENTITIES',
-          entities: entities ? entities.map(convertEntity) : []
-        });
+    return result.then((entities: any[]) => {
+      dispatch({
+        type: 'UPDATE_ENTITIES',
+        entities: entities ? entities.map(convertEntity) : []
       });
-    }
+    });
     return result;
   }, [getEntities]);
   const updateProducts = useCallback(() => {
     const result: Promise<any> = getProducts();
-    if (result) {
-      return result.then((products: any[]) => {
-        dispatch({
-          type: 'UPDATE_PRODUCTS',
-          products: products.map(convertProduct)
-        });
+    return result.then((products: any[]) => {
+      dispatch({
+        type: 'UPDATE_PRODUCTS',
+        products: products.map(convertProduct)
       });
-    }
-    return result;
+    });
   }, [getProducts, state.entity]);
   // ==========================================================================
 

@@ -146,6 +146,7 @@ const DeliveryCard: React.FC<Props> = (props) => {
   }, globalState.products);
 
   const nextEntity = deliveryEntities[deliveryStep] === globalState.account;
+  const isFactory = globalState.entity.type === 'Factory';
 
   return (
     <Card className={classes.root}>
@@ -158,7 +159,7 @@ const DeliveryCard: React.FC<Props> = (props) => {
             {name}
           </Typography>
           <div className={classes.grow} />
-          {nextEntity && (
+          {nextEntity && !isFactory && (
             <TimestampButton
               onClickCallback={onTimestampCallback}
               disabled={props.disabled}
