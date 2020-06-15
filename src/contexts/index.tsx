@@ -155,12 +155,12 @@ const GlobalContextProvider: React.FC = ({ children }) => {
       });
   }, [state.account]);
   const getProducts = useCallback(() => {
-    if (state.entity === EmptyEntity) {
-      return EmptyPromise;
-    }
     return state.managerContract.methods
       .getProducts()
-      .call({ from: state.account });
+      .call({ from: state.account })
+      .catch(() => {
+        return EmptyPromise;
+      });
   }, [state.account]);
   // ==========================================================================
 
@@ -193,9 +193,6 @@ const GlobalContextProvider: React.FC = ({ children }) => {
     return result;
   }, [getEntities]);
   const updateProducts = useCallback(() => {
-    if (!state.entity.approved) {
-      return EmptyPromise;
-    }
     const result: Promise<any> = getProducts();
     if (result) {
       return result.then((products: any[]) => {
