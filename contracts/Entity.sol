@@ -3,8 +3,6 @@ import './TypesLibrary.sol';
 pragma experimental ABIEncoderV2;
 
 contract Entity {
-  using TypesLib for TypesLib.EntityData;
-
   TypesLib.EntityData public data;
 
   constructor(

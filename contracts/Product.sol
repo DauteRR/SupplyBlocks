@@ -1,17 +1,19 @@
 pragma solidity >=0.4.21 <0.7.0;
 import './TypesLibrary.sol';
 import './Entity.sol';
+import './Manager.sol';
 pragma experimental ABIEncoderV2;
 
 contract Product {
-  using TypesLib for TypesLib.ProductState;
-  using TypesLib for TypesLib.ProductData;
-
   TypesLib.ProductData public data;
 
-  TypesLib.DeliveryStep[] steps;
-
   mapping(address => bool) public associatedEntities;
+
+  address[] public deliveryEntities;
+  uint256[] public deliveryTimestamps;
+  uint256 public deliveryPointer;
+
+  bool public deliveryIsPrepared;
 
   constructor(string memory _name, Entity _factory) public {
     require(
@@ -29,52 +31,108 @@ contract Product {
       deliveryTimestamp: 0
     });
 
+    deliveryEntities.push(_factory.getID());
+    deliveryTimestamps.push(0);
+    deliveryPointer = 0;
+
     associatedEntities[_factory.getID()] = true;
   }
 
-  function setShipped(Entity _transport) public {
+  function setDeliveryIsPrepared() public {
     require(
-      _transport.getType() == TypesLib.EntityType.Transport,
-      'Non transport entity'
+      msg.sender == data.creatorID,
+      'Unauthorized for delivery preparation'
     );
-    require(
-      data.state == TypesLib.ProductState.Created ||
-        data.state == TypesLib.ProductState.Stored,
-      'Wrong previous state'
-    );
-    data.state = TypesLib.ProductState.Shipped;
-    addDeliveryStep(data.state, _transport.getID(), now);
-    associatedEntities[_transport.getID()] = true;
+    deliveryIsPrepared = true;
   }
 
-  function setStored(Entity _warehouse) public {
-    require(
-      _warehouse.getType() == TypesLib.EntityType.Warehouse,
-      'Non warehouse entity'
-    );
-    require(
-      data.state == TypesLib.ProductState.Shipped,
-      'Wrong previous state'
-    );
-    data.state = TypesLib.ProductState.Stored;
-    addDeliveryStep(data.state, _warehouse.getID(), now);
-    associatedEntities[_warehouse.getID()] = true;
+  function timestampDeliveryStep() public {
+    require(deliveryIsPrepared, 'Product have not been prepared for delivery');
+    require(deliveryEntities[deliveryPointer] == msg.sender, 'Unauthorized');
+
+    if (deliveryPointer == deliveryEntities.length - 1) {
+      require(
+        data.state == TypesLib.ProductState.Shipped,
+        'Wrong Delivery previous step'
+      );
+      data.state = TypesLib.ProductState.Delivered;
+    } else if (deliveryPointer != 0) {
+      if (deliveryPointer % 2 == 1) {
+        require(
+          data.state == TypesLib.ProductState.Stored,
+          'Wrong Shipped previous step'
+        );
+        data.state = TypesLib.ProductState.Shipped;
+      } else {
+        require(
+          data.state == TypesLib.ProductState.Shipped,
+          'Wrong Stored previous step'
+        );
+        data.state = TypesLib.ProductState.Shipped;
+      }
+    } else {
+      require(
+        data.state == TypesLib.ProductState.Created,
+        'Wrong Shipped previous step'
+      );
+      data.state = TypesLib.ProductState.Shipped;
+    }
+    deliveryTimestamps[deliveryPointer] = now;
+    deliveryPointer += 1;
   }
 
-  function setDelivered(Entity _retailer) public {
+  function storeDeliveryStep(address _entityAddress) private {
+    deliveryEntities.push(_entityAddress);
+    associatedEntities[_entityAddress] = true;
+    deliveryTimestamps.push(0);
+  }
+
+  function purchase(address[] memory _routeEntities, address _managerAddress)
+    public
+  {
+    require(data.purchaserID != address(0), 'Product already purchased');
+    require(_routeEntities.length >= 2, 'Invalid delivery route');
     require(
-      _retailer.getType() == TypesLib.EntityType.Retailer,
+      msg.sender == _routeEntities[_routeEntities.length - 1],
+      'Unauthorized'
+    );
+
+    Manager manager = Manager(_managerAddress);
+    require(manager.approvedEntities(msg.sender), 'Non approved account');
+    require(manager.registeredProducts(data.id), 'Non registered product');
+    require(
+      manager.entitiesMapping(msg.sender).getType() ==
+        TypesLib.EntityType.Retailer,
       'Non retailer entity'
     );
+
+    data.purchaserID = msg.sender;
+
+    Entity entity = Entity(_routeEntities[0]);
+    require(entity.getID() == getCreatorID(), 'Invalid first delivery step');
+    storeDeliveryStep(_routeEntities[0]);
+    for (uint256 index = 1; index < _routeEntities.length - 1; index++) {
+      entity = Entity(_routeEntities[index]);
+      bool shouldBeTransportEntity = (index % 2 == 1);
+      if (shouldBeTransportEntity) {
+        require(
+          entity.getType() == TypesLib.EntityType.Transport,
+          'Invalid transport delivery step'
+        );
+      } else {
+        require(
+          entity.getType() == TypesLib.EntityType.Warehouse,
+          'Invalid warehouse delivery step'
+        );
+      }
+      storeDeliveryStep(_routeEntities[index]);
+    }
+    entity = Entity(_routeEntities[_routeEntities.length - 1]);
     require(
-      data.state == TypesLib.ProductState.Shipped,
-      'Wrong previous state'
+      entity.getType() == TypesLib.EntityType.Retailer,
+      'Invalid last delivery step'
     );
-    data.state = TypesLib.ProductState.Delivered;
-    data.purchaserID = _retailer.getID();
-    data.deliveryTimestamp = now;
-    addDeliveryStep(data.state, _retailer.getID(), data.deliveryTimestamp);
-    associatedEntities[_retailer.getID()] = true;
+    storeDeliveryStep(_routeEntities[_routeEntities.length - 1]);
   }
 
   function getData() public view returns (TypesLib.ProductData memory) {
@@ -89,15 +147,11 @@ contract Product {
     return data.creatorID;
   }
 
-  function getCreationTimestamp() public view returns (uint256) {
-    return data.creationTimestamp;
+  function getPurchaserID() public view returns (address) {
+    return data.purchaserID;
   }
 
-  function addDeliveryStep(
-    TypesLib.ProductState _state,
-    address _entityAddress,
-    uint256 _timestamp
-  ) public {
-    steps.push(TypesLib.DeliveryStep(_entityAddress, _state, _timestamp));
+  function getCreationTimestamp() public view returns (uint256) {
+    return data.creationTimestamp;
   }
 }

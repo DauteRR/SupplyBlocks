@@ -5,12 +5,6 @@ library TypesLib {
 
   enum ProductState { Created, Shipped, Stored, Delivered }
 
-  struct DeliveryStep {
-    address entityAddress;
-    ProductState productState;
-    uint256 timestamp;
-  }
-
   struct EntityData {
     address id;
     string name;

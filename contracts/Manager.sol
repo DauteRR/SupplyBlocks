@@ -5,10 +5,6 @@ import './Product.sol';
 pragma experimental ABIEncoderV2;
 
 contract Manager {
-  using TypesLib for TypesLib.EntityType;
-  using TypesLib for TypesLib.EntityData;
-  using TypesLib for TypesLib.ProductData;
-
   address[] public accounts;
   Entity[] public entities;
   mapping(address => bool) public setEntities;
@@ -65,17 +61,6 @@ contract Manager {
     products.push(address(newProduct));
   }
 
-  function createDelivery(address _productAddress) public {
-    require(approvedEntities[msg.sender], 'Non approved account');
-    require(registeredProducts[_productAddress], 'Non registered product');
-
-    // TODO:
-    //Delivery newDelivery = new Delivery(productsMapping[_productAddress]);
-    //deliveriesMapping[address(newDelivery)] = newDelivery;
-    //registeredDeliveries[address(newDelivery)] = true;
-    //deliveries.push(address(newDelivery));
-  }
-
   function approveEntity(address _address) public {
     require(entitiesMapping[_address].getSet(), 'Entity not registered');
     require(
@@ -88,8 +73,6 @@ contract Manager {
   }
 
   function getEntities() public view returns (TypesLib.EntityData[] memory) {
-    require(approvedEntities[msg.sender], 'Address not approved');
-
     uint256 size = 0;
     uint256[] memory indexes = new uint256[](entities.length);
     Entity entity = Entity(entitiesMapping[msg.sender]);
