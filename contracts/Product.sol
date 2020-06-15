@@ -23,8 +23,8 @@ contract Product {
       creatorID: _factory.getID(),
       creationTimestamp: now,
       purchaserID: address(0),
-      deliveryEntities: address[],
-      deliveryTimestamps: uint256[],
+      deliveryEntities: new address[](0),
+      deliveryTimestamps: new uint256[](0),
       deliveryPointer: 0,
       deliveryIsPrepared: false
     });
