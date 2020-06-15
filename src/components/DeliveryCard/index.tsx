@@ -129,8 +129,7 @@ const DeliveryCard: React.FC<Props> = (props) => {
     onTimestampCallback
   } = props;
   const { globalState } = useContext(GlobalContext);
-  // TODO: CHANGE
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(false);
 
   const handleExpandClick = useCallback(() => {
     setExpanded(!expanded);

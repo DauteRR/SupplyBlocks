@@ -1,4 +1,5 @@
-import { makeStyles, Theme } from '@material-ui/core';
+import { makeStyles, Theme, Typography } from '@material-ui/core';
+import FingerprintIcon from '@material-ui/icons/Fingerprint';
 import { OptionsObject } from 'notistack';
 import React from 'react';
 import { TimelineElement } from '../components/Timeline';
@@ -10,7 +11,8 @@ import {
   getEntityType,
   getEntityTypesData,
   getProductState,
-  Product
+  Product,
+  ProductState
 } from '../types';
 
 export const customColorStyles = (color: string) => {
@@ -34,10 +36,6 @@ export const convertEntity = (obj: any): Entity => ({
 });
 
 export const convertProduct = (obj: any): Product => {
-  // obj.deliveryEntities.forEach(console.log);
-  console.log(obj.deliveryEntities.length);
-  console.log(obj.deliveryTimestamps.length);
-
   return {
     id: obj.id,
     name: obj.name,
@@ -121,83 +119,91 @@ export const getRoute = (
   return route;
 };
 
+const entityTypeToProductState = (type: EntityType): ProductState => {
+  switch (type) {
+    case 'Factory':
+      return 'Prepared';
+    case 'Retailer':
+      return 'Delivered';
+    case 'Transport':
+      return 'Shipped';
+    case 'Warehouse':
+      return 'Stored';
+    default:
+      throw new Error('Something is wrong');
+  }
+};
+
+const entityTypesData = getEntityTypesData({ color: 'white', fontSize: 25 });
+
+const getCommonProps = (key: EntityType, grey?: boolean) => ({
+  dateClassName: customColorStyles(grey ? 'grey' : entityTypesData[key].color)
+    .customColor,
+  iconStyle: {
+    backgroundColor: grey ? 'grey' : entityTypesData[key].color,
+    color: 'white'
+  },
+  contentStyle: {
+    color: 'white',
+    backgroundColor: grey ? 'grey' : entityTypesData[key].color
+  },
+  contentArrowStyle: {
+    borderRight: `7px solid  ${grey ? 'grey' : entityTypesData[key].color}`
+  },
+  icon: entityTypesData[key].icon
+});
+
+const getEntity = (id: Address, entities: Entity[]): Entity => {
+  const filtered = entities.filter((entity) => entity.id === id);
+  if (filtered.length !== 1) {
+    throw new Error('Something is wrong');
+  }
+  return filtered[0];
+};
+
+const fingerprint = (id: Address, theme: Theme) => {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <FingerprintIcon style={{ marginRight: theme.spacing(1) }} />
+      <Typography style={{ fontSize: 10 }}>{id}</Typography>
+    </div>
+  );
+};
+
 export const getTimelineElements = (
   delivery: Product,
   entities: Entity[],
   theme: Theme
 ): TimelineElement[] => {
   const {
+    purchaserID,
     deliveryEntities,
     deliveryTimestamps,
     creationTimestamp,
     deliveryStep
   } = delivery;
 
-  if (deliveryEntities.length < 3) {
-    throw new Error('Something is wrong');
+  if (delivery.state === 'Created' && purchaserID === defaultAddress) {
+    return [];
   }
-  if (deliveryTimestamps.length < 4) {
-    throw new Error('Something is wrong');
-  }
-
-  const entityTypesData = getEntityTypesData({ color: 'white', fontSize: 25 });
-
-  const getCommonProps = (key: EntityType, grey?: boolean) => ({
-    dateClassName: customColorStyles(grey ? 'grey' : entityTypesData[key].color)
-      .customColor,
-    iconStyle: {
-      backgroundColor: grey ? 'grey' : entityTypesData[key].color,
-      color: 'white'
-    },
-    contentStyle: {
-      color: 'white',
-      backgroundColor: grey ? 'grey' : entityTypesData[key].color
-    },
-    contentArrowStyle: {
-      borderRight: `7px solid  ${grey ? 'grey' : entityTypesData[key].color}`
-    },
-    icon: entityTypesData[key].icon
-  });
-
-  const getEntity = (id: Address): Entity => {
-    const filtered = entities.filter((entity) => entity.id === id);
-    if (filtered.length !== 1) {
-      throw new Error('Something is wrong');
-    }
-    return filtered[0];
-  };
-  console.log(delivery);
 
   const elements: TimelineElement[] = [];
   elements.push({
     title: creationTimestamp.toUTCString(),
     label: 'Created',
-    body: <p>TODO: show icon and fingerprint</p>,
+    body: fingerprint(delivery.creatorID, theme),
     ...getCommonProps('Factory')
   });
 
-  let pending: boolean = deliveryStep === 1;
-
-  // elements.push({
-  //   label: delivery.deliveryTimestamps[0].toUTCString(),
-  //   title: 'Prepared',
-  //   body: <></>,
-  //   ...getCommonProps('Factory', pending)
-  // });
-
   for (let i = 0; i < deliveryTimestamps.length; ++i) {
-    pending = deliveryStep >= i;
-    // console.log(deliveryEntities[i]);
-
-    // const currentEntity = getEntity(deliveryEntities[i - 1]);
-    // console.log(currentEntity.type);
-
-    // elements.push({
-    //   label: 'Prepared',
-    //   title: delivery.deliveryTimestamps[i].toUTCString(),
-    //   body: <></>,
-    //   ...getCommonProps(currentEntity.type, pending)
-    // });
+    const pending = deliveryStep < i;
+    const currentEntity = getEntity(deliveryEntities[i], entities);
+    elements.push({
+      label: entityTypeToProductState(currentEntity.type),
+      title: delivery.deliveryTimestamps[i].toUTCString(),
+      body: fingerprint(currentEntity.id, theme),
+      ...getCommonProps(currentEntity.type, pending)
+    });
   }
 
   return elements;

@@ -41,10 +41,16 @@ export interface TimelineElement
 
 interface Props {
   elements: TimelineElement[];
+  emptyElements?: JSX.Element;
 }
 
 export const Timeline: React.FC<Props> = (props) => {
   const classes = useStyles();
+
+  if (props.elements.length === 0) {
+    return props.emptyElements ? props.emptyElements : <></>;
+  }
+
   return (
     <VerticalTimeline className={classes.timeline}>
       {props.elements.map((element, index) => {

@@ -76,7 +76,7 @@ interface InfoItemProps {
   textClassName?: string;
 }
 
-const InfoItem: React.FC<InfoItemProps> = (props) => {
+export const InfoItem: React.FC<InfoItemProps> = (props) => {
   const classes = useStyles();
   return (
     <div className={classes.infoItem}>

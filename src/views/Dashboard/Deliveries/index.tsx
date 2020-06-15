@@ -4,7 +4,7 @@ import React, { useCallback, useContext, useState } from 'react';
 import DeliveryCard from '../../../components/DeliveryCard';
 import Title from '../../../components/Title';
 import { GlobalContext } from '../../../contexts';
-import { Product } from '../../../types';
+import { defaultAddress, Product } from '../../../types';
 
 const useStyles = makeStyles<Theme>((theme) => ({
   root: {
@@ -51,16 +51,18 @@ const DeliveriesList: React.FC<{
   return (
     <Container maxWidth="lg">
       <Grid className={classes.grid} container>
-        {deliveries.map((delivery, index) => (
-          <Grid key={index} className={classes.gridItem} item xs={12}>
-            <DeliveryCard
-              disabled={current !== delivery.id && current !== ''}
-              transacting={current === delivery.id}
-              onTimestampCallback={timestampCallback(delivery.id)}
-              {...delivery}
-            />
-          </Grid>
-        ))}
+        {deliveries
+          .filter((delivery) => delivery.purchaserID !== defaultAddress)
+          .map((delivery, index) => (
+            <Grid key={index} className={classes.gridItem} item xs={12}>
+              <DeliveryCard
+                disabled={current !== delivery.id && current !== ''}
+                transacting={current === delivery.id}
+                onTimestampCallback={timestampCallback(delivery.id)}
+                {...delivery}
+              />
+            </Grid>
+          ))}
       </Grid>
     </Container>
   );

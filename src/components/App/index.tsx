@@ -111,6 +111,7 @@ const EnableMetamask = (
 interface Props {}
 
 // TODO: Clean imports, warnings, unused makeStyles classes and document smart contracts
+// TODO: Reorganize types
 export const App: React.FC<Props> = (props) => {
   const { globalState, updateAccount } = useContext(GlobalContext);
   const classes = useStyles();
