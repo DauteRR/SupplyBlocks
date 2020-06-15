@@ -4,12 +4,12 @@ import {
   makeStyles,
   ThemeProvider
 } from '@material-ui/core';
-import { SnackbarProvider, useSnackbar } from 'notistack';
+import { OptionsObject, SnackbarProvider, useSnackbar } from 'notistack';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { GlobalContext, GlobalContextProvider } from '../../contexts/Global';
+import { GlobalContext, GlobalContextProvider } from '../../contexts';
 import { useInterval } from '../../hooks/useInterval';
 import ErrorView from '../../views/Error';
-import AppBody from '../AppBody';
+import { AppBody } from '../AppBody';
 
 const useStyles = makeStyles({
   appContainer: {
@@ -33,66 +33,99 @@ const theme = createMuiTheme({
   }
 });
 
-const SetOnAccountChange = (callback: (accounts: string[]) => void) => {
-  window.ethereum.on('accountsChanged', callback);
+type useStateBooleanSetter = React.Dispatch<React.SetStateAction<boolean>>;
+
+const OnAccountChange = (
+  updateAccount: (account: string) => void,
+  enqueueSnackbar: (
+    message: React.ReactNode,
+    options?: OptionsObject | undefined
+  ) => string | number,
+  metamaskEnabledSetter: useStateBooleanSetter,
+  web3: Web3
+) => {
+  window.ethereum.on('accountsChanged', () => {
+    web3.eth.getAccounts((error, accounts) => {
+      updateAccount(accounts[0]);
+      if (accounts.length === 0) {
+        metamaskEnabledSetter(false);
+        enqueueSnackbar('Metamask disconnected', { variant: 'error' });
+      } else {
+        enqueueSnackbar('Account change', { variant: 'info' });
+      }
+    });
+  });
+};
+
+const CheckMetamask = (
+  valueSetter: useStateBooleanSetter,
+  errorSetter: useStateBooleanSetter
+) => () => {
+  if (!window.ethereum) {
+    errorSetter(true);
+  }
+  valueSetter(window.ethereum.selectedAddress);
+};
+
+const CheckConnection = (
+  web3: Web3,
+  errorSetter: useStateBooleanSetter
+) => () => {
+  web3.eth.net.isListening().catch(() => {
+    errorSetter(true);
+  });
+};
+
+const EnableMetamask = (
+  metamaskEnabledSetter: useStateBooleanSetter,
+  enqueueSnackbar: (
+    message: React.ReactNode,
+    options?: OptionsObject | undefined
+  ) => string | number
+) => () => {
+  window.ethereum
+    .enable()
+    .then(() => {
+      metamaskEnabledSetter(true);
+      enqueueSnackbar('Metamask enabled', { variant: 'success' });
+    })
+    .catch(() => {
+      metamaskEnabledSetter(false);
+      enqueueSnackbar('Error enabling Metamask', { variant: 'error' });
+    });
 };
 
 interface Props {}
 
 export const App: React.FC<Props> = (props) => {
-  const { globalState, updateAccount, updateEntity } = useContext(
-    GlobalContext
-  );
+  const { globalState, updateAccount } = useContext(GlobalContext);
   const classes = useStyles();
   const [connectionError, setConnectionError] = useState(false);
   const [web3ProviderError, setWeb3ProviderError] = useState(false);
-  const [isMetamaskEnabled, setIsMetamaskEnabled] = useState(true);
   const { web3 } = globalState;
   const { enqueueSnackbar } = useSnackbar();
+  const [isMetamaskEnabled, setIsMetamaskEnabled] = useState(true);
 
-  const CheckMetamask = useCallback(() => {
-    if (!window.ethereum) {
-      setWeb3ProviderError(true);
-    }
-    setIsMetamaskEnabled(window.ethereum.selectedAddress);
+  // On component mount
+  useEffect(() => {
+    CheckMetamask(setIsMetamaskEnabled, setWeb3ProviderError);
   }, []);
 
-  const enableMetamaskCallback = useCallback(() => {
-    window.ethereum
-      .enable()
-      .then(() => setIsMetamaskEnabled(true))
-      .catch(() => {});
-  }, []);
+  const checkMetamask = useCallback(
+    CheckMetamask(setIsMetamaskEnabled, setWeb3ProviderError),
+    []
+  );
+
+  const checkConnection = useCallback(
+    CheckConnection(web3, setConnectionError),
+    [web3]
+  );
+  useInterval(checkConnection, 3000);
+  useInterval(checkMetamask, 3000);
 
   useEffect(() => {
-    if (isMetamaskEnabled) {
-      updateAccount(window.ethereum.selectedAddress);
-    }
-  }, [isMetamaskEnabled, updateAccount]);
-
-  const CheckConnection = useCallback(() => {
-    web3.eth.net.isListening().catch(() => {
-      setConnectionError(true);
-    });
-  }, [web3]);
-
-  useInterval(CheckConnection, 5000);
-  useInterval(CheckMetamask, 5000);
-
-  useEffect(() => {
-    SetOnAccountChange((accounts: string[]) => {
-      updateAccount(accounts[0]);
-      enqueueSnackbar('Account change', { variant: 'info' });
-      if (accounts.length === 0) {
-        setIsMetamaskEnabled(false);
-      }
-    });
-  }, [updateAccount, enqueueSnackbar]);
-
-  useEffect(() => {
-    updateEntity(globalState.account);
-    // including updateEntity in the deps cause updates constantly
-  }, [globalState.account]);
+    OnAccountChange(updateAccount, enqueueSnackbar, setIsMetamaskEnabled, web3);
+  }, [updateAccount, enqueueSnackbar, web3]);
 
   let appBody: JSX.Element = <AppBody />;
 
@@ -106,7 +139,7 @@ export const App: React.FC<Props> = (props) => {
           color="secondary"
           className={classes.button}
           variant="contained"
-          onClick={enableMetamaskCallback}
+          onClick={EnableMetamask(setIsMetamaskEnabled, enqueueSnackbar)}
         >
           Enable Metamask
         </Button>

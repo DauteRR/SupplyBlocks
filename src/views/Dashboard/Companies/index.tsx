@@ -3,7 +3,7 @@ import { useSnackbar } from 'notistack';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import CompanyCard from '../../../components/CompanyCard';
 import Title from '../../../components/Title';
-import { GlobalContext } from '../../../contexts/Global';
+import { GlobalContext } from '../../../contexts';
 import { Entity } from '../../../types/Entity';
 
 const useStyles = makeStyles<Theme>((theme) => ({
@@ -25,8 +25,7 @@ const useStyles = makeStyles<Theme>((theme) => ({
 
 const CompaniesList: React.FC<{
   companies: Entity[];
-  updateCallback: () => void;
-}> = ({ companies, updateCallback }) => {
+}> = ({ companies }) => {
   const classes = useStyles();
   const { approveEntity } = useContext(GlobalContext);
   const [current, setCurrent] = useState('');
@@ -38,7 +37,6 @@ const CompaniesList: React.FC<{
         setCurrent(address);
         approveEntity(address)
           .then(() => {
-            updateCallback();
             enqueueSnackbar('Approved', { variant: 'success' });
           })
           .catch(() => {
@@ -47,7 +45,7 @@ const CompaniesList: React.FC<{
           .finally(() => setCurrent(''));
       };
     },
-    [approveEntity, enqueueSnackbar, updateCallback]
+    [approveEntity, enqueueSnackbar]
   );
 
   return (
@@ -84,24 +82,18 @@ interface Props {}
 
 const CompaniesView: React.FC<Props> = (props) => {
   const classes = useStyles();
-  const { globalState, convertEntity, getEntities } = useContext(GlobalContext);
-  const [isLoading, setIsLoading] = useState(true);
+  const { globalState } = useContext(GlobalContext);
   const [companies, setCompanies] = useState<Entity[]>([]);
   const [pendingCompanies, setPendingCompanies] = useState<Entity[]>([]);
   const isAdmin = globalState.entity.type === 'Admin';
 
-  const UpdateCompanies = () => {
-    getEntities().then((result: any[]) => {
-      const { pending, approved } = splitCompanies(result.map(convertEntity));
-      setCompanies(approved);
-      setPendingCompanies(pending);
-      setIsLoading(false);
-    });
-  };
+  useEffect(() => {
+    const { pending, approved } = splitCompanies(globalState.entities);
+    setCompanies(approved);
+    setPendingCompanies(pending);
+  }, [globalState.entities]);
 
-  useEffect(UpdateCompanies, []);
-
-  if (isLoading) {
+  if (!globalState.entity.approved) {
     return <></>;
   }
 
@@ -110,14 +102,11 @@ const CompaniesView: React.FC<Props> = (props) => {
       {isAdmin && pendingCompanies.length > 0 && (
         <>
           <Title title={'Pending'} />
-          <CompaniesList
-            companies={pendingCompanies}
-            updateCallback={UpdateCompanies}
-          />
+          <CompaniesList companies={pendingCompanies} />
         </>
       )}
       <Title title={'Companies'} />
-      <CompaniesList companies={companies} updateCallback={UpdateCompanies} />
+      <CompaniesList companies={companies} />
     </div>
   );
 };

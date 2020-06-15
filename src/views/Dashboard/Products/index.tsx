@@ -1,10 +1,10 @@
 import { Container, Grid, makeStyles, Theme } from '@material-ui/core';
 import { Formik, FormikHelpers } from 'formik';
 import { useSnackbar } from 'notistack';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import ProductCard from '../../../components/ProductCard';
 import Title from '../../../components/Title';
-import { GlobalContext } from '../../../contexts/Global';
+import { GlobalContext } from '../../../contexts';
 import { Product } from '../../../types/Product';
 import { CreateProductForm } from './Form';
 import { CreateProductFormValidationSchema } from './ValidationSchema';
@@ -31,8 +31,7 @@ const useStyles = makeStyles<Theme>((theme) => ({
 
 const ProductsList: React.FC<{
   products: Product[];
-  updateCallback: () => void;
-}> = ({ products, updateCallback }) => {
+}> = ({ products }) => {
   const classes = useStyles();
   const { purchaseProduct } = useContext(GlobalContext);
   const [current, setCurrent] = useState('');
@@ -44,7 +43,6 @@ const ProductsList: React.FC<{
         setCurrent(address);
         purchaseProduct(address)
           .then(() => {
-            updateCallback();
             enqueueSnackbar('Purchased', { variant: 'success' });
           })
           .catch(() => {
@@ -53,7 +51,7 @@ const ProductsList: React.FC<{
           .finally(() => setCurrent(''));
       };
     },
-    [enqueueSnackbar, updateCallback, purchaseProduct]
+    [enqueueSnackbar, purchaseProduct]
   );
 
   return (
@@ -83,25 +81,11 @@ interface Props {}
 
 const ProductsView: React.FC<Props> = (props) => {
   const classes = useStyles();
-  const {
-    globalState,
-    getProducts,
-    createProduct,
-    convertProduct
-  } = useContext(GlobalContext);
-  const [isLoading, setIsLoading] = useState(true);
-  const [products, setProducts] = useState<Product[]>([]);
+  const { globalState, createProduct, updateProducts } = useContext(
+    GlobalContext
+  );
   const { enqueueSnackbar } = useSnackbar();
   const isFactory = globalState.entity.type === 'Factory';
-
-  const UpdateProducts = () => {
-    getProducts().then((result: any[]) => {
-      setProducts(result.map(convertProduct));
-      setIsLoading(false);
-    });
-  };
-
-  useEffect(UpdateProducts, [globalState.account]);
 
   const submitCallback = useCallback(
     (values: CreateProductForm, helpers: FormikHelpers<CreateProductForm>) => {
@@ -112,7 +96,7 @@ const ProductsView: React.FC<Props> = (props) => {
           enqueueSnackbar('Success', {
             variant: 'success'
           });
-          UpdateProducts();
+          updateProducts();
         })
         .catch((error: any) => {
           enqueueSnackbar('Error creating product', {
@@ -121,10 +105,10 @@ const ProductsView: React.FC<Props> = (props) => {
         })
         .finally(() => helpers.setSubmitting(false));
     },
-    [createProduct, globalState, enqueueSnackbar, UpdateProducts]
+    [createProduct, enqueueSnackbar, updateProducts]
   );
 
-  if (isLoading) {
+  if (!globalState.entity.approved) {
     return <></>;
   }
 
@@ -150,7 +134,7 @@ const ProductsView: React.FC<Props> = (props) => {
         </>
       )}
       <Title title={'Products'} />
-      <ProductsList products={products} updateCallback={UpdateProducts} />
+      <ProductsList products={globalState.products} />
     </div>
   );
 };

@@ -150,7 +150,6 @@ export const SignUpForm: React.FC<Props> = (props) => {
               color="secondary"
               className={classes.submit}
               onClick={submitForm}
-              // TODO: disabled button delay when submitting successfully
               disabled={isSubmitting || !isValid || props.disabled}
             >
               Send petition

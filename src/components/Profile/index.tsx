@@ -1,6 +1,6 @@
 import { makeStyles, Theme, Typography } from '@material-ui/core';
 import React, { useContext, useEffect, useState } from 'react';
-import { GlobalContext } from '../../contexts/Global';
+import { GlobalContext } from '../../contexts';
 import EntityTypeAvatar from '../EntityTypeAvatar';
 import EntityTypeChip from '../EntityTypeChip';
 
@@ -27,6 +27,10 @@ const Profile: React.FC = (props) => {
   useEffect(() => {
     setEntity(globalState.entity);
   }, [globalState.entity]);
+
+  if (!globalState.entity.approved) {
+    return <></>;
+  }
 
   return (
     <div className={classes.root}>

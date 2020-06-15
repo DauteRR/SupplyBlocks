@@ -14,7 +14,7 @@ import {
 import EventIcon from '@material-ui/icons/Event';
 import FingerprintIcon from '@material-ui/icons/Fingerprint';
 import React, { useContext } from 'react';
-import { GlobalContext } from '../../contexts/Global';
+import { GlobalContext } from '../../contexts';
 import { defaultAddress, getEntityTypesData } from '../../types';
 import { Product } from '../../types/Product';
 import ProductStateChip from '../ProductStateChip';

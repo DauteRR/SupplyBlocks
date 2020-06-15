@@ -66,7 +66,6 @@ const SidebarNav: React.FC<Props> = (props) => {
       setActive(DashboardRoutes.companies.path);
       history.push(DashboardRoutes.companies.path);
     }
-    // Callback for component mount => empty deps array
   }, []);
 
   const clickCallback = useCallback(

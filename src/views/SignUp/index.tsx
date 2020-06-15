@@ -11,7 +11,7 @@ import { useSnackbar } from 'notistack';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Logo from '../../components/Logo';
-import { GlobalContext } from '../../contexts/Global';
+import { GlobalContext } from '../../contexts';
 import { ApplicationRoutes } from '../../routes';
 import { EntityType } from '../../types/Entity';
 import { SignUpForm, SignUpFormFields } from './Form';
@@ -55,7 +55,7 @@ interface Props {}
 export const SignUpView: React.FC<Props> = (props) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-  const { globalState, updateEntity, createEntity } = useContext(GlobalContext);
+  const { globalState, createEntity } = useContext(GlobalContext);
   const [alreadyRegistered, setAlreadyRegistered] = useState(false);
   const [pending, setPending] = useState(false);
 
@@ -73,7 +73,6 @@ export const SignUpView: React.FC<Props> = (props) => {
           enqueueSnackbar('Success', {
             variant: 'success'
           });
-          updateEntity(globalState.account);
         })
         .catch((error: any) => {
           enqueueSnackbar('Error sending petition', {
@@ -82,12 +81,13 @@ export const SignUpView: React.FC<Props> = (props) => {
         })
         .finally(() => helpers.setSubmitting(false));
     },
-    [createEntity, globalState, enqueueSnackbar, updateEntity]
+    [createEntity, enqueueSnackbar]
   );
 
   useEffect(() => {
     setAlreadyRegistered(globalState.entity.approved);
     setPending(globalState.entity.set && !globalState.entity.approved);
+    console.log('here');
   }, [globalState.entity]);
 
   return (

@@ -7,7 +7,7 @@ import {
 } from '@material-ui/core';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { GlobalContext } from '../../contexts/Global';
+import { GlobalContext } from '../../contexts';
 import { ApplicationRoutes } from '../../routes';
 
 const useStyles = makeStyles<Theme>((theme: Theme) => ({

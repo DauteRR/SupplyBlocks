@@ -6,7 +6,6 @@ import StarIcon from '@material-ui/icons/Star';
 import StoreIcon from '@material-ui/icons/Store';
 import React from 'react';
 
-// TODO: Organize types
 export type Address = string;
 
 export const defaultAddress: Address =
