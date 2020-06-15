@@ -25,42 +25,41 @@ contract Product {
       purchaserID: address(0),
       deliveryEntities: new address[](0),
       deliveryTimestamps: new uint256[](0),
-      deliveryPointer: 0,
-      deliveryIsPrepared: false
+      deliveryStep: 0
     });
 
     associatedEntities[_factory.getID()] = true;
   }
 
-  function setDeliveryIsPrepared() public {
+  function prepareDelivery() public {
     require(
       msg.sender == data.creatorID,
       'Unauthorized for delivery preparation'
     );
-    require(!data.deliveryIsPrepared, 'Already prepared');
+    require(data.state == TypesLib.ProductState.Prepared, 'Already prepared');
     require(data.deliveryEntities.length >= 3, 'No valid delivery to prepare');
-    data.deliveryIsPrepared = true;
     data.deliveryTimestamps.push(now);
+    data.state = TypesLib.ProductState.Prepared;
   }
 
   function timestampDeliveryStep() public {
     require(
-      data.deliveryIsPrepared,
+      data.state == TypesLib.ProductState.Prepared,
       'Product have not been prepared for delivery'
     );
     require(
-      data.deliveryEntities[data.deliveryPointer] == msg.sender,
+      data.deliveryEntities[data.deliveryStep] == msg.sender,
       'Unauthorized'
     );
 
-    if (data.deliveryPointer == data.deliveryEntities.length - 1) {
+    if (data.deliveryStep == data.deliveryEntities.length - 1) {
       require(
         data.state == TypesLib.ProductState.Shipped,
         'Wrong Delivery previous step'
       );
       data.state = TypesLib.ProductState.Delivered;
-    } else if (data.deliveryPointer != 0) {
-      if (data.deliveryPointer % 2 == 1) {
+    } else if (data.deliveryStep != 0) {
+      if (data.deliveryStep % 2 == 1) {
         require(
           data.state == TypesLib.ProductState.Stored,
           'Wrong Shipped previous step'
@@ -75,13 +74,13 @@ contract Product {
       }
     } else {
       require(
-        data.state == TypesLib.ProductState.Created,
+        data.state == TypesLib.ProductState.Prepared,
         'Wrong Shipped previous step'
       );
       data.state = TypesLib.ProductState.Shipped;
     }
     data.deliveryTimestamps.push(now);
-    data.deliveryPointer += 1;
+    data.deliveryStep += 1;
   }
 
   function storeDeliveryStep(address _entityAddress) private {

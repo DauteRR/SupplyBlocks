@@ -31,8 +31,7 @@ export const convertProduct = (obj: any): Product => {
     deliveryTimestamps: obj.deliveryTimestamps.map(
       (timestamp: string) => new Date(parseInt(timestamp) * 1000)
     ),
-    deliveryPointer: parseInt(obj.deliveryPointer),
-    deliveryIsPrepared: obj.deliveryIsPrepared
+    deliveryPointer: parseInt(obj.deliveryPointer)
   };
 };
 

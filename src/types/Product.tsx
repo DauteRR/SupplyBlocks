@@ -1,3 +1,4 @@
+import AllInboxIcon from '@material-ui/icons/AllInbox';
 import BuildIcon from '@material-ui/icons/Build';
 import HomeWorkIcon from '@material-ui/icons/HomeWork';
 import LocalShippingIcon from '@material-ui/icons/LocalShipping';
@@ -5,7 +6,13 @@ import StoreIcon from '@material-ui/icons/Store';
 import React from 'react';
 import { Address } from './Entity';
 
-const productTypes = ['Created', 'Shipped', 'Stored', 'Delivered'] as const;
+const productTypes = [
+  'Created',
+  'Prepared',
+  'Shipped',
+  'Stored',
+  'Delivered'
+] as const;
 
 export type ProductState = typeof productTypes[number];
 
@@ -19,7 +26,6 @@ export interface Product {
   deliveryEntities: Address[];
   deliveryTimestamps: Date[];
   deliveryPointer: number;
-  deliveryIsPrepared: boolean;
 }
 
 export interface ProductCreationArgs {
@@ -46,6 +52,11 @@ export const getProductStatesData = (
       icon: <BuildIcon style={style} />,
       color: '#f5ab25',
       label: 'Created'
+    },
+    Prepared: {
+      icon: <AllInboxIcon style={style} />,
+      color: 'green',
+      label: 'Prepared'
     },
     Delivered: {
       icon: <StoreIcon style={style} />,

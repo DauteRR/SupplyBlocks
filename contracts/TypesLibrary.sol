@@ -3,7 +3,7 @@ pragma solidity >=0.4.21 <0.7.0;
 library TypesLib {
   enum EntityType { None, Admin, Factory, Transport, Warehouse, Retailer }
 
-  enum ProductState { Created, Shipped, Stored, Delivered }
+  enum ProductState { Created, Prepared, Shipped, Stored, Delivered }
 
   struct EntityData {
     address id;
@@ -24,7 +24,6 @@ library TypesLib {
     address purchaserID;
     address[] deliveryEntities;
     uint256[] deliveryTimestamps;
-    uint256 deliveryPointer;
-    bool deliveryIsPrepared;
+    uint256 deliveryStep;
   }
 }

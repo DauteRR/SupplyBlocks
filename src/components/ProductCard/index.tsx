@@ -136,7 +136,6 @@ const ProductCard: React.FC<Props> = (props) => {
     creatorID,
     creationTimestamp,
     purchaserID,
-    deliveryIsPrepared,
     onPurchaseCallback,
     onPrepareCallback
   } = props;
@@ -195,7 +194,7 @@ const ProductCard: React.FC<Props> = (props) => {
           />
         )}
         {/* // TODO: */}
-        {/* {purchased && state === 'Delivered' && (
+        {/* {state === 'Delivered' && (
           <InfoItem
             text={deliveryTimestamp!.toUTCString()}
             icon={<EventIcon className={classes.icon} color="primary" />}
@@ -212,7 +211,7 @@ const ProductCard: React.FC<Props> = (props) => {
           />
         </CardActions>
       )}
-      {!deliveryIsPrepared && isFactory && purchased && (
+      {state === 'Prepared' && isFactory && (
         <CardActions className={classes.cardActions}>
           <CardButton
             text="Prepare"
