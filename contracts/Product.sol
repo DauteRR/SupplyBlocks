@@ -39,13 +39,10 @@ contract Product {
     require(data.state != TypesLib.ProductState.Prepared, 'Already prepared');
     data.deliveryTimestamps[data.deliveryStep] = now;
     data.state = TypesLib.ProductState.Prepared;
+    data.deliveryStep += 1;
   }
 
   function timestampDeliveryStep() public {
-    require(
-      data.state == TypesLib.ProductState.Prepared,
-      'Product have not been prepared for delivery'
-    );
     require(
       data.deliveryEntities[data.deliveryStep] == msg.sender,
       'Unauthorized'

@@ -137,13 +137,15 @@ const ProductCard: React.FC<Props> = (props) => {
     creationTimestamp,
     purchaserID,
     onPurchaseCallback,
-    onPrepareCallback
+    onPrepareCallback,
+    deliveryTimestamps
   } = props;
   const { globalState } = useContext(GlobalContext);
 
   const purchased = purchaserID !== defaultAddress;
   const isRetailer = globalState.entity.type === 'Retailer';
   const isFactory = globalState.entity.type === 'Factory';
+  const [deliveryTimestamp] = deliveryTimestamps.slice(-1);
 
   return (
     <Card className={classes.root}>
@@ -193,13 +195,12 @@ const ProductCard: React.FC<Props> = (props) => {
             }
           />
         )}
-        {/* // TODO: */}
-        {/* {state === 'Delivered' && (
+        {state === 'Delivered' && (
           <InfoItem
-            text={deliveryTimestamp!.toUTCString()}
+            text={deliveryTimestamp.toUTCString()}
             icon={<EventIcon className={classes.icon} color="primary" />}
           />
-        )} */}
+        )}
       </CardContent>
       {!purchased && isRetailer && (
         <CardActions className={classes.cardActions}>
@@ -211,7 +212,7 @@ const ProductCard: React.FC<Props> = (props) => {
           />
         </CardActions>
       )}
-      {state === 'Prepared' && isFactory && (
+      {state === 'Created' && purchased && isFactory && (
         <CardActions className={classes.cardActions}>
           <CardButton
             text="Prepare"

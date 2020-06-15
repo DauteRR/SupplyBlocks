@@ -64,7 +64,7 @@ const CompaniesList: React.FC<{
             transacting={current === company.id}
             onClickCallback={clickCallback(company.id)}
             {...company}
-          ></CompanyCard>
+          />
         </Grid>
       ))}
     </Grid>

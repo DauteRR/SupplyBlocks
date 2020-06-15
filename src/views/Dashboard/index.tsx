@@ -43,6 +43,7 @@ const useStyles = makeStyles<Theme>((theme) => ({
   }
 }));
 
+// TODO: fix small screens width issue
 const Dashboard: React.FC = (props) => {
   const classes = useStyles();
   const theme = useTheme();

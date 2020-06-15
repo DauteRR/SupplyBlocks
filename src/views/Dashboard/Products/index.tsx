@@ -88,7 +88,7 @@ const ProductsList: React.FC<{
             onPurchaseCallback={purchaseCallback(product.id)}
             onPrepareCallback={prepareCallback(product.id)}
             {...product}
-          ></ProductCard>
+          />
         </Grid>
       ))}
     </Grid>

@@ -74,6 +74,7 @@ type Context = {
   approveEntity: (address: Address | string) => Promise<any>;
   purchaseProduct: (address: Address) => Promise<any>;
   prepareProduct: (address: Address) => Promise<any>;
+  timestampDeliveryStep: (address: Address) => Promise<any>;
 };
 
 const DefaultContext: Context = {
@@ -85,7 +86,8 @@ const DefaultContext: Context = {
   createProduct: () => EmptyPromise,
   approveEntity: () => EmptyPromise,
   purchaseProduct: () => EmptyPromise,
-  prepareProduct: () => EmptyPromise
+  prepareProduct: () => EmptyPromise,
+  timestampDeliveryStep: () => EmptyPromise
 };
 
 const GlobalContext = React.createContext<Context>(DefaultContext);
@@ -303,7 +305,26 @@ const GlobalContextProvider: React.FC = ({ children }) => {
         productAddress
       );
       return contractInstance.methods
-        .setDeliveryIsPrepared()
+        .prepareDelivery()
+        .send({ from: state.account })
+        .then(() => {
+          updateProducts();
+        });
+    },
+    [state]
+  );
+
+  const timestampDeliveryStep = useCallback(
+    (productAddress: string) => {
+      if (!state.entity.approved) {
+        return EmptyPromise;
+      }
+      const contractInstance = new state.web3.eth.Contract(
+        ProductCompiledContract.abi as AbiItem[],
+        productAddress
+      );
+      return contractInstance.methods
+        .timestampDeliveryStep()
         .send({ from: state.account })
         .then(() => {
           updateProducts();
@@ -324,7 +345,8 @@ const GlobalContextProvider: React.FC = ({ children }) => {
         approveEntity,
         createProduct,
         purchaseProduct,
-        prepareProduct
+        prepareProduct,
+        timestampDeliveryStep
       }}
     >
       {children}

@@ -25,7 +25,7 @@ export interface Product {
   purchaserID: Address;
   deliveryEntities: Address[];
   deliveryTimestamps: Date[];
-  deliveryPointer: number;
+  deliveryStep: number;
 }
 
 export interface ProductCreationArgs {
@@ -55,7 +55,7 @@ export const getProductStatesData = (
     },
     Prepared: {
       icon: <AllInboxIcon style={style} />,
-      color: 'green',
+      color: '#f5ab25',
       label: 'Prepared'
     },
     Delivered: {
