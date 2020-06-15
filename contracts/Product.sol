@@ -37,7 +37,7 @@ contract Product {
       'Unauthorized for delivery preparation'
     );
     require(data.state != TypesLib.ProductState.Prepared, 'Already prepared');
-    data.deliveryTimestamps.push(now);
+    data.deliveryTimestamps[data.deliveryStep] = now;
     data.state = TypesLib.ProductState.Prepared;
   }
 
