@@ -61,17 +61,17 @@ export const getProductStatesData = (
     Delivered: {
       icon: <StoreIcon style={style} />,
       color: '#51c151',
-      label: 'Retailer'
+      label: 'Delivered'
     },
     Shipped: {
       icon: <LocalShippingIcon style={style} />,
       color: '#ef6666',
-      label: 'Transport'
+      label: 'Shipped'
     },
     Stored: {
       icon: <HomeWorkIcon style={style} />,
       color: '#6b6be0',
-      label: 'Warehouse'
+      label: 'Stored'
     }
   };
 };
