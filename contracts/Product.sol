@@ -36,8 +36,7 @@ contract Product {
       msg.sender == data.creatorID,
       'Unauthorized for delivery preparation'
     );
-    require(data.state == TypesLib.ProductState.Prepared, 'Already prepared');
-    require(data.deliveryEntities.length >= 3, 'No valid delivery to prepare');
+    require(data.state != TypesLib.ProductState.Prepared, 'Already prepared');
     data.deliveryTimestamps.push(now);
     data.state = TypesLib.ProductState.Prepared;
   }
