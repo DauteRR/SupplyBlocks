@@ -87,7 +87,6 @@ export const SignUpView: React.FC<Props> = (props) => {
   useEffect(() => {
     setAlreadyRegistered(globalState.entity.approved);
     setPending(globalState.entity.set && !globalState.entity.approved);
-    console.log('here');
   }, [globalState.entity]);
 
   return (

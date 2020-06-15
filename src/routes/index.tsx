@@ -1,10 +1,10 @@
-import { Typography } from '@material-ui/core';
 import BusinessIcon from '@material-ui/icons/Business';
 import GpsFixedIcon from '@material-ui/icons/GpsFixed';
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
 import React from 'react';
 import Dashboard from '../views/Dashboard';
 import CompaniesView from '../views/Dashboard/Companies';
+import DeliveriesView from '../views/Dashboard/Deliveries';
 import ProductsView from '../views/Dashboard/Products';
 import { SignUpView } from '../views/SignUp';
 import { WelcomeView } from '../views/Welcome';
@@ -53,7 +53,7 @@ export const DashboardRoutes: DashboardRoutes = {
     label: 'Deliveries',
     exact: true,
     path: '/dashboard/deliveries',
-    view: <Typography>Deliveries</Typography>,
+    view: <DeliveriesView />,
     icon: <GpsFixedIcon />
   }
 };

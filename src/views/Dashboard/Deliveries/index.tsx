@@ -1,4 +1,4 @@
-import { makeStyles, Theme } from '@material-ui/core';
+import { Button, makeStyles, Theme } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import React, { useContext, useState } from 'react';
 import Title from '../../../components/Title';
@@ -23,6 +23,8 @@ const DeliveriesView: React.FC<Props> = (props) => {
   const { enqueueSnackbar } = useSnackbar();
   const isFactory = globalState.entity.type === 'Factory';
 
+  const callback = () => {};
+
   return (
     <div className={classes.root}>
       {isFactory && (
@@ -32,9 +34,10 @@ const DeliveriesView: React.FC<Props> = (props) => {
           {/* <DeliveriesList products={[]} updateCallback={() => {}} /> */}
         </>
       )}
-      <Title title={'Products'} />
+      <Title title={'Deliveries'} />
       {/* TODO: proper values */}
       {/* <DeliveriesList products={[]} updateCallback={() => {}} /> */}
+      <Button onClick={callback}>Test</Button>
     </div>
   );
 };

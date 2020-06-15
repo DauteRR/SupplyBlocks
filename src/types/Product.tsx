@@ -16,7 +16,10 @@ export interface Product {
   creatorID: Address;
   creationTimestamp: Date;
   purchaserID: Address;
-  deliveryTimestamp?: Date;
+  deliveryEntities: Address[];
+  deliveryTimestamps: Date[];
+  deliveryPointer: number;
+  deliveryIsPrepared: boolean;
 }
 
 export interface ProductCreationArgs {

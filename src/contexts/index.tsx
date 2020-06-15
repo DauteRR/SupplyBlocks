@@ -5,14 +5,14 @@ import { Contract } from 'web3-eth-contract';
 import { AbiItem } from 'web3-utils';
 import EntityCompiledContract from '../contracts/Entity.json';
 import ManagerCompiledContract from '../contracts/Manager.json';
+import ProductCompiledContract from '../contracts/Product.json';
 import {
   Address,
   defaultAddress,
   EmptyEntity,
   Entity,
   EntityCreationArgs,
-  entityTypeConversion,
-  PartialDeliveryRoute
+  entityTypeConversion
 } from '../types';
 import { Product, ProductCreationArgs } from '../types/Product';
 import { convertEntity, convertProduct, getRoute } from '../utils';
@@ -250,38 +250,50 @@ const GlobalContextProvider: React.FC = ({ children }) => {
     },
     [state]
   );
-  const calculateRoute = useCallback(async (): Promise<
-    PartialDeliveryRoute
-  > => {
-    const route: PartialDeliveryRoute = await getEntities().then(
-      (result: any) => {
-        const entities: Entity[] = result
-          .map(convertEntity)
-          .filter(
-            (entity: Entity) =>
-              entity.type === 'Warehouse' || entity.type === 'Transport'
-          );
-
-        return getRoute(entities, enqueueSnackbar);
-      }
-    );
-    return route;
-  }, [getEntities, enqueueSnackbar]);
-  // TODO: CHECK
   const purchaseProduct = useCallback(
     async (productAddress: string) => {
       if (!state.entity.approved) {
+        console.error('????');
         return EmptyPromise;
       }
-      const route = await calculateRoute();
-      return state.managerContract.methods
-        .purchaseProduct(productAddress, route.transport, route.warehouse)
-        .call({ from: state.account });
+      const entities = state.entities.filter(
+        (entity: Entity) =>
+          entity.type === 'Warehouse' || entity.type === 'Transport'
+      );
+      const route = getRoute(entities, enqueueSnackbar);
+      if (route === []) {
+        console.error('wrong route');
+        return;
+      }
+
+      const productArray = state.products.filter(
+        (product) => productAddress === product.id
+      );
+
+      if (productArray.length > 1) {
+        throw new Error('Something is wrong');
+      } else if (productArray.length === 0) {
+        console.log('here?');
+        return EmptyPromise;
+      }
+      const product = productArray[0];
+      route.unshift(product.creatorID);
+      route.push(state.entity.id);
+
+      const contractInstance = new state.web3.eth.Contract(
+        ProductCompiledContract.abi as AbiItem[],
+        productAddress
+      );
+      return contractInstance.methods
+        .purchase(route, ManagerCompiledContract.networks[5777].address)
+        .send({ from: state.account })
+        .then(() => {
+          updateProducts();
+        });
     },
-    [state, calculateRoute]
+    [state]
   );
   // ==========================================================================
-
   return (
     <Provider
       value={{
