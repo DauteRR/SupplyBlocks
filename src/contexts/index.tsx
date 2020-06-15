@@ -73,6 +73,7 @@ type Context = {
   createProduct: (params: ProductCreationArgs) => Promise<any>;
   approveEntity: (address: Address | string) => Promise<any>;
   purchaseProduct: (address: Address) => Promise<any>;
+  prepareProduct: (address: Address) => Promise<any>;
 };
 
 const DefaultContext: Context = {
@@ -82,8 +83,9 @@ const DefaultContext: Context = {
   updateEntities: () => EmptyPromise,
   createEntity: () => EmptyPromise,
   createProduct: () => EmptyPromise,
-  approveEntity: (address: Address) => EmptyPromise,
-  purchaseProduct: () => EmptyPromise
+  approveEntity: () => EmptyPromise,
+  purchaseProduct: () => EmptyPromise,
+  prepareProduct: () => EmptyPromise
 };
 
 const GlobalContext = React.createContext<Context>(DefaultContext);
@@ -271,7 +273,6 @@ const GlobalContextProvider: React.FC = ({ children }) => {
       if (productArray.length > 1) {
         throw new Error('Something is wrong');
       } else if (productArray.length === 0) {
-        console.log('here?');
         return EmptyPromise;
       }
       const product = productArray[0];
@@ -291,6 +292,26 @@ const GlobalContextProvider: React.FC = ({ children }) => {
     },
     [state]
   );
+
+  const prepareProduct = useCallback(
+    async (productAddress: string) => {
+      if (!state.entity.approved) {
+        return EmptyPromise;
+      }
+      const contractInstance = new state.web3.eth.Contract(
+        ProductCompiledContract.abi as AbiItem[],
+        productAddress
+      );
+      return contractInstance.methods
+        .setDeliveryIsPrepared()
+        .send({ from: state.account })
+        .then(() => {
+          updateProducts();
+        });
+    },
+    [state]
+  );
+
   // ==========================================================================
   return (
     <Provider
@@ -302,7 +323,8 @@ const GlobalContextProvider: React.FC = ({ children }) => {
         createEntity,
         approveEntity,
         createProduct,
-        purchaseProduct
+        purchaseProduct,
+        prepareProduct
       }}
     >
       {children}

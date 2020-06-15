@@ -33,11 +33,11 @@ const ProductsList: React.FC<{
   products: Product[];
 }> = ({ products }) => {
   const classes = useStyles();
-  const { purchaseProduct } = useContext(GlobalContext);
+  const { purchaseProduct, prepareProduct } = useContext(GlobalContext);
   const [current, setCurrent] = useState('');
   const { enqueueSnackbar } = useSnackbar();
 
-  const clickCallback = useCallback(
+  const purchaseCallback = useCallback(
     (address: string) => {
       return () => {
         setCurrent(address);
@@ -54,6 +54,23 @@ const ProductsList: React.FC<{
     [enqueueSnackbar, purchaseProduct]
   );
 
+  const prepareCallback = useCallback(
+    (address: string) => {
+      return () => {
+        setCurrent(address);
+        prepareProduct(address)
+          .then(() => {
+            enqueueSnackbar('Prepared', { variant: 'success' });
+          })
+          .catch(() => {
+            enqueueSnackbar('Error', { variant: 'error' });
+          })
+          .finally(() => setCurrent(''));
+      };
+    },
+    [enqueueSnackbar, prepareProduct]
+  );
+
   return (
     <Grid className={classes.grid} container>
       {products.map((product, index) => (
@@ -68,7 +85,8 @@ const ProductsList: React.FC<{
           <ProductCard
             disabled={current !== product.id && current !== ''}
             transacting={current === product.id}
-            onClickCallback={clickCallback(product.id)}
+            onPurchaseCallback={purchaseCallback(product.id)}
+            onPrepareCallback={prepareCallback(product.id)}
             {...product}
           ></ProductCard>
         </Grid>

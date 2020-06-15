@@ -89,6 +89,7 @@ const InfoItem: React.FC<InfoItemProps> = (props) => {
 };
 
 interface CardButtonProps {
+  text: string;
   onClickCallback: () => void;
   disabled: boolean;
   transacting: boolean;
@@ -98,7 +99,7 @@ const CardButton: React.FC<CardButtonProps> = (props) => {
   const classes = useStyles();
   return (
     <div className={classes.wrapper}>
-      <Tooltip title="Purchase product" aria-label="purchase-product">
+      <Tooltip title={props.text} aria-label={props.text}>
         <div>
           <Button
             variant="contained"
@@ -107,7 +108,7 @@ const CardButton: React.FC<CardButtonProps> = (props) => {
             onClick={props.onClickCallback}
             disabled={props.disabled || props.transacting}
           >
-            Purchase
+            {props.text}
           </Button>
         </div>
       </Tooltip>
@@ -119,7 +120,8 @@ const CardButton: React.FC<CardButtonProps> = (props) => {
 };
 
 interface Props extends Product {
-  onClickCallback: () => void;
+  onPurchaseCallback: () => void;
+  onPrepareCallback: () => void;
   disabled: boolean;
   transacting: boolean;
 }
@@ -134,12 +136,15 @@ const ProductCard: React.FC<Props> = (props) => {
     creatorID,
     creationTimestamp,
     purchaserID,
-    onClickCallback
+    deliveryIsPrepared,
+    onPurchaseCallback,
+    onPrepareCallback
   } = props;
   const { globalState } = useContext(GlobalContext);
 
   const purchased = purchaserID !== defaultAddress;
   const isRetailer = globalState.entity.type === 'Retailer';
+  const isFactory = globalState.entity.type === 'Factory';
 
   return (
     <Card className={classes.root}>
@@ -200,7 +205,18 @@ const ProductCard: React.FC<Props> = (props) => {
       {!purchased && isRetailer && (
         <CardActions className={classes.cardActions}>
           <CardButton
-            onClickCallback={onClickCallback}
+            text="Purchase"
+            onClickCallback={onPurchaseCallback}
+            transacting={props.transacting}
+            disabled={props.disabled}
+          />
+        </CardActions>
+      )}
+      {!deliveryIsPrepared && isFactory && purchased && (
+        <CardActions className={classes.cardActions}>
+          <CardButton
+            text="Prepare"
+            onClickCallback={onPrepareCallback}
             transacting={props.transacting}
             disabled={props.disabled}
           />

@@ -40,6 +40,7 @@ contract Product {
     require(!data.deliveryIsPrepared, 'Already prepared');
     require(data.deliveryEntities.length >= 3, 'No valid delivery to prepare');
     data.deliveryIsPrepared = true;
+    data.deliveryTimestamps.push(now);
   }
 
   function timestampDeliveryStep() public {
@@ -79,7 +80,7 @@ contract Product {
       );
       data.state = TypesLib.ProductState.Shipped;
     }
-    data.deliveryTimestamps[data.deliveryPointer] = now;
+    data.deliveryTimestamps.push(now);
     data.deliveryPointer += 1;
   }
 
