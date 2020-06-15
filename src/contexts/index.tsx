@@ -186,7 +186,7 @@ const GlobalContextProvider: React.FC = ({ children }) => {
       return result.then((entities: any[]) => {
         dispatch({
           type: 'UPDATE_ENTITIES',
-          entities: entities.map(convertEntity)
+          entities: entities ? entities.map(convertEntity) : []
         });
       });
     }
