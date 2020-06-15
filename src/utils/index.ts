@@ -1,10 +1,10 @@
 import { OptionsObject } from 'notistack';
 import {
+  Address,
   defaultAddress,
   Entity,
   getEntityType,
   getProductState,
-  PartialDeliveryRoute,
   Product
 } from '../types';
 
@@ -26,13 +26,13 @@ export const convertProduct = (obj: any): Product => {
     creatorID: obj.creatorID,
     creationTimestamp: new Date(parseInt(obj.creationTimestamp) * 1000),
     purchaserID:
-      obj.purchaserID === defaultAddress
-        ? defaultAddress
-        : obj.purcharserAddress,
-    deliveryTimestamp:
-      obj.purchaserID === defaultAddress
-        ? undefined
-        : new Date(parseInt(obj.deliveryTimestamp) * 1000)
+      obj.purchaserID === defaultAddress ? defaultAddress : obj.purchaserID,
+    deliveryEntities: obj.deliveryEntities,
+    deliveryTimestamps: obj.deliveryTimestamps.map(
+      (timestamp: string) => new Date(parseInt(timestamp) * 1000)
+    ),
+    deliveryPointer: obj.deliveryPointer,
+    deliveryIsPrepared: obj.deliveryIsPrepared
   };
 };
 
@@ -67,18 +67,19 @@ export const getRoute = (
     message: React.ReactNode,
     options?: OptionsObject | undefined
   ) => React.ReactText
-): PartialDeliveryRoute => {
+): Address[] => {
   const warehouseCount = entities.filter(
     (entity) => entity.type === 'Warehouse'
   ).length;
   const transportCount = entities.length - warehouseCount;
-  const max = warehouseCount < transportCount ? warehouseCount : transportCount;
+  const max =
+    warehouseCount + 1 < transportCount ? warehouseCount + 1 : transportCount;
 
   if (max === 0) {
     enqueueSnackbar('Not enough transport/warehouse companies', {
       variant: 'error'
     });
-    return { transport: [], warehouse: [] };
+    return [];
   }
 
   const transportSteps = max > 1 ? getRandomIntInclusive(1, max) : 1;
@@ -94,8 +95,13 @@ export const getRoute = (
         )
       : [];
 
-  return {
-    transport: selectedTransportEntities,
-    warehouse: selectedWarehousingEntities
-  };
+  const route: Address[] = [];
+  for (let i = 0; i < selectedTransportEntities.length; ++i) {
+    if (i > 1) {
+      route.push(selectedWarehousingEntities[i].id);
+    }
+    route.push(selectedTransportEntities[i].id);
+  }
+
+  return route;
 };

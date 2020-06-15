@@ -9,12 +9,6 @@ contract Product {
 
   mapping(address => bool) public associatedEntities;
 
-  address[] public deliveryEntities;
-  uint256[] public deliveryTimestamps;
-  uint256 public deliveryPointer;
-
-  bool public deliveryIsPrepared;
-
   constructor(string memory _name, Entity _factory) public {
     require(
       _factory.getType() == TypesLib.EntityType.Factory,
@@ -29,10 +23,12 @@ contract Product {
       creatorID: _factory.getID(),
       creationTimestamp: now,
       purchaserID: address(0),
-      deliveryTimestamp: 0
+      deliveryEntities: address[],
+      deliveryTimestamps: uint256[],
+      deliveryPointer: 0,
+      deliveryIsPrepared: false
     });
 
-    deliveryPointer = 0;
     associatedEntities[_factory.getID()] = true;
   }
 
@@ -41,23 +37,29 @@ contract Product {
       msg.sender == data.creatorID,
       'Unauthorized for delivery preparation'
     );
-    require(!deliveryIsPrepared, 'Already prepared');
-    require(deliveryEntities.length >= 3, 'No valid delivery to prepare');
-    deliveryIsPrepared = true;
+    require(!data.deliveryIsPrepared, 'Already prepared');
+    require(data.deliveryEntities.length >= 3, 'No valid delivery to prepare');
+    data.deliveryIsPrepared = true;
   }
 
   function timestampDeliveryStep() public {
-    require(deliveryIsPrepared, 'Product have not been prepared for delivery');
-    require(deliveryEntities[deliveryPointer] == msg.sender, 'Unauthorized');
+    require(
+      data.deliveryIsPrepared,
+      'Product have not been prepared for delivery'
+    );
+    require(
+      data.deliveryEntities[data.deliveryPointer] == msg.sender,
+      'Unauthorized'
+    );
 
-    if (deliveryPointer == deliveryEntities.length - 1) {
+    if (data.deliveryPointer == data.deliveryEntities.length - 1) {
       require(
         data.state == TypesLib.ProductState.Shipped,
         'Wrong Delivery previous step'
       );
       data.state = TypesLib.ProductState.Delivered;
-    } else if (deliveryPointer != 0) {
-      if (deliveryPointer % 2 == 1) {
+    } else if (data.deliveryPointer != 0) {
+      if (data.deliveryPointer % 2 == 1) {
         require(
           data.state == TypesLib.ProductState.Stored,
           'Wrong Shipped previous step'
@@ -77,13 +79,13 @@ contract Product {
       );
       data.state = TypesLib.ProductState.Shipped;
     }
-    deliveryTimestamps[deliveryPointer] = now;
-    deliveryPointer += 1;
+    data.deliveryTimestamps[data.deliveryPointer] = now;
+    data.deliveryPointer += 1;
   }
 
   function storeDeliveryStep(address _entityAddress) private {
-    deliveryEntities.push(_entityAddress);
-    deliveryTimestamps.push(0);
+    data.deliveryEntities.push(_entityAddress);
+    data.deliveryTimestamps.push(0);
     associatedEntities[_entityAddress] = true;
   }
 

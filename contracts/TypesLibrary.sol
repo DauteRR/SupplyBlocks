@@ -22,6 +22,9 @@ library TypesLib {
     address creatorID;
     uint256 creationTimestamp;
     address purchaserID;
-    uint256 deliveryTimestamp;
+    address[] deliveryEntities;
+    uint256[] deliveryTimestamps;
+    uint256 deliveryPointer;
+    bool deliveryIsPrepared;
   }
 }

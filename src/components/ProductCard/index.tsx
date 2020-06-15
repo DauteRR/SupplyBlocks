@@ -134,7 +134,6 @@ const ProductCard: React.FC<Props> = (props) => {
     creatorID,
     creationTimestamp,
     purchaserID,
-    deliveryTimestamp,
     onClickCallback
   } = props;
   const { globalState } = useContext(GlobalContext);
@@ -190,12 +189,13 @@ const ProductCard: React.FC<Props> = (props) => {
             }
           />
         )}
-        {purchased && (
+        {/* // TODO: */}
+        {/* {purchased && state === 'Delivered' && (
           <InfoItem
             text={deliveryTimestamp!.toUTCString()}
             icon={<EventIcon className={classes.icon} color="primary" />}
           />
-        )}
+        )} */}
       </CardContent>
       {!purchased && isRetailer && (
         <CardActions className={classes.cardActions}>
