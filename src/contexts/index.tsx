@@ -181,7 +181,9 @@ const GlobalContextProvider: React.FC = ({ children }) => {
 
   // On component mount
   useEffect(() => {
-    state.web3.eth.getAccounts((error, accounts) => updateAccount(accounts[0]));
+    state.web3.eth.getAccounts((error, accounts) => {
+      if (accounts) updateAccount(accounts[0]);
+    });
   }, []);
 
   const updateEntities = useCallback(() => {

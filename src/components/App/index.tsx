@@ -44,6 +44,12 @@ const OnAccountChange = (
   metamaskEnabledSetter: useStateBooleanSetter,
   web3: Web3
 ) => {
+  if (!window.ethereum) {
+    metamaskEnabledSetter(false);
+    enqueueSnackbar('Metamask not installed', { variant: 'error' });
+    return;
+  }
+
   window.ethereum.on('accountsChanged', () => {
     web3.eth.getAccounts((error, accounts) => {
       updateAccount(accounts[0]);
@@ -63,8 +69,9 @@ const CheckMetamask = (
 ) => () => {
   if (!window.ethereum) {
     errorSetter(true);
+  } else {
+    valueSetter(window.ethereum.selectedAddress);
   }
-  valueSetter(window.ethereum.selectedAddress);
 };
 
 const CheckConnection = (
@@ -83,6 +90,12 @@ const EnableMetamask = (
     options?: OptionsObject | undefined
   ) => string | number
 ) => () => {
+  if (!window.ethereum) {
+    metamaskEnabledSetter(false);
+    enqueueSnackbar('Metamask not installed', { variant: 'error' });
+    return;
+  }
+
   window.ethereum
     .enable()
     .then(() => {
