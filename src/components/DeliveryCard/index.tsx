@@ -16,7 +16,9 @@ import clsx from 'clsx';
 import React, { useCallback, useContext, useState } from 'react';
 import { GlobalContext } from '../../contexts';
 import { Product } from '../../types/Product';
+import { convertProduct, getTimelineElements } from '../../utils';
 import ProductStateChip from '../ProductStateChip';
+import Timeline from '../Timeline';
 
 const useStyles = makeStyles<Theme>((theme) => ({
   root: {
@@ -62,6 +64,9 @@ const useStyles = makeStyles<Theme>((theme) => ({
     left: '50%',
     marginTop: -12,
     marginLeft: -12
+  },
+  timelineContainer: {
+    padding: theme.spacing(2)
   }
 }));
 
@@ -95,6 +100,16 @@ const TimestampButton: React.FC<TimestampButtonProps> = (props) => {
   );
 };
 
+const DeliveryTimeline: React.FC<{ delivery: Product }> = ({ delivery }) => {
+  const { globalState } = useContext(GlobalContext);
+  const theme = useTheme();
+  return (
+    <Timeline
+      elements={getTimelineElements(delivery, globalState.entities, theme)}
+    />
+  );
+};
+
 interface Props extends Product {
   onTimestampCallback: () => void;
   disabled: boolean;
@@ -106,18 +121,14 @@ const DeliveryCard: React.FC<Props> = (props) => {
   const theme = useTheme();
   const {
     name,
-    id,
     state,
-    creatorID,
-    creationTimestamp,
-    purchaserID,
     deliveryEntities,
     deliveryStep,
-    onTimestampCallback,
-    deliveryTimestamps
+    onTimestampCallback
   } = props;
   const { globalState } = useContext(GlobalContext);
-  const [expanded, setExpanded] = useState(false);
+  // TODO: CHANGE
+  const [expanded, setExpanded] = useState(true);
 
   const handleExpandClick = useCallback(() => {
     setExpanded(!expanded);
@@ -155,20 +166,11 @@ const DeliveryCard: React.FC<Props> = (props) => {
           </IconButton>
         </div>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
-          {/* TODO: */}
-          {/* <Timeline /> */}
+          <div className={classes.timelineContainer}>
+            <DeliveryTimeline delivery={convertProduct(props)} />
+          </div>
         </Collapse>
       </CardContent>
-      {/* {!purchased && isRetailer && (
-        <CardActions className={classes.cardActions}>
-          <TimestampButton
-            text="Purchase"
-            onClickCallback={onPurchaseCallback}
-            transacting={props.transacting}
-            disabled={props.disabled}
-          />
-        </CardActions>
-      )} */}
     </Card>
   );
 };

@@ -1,12 +1,27 @@
+import { makeStyles, Theme } from '@material-ui/core';
 import { OptionsObject } from 'notistack';
+import React from 'react';
+import { TimelineElement } from '../components/Timeline';
 import {
   Address,
   defaultAddress,
   Entity,
+  EntityType,
   getEntityType,
+  getEntityTypesData,
   getProductState,
   Product
 } from '../types';
+
+export const customColorStyles = (color: string) => {
+  const customUseStyles = makeStyles(() => ({
+    customColor: {
+      color: color
+    }
+  }));
+  const customClasses = customUseStyles();
+  return customClasses;
+};
 
 export const convertEntity = (obj: any): Entity => ({
   id: obj.id,
@@ -100,4 +115,45 @@ export const getRoute = (
   }
 
   return route;
+};
+
+export const getTimelineElements = (
+  delivery: Product,
+  entities: Entity[],
+  theme: Theme
+): TimelineElement[] => {
+  console.log(delivery);
+
+  if (delivery.deliveryEntities.length < 3) {
+    throw new Error('Something is wrong');
+  }
+
+  const entityTypesData = getEntityTypesData({ color: 'white', fontSize: 25 });
+
+  const getCommonProps = (key: EntityType) => ({
+    dateClassName: customColorStyles(entityTypesData[key].color).customColor,
+    iconStyle: {
+      backgroundColor: entityTypesData[key].color,
+      color: 'white'
+    },
+    contentStyle: {
+      color: 'white',
+      backgroundColor: entityTypesData[key].color
+    },
+    contentArrowStyle: {
+      borderRight: `7px solid  ${entityTypesData[key].color}`
+    },
+    icon: entityTypesData[key].icon
+  });
+
+  const elements: TimelineElement[] = [];
+
+  elements.push({
+    label: delivery.creationTimestamp.toUTCString(),
+    title: 'Created',
+    body: <></>,
+    ...getCommonProps('Factory')
+  });
+
+  return elements;
 };

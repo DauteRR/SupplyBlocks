@@ -35,7 +35,8 @@ export interface TimelineElement
   extends Omit<VerticalTimelineElementProps, 'date'> {
   label: string;
   title: string;
-  text: string;
+  text?: string;
+  body: JSX.Element;
 }
 
 interface Props {
@@ -53,7 +54,8 @@ export const Timeline: React.FC<Props> = (props) => {
             <Typography variant="h5" className={classes.elementTitle}>
               {title}
             </Typography>
-            <Typography variant="subtitle1">{text}</Typography>
+            {text && <Typography variant="subtitle1">{text}</Typography>}
+            {element.body}
           </VerticalTimelineElement>
         );
       })}

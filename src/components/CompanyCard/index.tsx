@@ -15,6 +15,7 @@ import FingerprintIcon from '@material-ui/icons/Fingerprint';
 import PhoneIcon from '@material-ui/icons/Phone';
 import React from 'react';
 import { Entity, getEntityTypesData } from '../../types/Entity';
+import { customColorStyles } from '../../utils';
 import EntityTypeChip from '../EntityTypeChip';
 
 const useStyles = makeStyles<Theme>((theme) => ({
@@ -73,16 +74,6 @@ interface InfoItemProps {
   icon: JSX.Element | React.Component;
   textClassName?: string;
 }
-
-const customStyles = (color: string) => {
-  const customUseStyles = makeStyles(() => ({
-    companyName: {
-      color: color
-    }
-  }));
-  const customClasses = customUseStyles();
-  return customClasses;
-};
 
 const InfoItem: React.FC<InfoItemProps> = (props) => {
   const classes = useStyles();
@@ -153,7 +144,8 @@ const CompanyCard: React.FC<Props> = (props) => {
               variant="h5"
               noWrap
               className={
-                customStyles(getEntityTypesData({})[type].color).companyName
+                customColorStyles(getEntityTypesData({})[type].color)
+                  .customColor
               }
             >
               {name}

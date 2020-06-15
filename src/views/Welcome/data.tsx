@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core';
+import React from 'react';
 import PresentationPNG from '../../assets/business-presentation.png';
 import CostsPNG from '../../assets/costs.png';
 import FactoryPNG from '../../assets/factory.png';
@@ -11,6 +11,7 @@ import TransportPNG from '../../assets/transport.png';
 import WarehousePNG from '../../assets/warehouse.png';
 import { TimelineElement } from '../../components/Timeline';
 import { EntityType, getEntityTypesData } from '../../types/Entity';
+import { customColorStyles } from '../../utils';
 
 export interface ItemData {
   label: string;
@@ -76,21 +77,11 @@ export const agents: ItemData[] = [
   }
 ];
 
-const customStyles = (color: string) => {
-  const customUseStyles = makeStyles(() => ({
-    elementSideText: {
-      color: color
-    }
-  }));
-  const customClasses = customUseStyles();
-  return customClasses;
-};
-
 export const getTimelineElements = (): TimelineElement[] => {
   const entityTypesData = getEntityTypesData({ color: 'white', fontSize: 25 });
 
   const getCommonProps = (key: EntityType) => ({
-    dateClassName: customStyles(entityTypesData[key].color).elementSideText,
+    dateClassName: customColorStyles(entityTypesData[key].color).customColor,
     iconStyle: {
       backgroundColor: entityTypesData[key].color,
       color: 'white'
@@ -110,12 +101,14 @@ export const getTimelineElements = (): TimelineElement[] => {
       label: 'Factory',
       title: 'Registry',
       text: 'Factories and manufacturers creates and registry their goods',
+      body: <></>,
       ...getCommonProps('Factory')
     },
     {
       label: 'Retailer',
       title: 'Purchase',
       text: 'Retailers and small businesses purchase registered products',
+      body: <></>,
       ...getCommonProps('Retailer')
     },
     {
@@ -123,6 +116,7 @@ export const getTimelineElements = (): TimelineElement[] => {
       title: 'Delivery route',
       text:
         'SupplyBlocks "autonomously calculates" the route for delivering the purchased products by retailers and small businesses, composed of transport and warehousing companies',
+      body: <></>,
       ...getCommonProps('Admin')
     },
     {
@@ -130,6 +124,7 @@ export const getTimelineElements = (): TimelineElement[] => {
       title: 'Delivery - Transport 1',
       text:
         'Assigned transport company moves the products to the next point on the route, which may be the end customer or a warehouse. In both cases the transport company registers that the product has been delivered',
+      body: <></>,
       ...getCommonProps('Transport')
     },
     {
@@ -137,6 +132,7 @@ export const getTimelineElements = (): TimelineElement[] => {
       title: 'Delivery - Warehouse',
       text:
         'Products are kept in the warehouse until a transport company picks them up for delivery. When products leave the warehouse the warehousing company registers this information',
+      body: <></>,
       ...getCommonProps('Warehouse')
     },
     {
@@ -144,6 +140,7 @@ export const getTimelineElements = (): TimelineElement[] => {
       title: 'Delivery - Transport 2',
       text:
         'Again, assigned transport company moves the products to the next point on the route (this cycle could be reproduced repeatedly)',
+      body: <></>,
       ...getCommonProps('Transport')
     },
     {
@@ -151,6 +148,7 @@ export const getTimelineElements = (): TimelineElement[] => {
       title: 'Delivery - Retailer',
       text:
         'Once the products are delivered, the buyer records the delivery and the process ends',
+      body: <></>,
       ...getCommonProps('Retailer')
     }
   ];
