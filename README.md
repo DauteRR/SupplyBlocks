@@ -1,6 +1,8 @@
 # SupplyBlocks
 
-<div style="text-align:center"><img src="src/assets/Logo.png"/><h2>Blockchain applied to supply chain orchestration</h2></div>
+Blockchain applied to supply chain orchestration
+
+<div style="text-align:center"><img src="src/assets/logo.png"/></div>
 
 ## How to use
 
@@ -12,4 +14,4 @@
 npm install && npm run migrate && npm start
 ```
 
-4. Enable Metamask through web application interface
+4. Enable Metamask through web application interface.
