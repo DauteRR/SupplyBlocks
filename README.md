@@ -15,3 +15,7 @@ npm install && npm run migrate && npm start
 ```
 
 4. Enable Metamask through web application interface.
+
+## About
+
+SupplyBlocks was created as [Cybersecurity and Data Intelligence Master's Degree final project](report.pdf).
